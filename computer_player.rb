@@ -1,8 +1,10 @@
+require_relative "./board"
+
 module TicTacToe
   class ComputerPlayer
     attr_reader :identity
-    def initialize(identity)
-      @identity = identity
+    def initialize(params = {})
+      @identity = params.fetch(:id, "X")
     end
 
     def get_identity
@@ -13,6 +15,11 @@ module TicTacToe
     end
 
     def get_center_move
+      center = Board.get_size / 2
+      move = {x: center, y: center}
+      if Board.is_cell_empty?(move.x, move.y)
+        move
+      end
     end
 
     def get_winning_move
@@ -22,8 +29,8 @@ module TicTacToe
     end
 
     def get_random_move
-      random_num = Random.rand(0..board.size)
-      
+      random_num = Random.rand(0..Board.size)
+
     end
   end
 end

@@ -10,6 +10,14 @@ module TicTacToe
       Array.new(size) { Array.new(size) }
     end
 
+    def get_grid
+      self.grid
+    end
+
+    def get_size
+      self.size
+    end
+
     def is_cell_empty?(x, y)
       grid[x][y].nil?
     end

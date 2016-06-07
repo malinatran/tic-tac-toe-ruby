@@ -21,6 +21,21 @@ module TicTacToe
         expect(board.grid).to eq(empty_board)
       end
     end
+
+    context "#getGrid" do
+      it "retrieves the grid" do
+        board = Board.new(size: 2)
+        two_by_two_board = [[nil, nil], [nil, nil]]
+        expect(board.get_grid).to eq(two_by_two_board)
+      end
+    end
+
+    context "#getSize" do
+      it "retrieves the grid's size" do
+        board = Board.new(size: 8)
+        expect(board.get_size).to eq(8)
+      end
+    end
     
     context "#isCellEmpty?" do
       it "returns true if cell is empty" do
