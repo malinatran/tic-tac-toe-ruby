@@ -14,6 +14,22 @@ module TicTacToe
       grid[x][y].nil?
     end
 
+    def get_empty_cells
+      empty_squares = []
+      @size.times do |x|
+        @size.times do |y|
+          if is_cell_empty?(x, y)
+            empty_squares.push({x: x, y: y})
+          end
+        end
+      end
+      empty_squares
+    end
+
+    def is_grid_filled?
+      self.get_empty_cells.length == 0
+    end
+
     def get_cell(x, y)
       grid[x][y]
     end

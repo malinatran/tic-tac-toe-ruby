@@ -29,6 +29,27 @@ module TicTacToe
       end
     end
 
+    context "#getEmptyCells" do
+      it "returns only cells without any values" do
+        board = Board.new(size: 2)
+        board.set_cell(0, 0, "O")
+        board.set_cell(0, 1, "X")
+        board.set_cell(1, 0, "O")
+        expect(board.get_empty_cells).to eq([{x: 1, y: 1}])
+      end
+    end
+
+    context "#isGridFilled" do
+      it "returns true if all cells have values" do
+        board = Board.new(size: 2)
+        board.set_cell(0, 0, "O")
+        board.set_cell(0, 1, "X")
+        board.set_cell(1, 0, "O")
+        board.set_cell(1, 1, "X")
+        expect(board.is_grid_filled?).to eq(true)
+      end
+    end
+
     context "#getCell" do
       it "returns a cell" do
         board = Board.new
