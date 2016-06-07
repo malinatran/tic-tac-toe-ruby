@@ -1,10 +1,11 @@
-require_relative "./board"
+require "./board"
 
 module TicTacToe
   class ComputerPlayer
-    attr_reader :identity
-    def initialize(params = {})
+    attr_reader :identity, :board
+    def initialize(params)
       @identity = params.fetch(:id, "X")
+      @board = params.fetch(:board)
     end
 
     def get_identity
@@ -15,10 +16,14 @@ module TicTacToe
     end
 
     def get_center_move
-      center = Board.get_size / 2
-      move = {x: center, y: center}
-      if Board.is_cell_empty?(move.x, move.y)
+      move = {}
+      center = board.get_size / 2
+      move[:x] = center
+      move[:y] = center
+      if board.is_cell_empty?(move[:x], move[:y])
         move
+      else
+        nil
       end
     end
 
@@ -29,7 +34,6 @@ module TicTacToe
     end
 
     def get_random_move
-      random_num = Random.rand(0..Board.size)
 
     end
   end

@@ -1,5 +1,5 @@
 require "spec_helper"
-require "./board.rb"
+require "./board"
 
 module TicTacToe
   describe Board do
