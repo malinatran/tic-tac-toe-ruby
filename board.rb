@@ -1,6 +1,8 @@
 module TicTacToe
   class Board
+
     attr_reader :size, :grid
+    
     def initialize(params = {})
       @size = params.fetch(:size, 3)
       @grid = create_grid(size)
@@ -24,8 +26,9 @@ module TicTacToe
 
     def get_empty_cells
       empty_squares = []
-      @size.times do |x|
-        @size.times do |y|
+      size = self.get_size
+      size.times do |x|
+        size.times do |y|
           if is_cell_empty?(x, y)
             empty_squares.push({x: x, y: y})
           end
@@ -53,29 +56,53 @@ module TicTacToe
     end
 
     def clear_grid
-      @size.times do |x|
-        @size.times do |y|
+      size = self.get_size
+      size.times do |x|
+        size.times do |y|
           clear_cell(x, y)
         end
       end
     end
 
-    def is_row_filled?(y, identity)
-      self.grid[y].each do |cell|
-        
+    def is_row_filled?(x, identity)
+      self.grid[x].each do |cell|
+        if cell != identity
+          return false
+        end
       end
+      true
     end
 
-    def is_col_filled?
+    def is_column_filled?(y, identity)
+      self.grid.each do |cell|
+        if cell[y] != identity
+          return false
+        end
+      end
+      true
     end
 
-    def is_either_diagonal_filled?
+    def is_forward_diagonal_filled?(identity)
+      i = 0
+      size = self.get_size
+      while i < size
+        if self.grid[i][size-1-i] != identity
+          return false
+        end
+        i += 1
+      end
+      true
     end
 
-    def is_forward_diagonal_filled?
-    end
-
-    def is_backward_diagonal_filled?
+    def is_backward_diagonal_filled?(identity)
+      i = 0
+      while i < self.get_size
+        if self.grid[i][i] != identity
+          return false
+        end
+        i += 1
+      end
+      true
     end
 
   end

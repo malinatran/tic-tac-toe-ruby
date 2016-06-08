@@ -99,5 +99,97 @@ module TicTacToe
         expect(board.grid).to eq(empty_board)
       end
     end
+
+    context "#isRowFilled" do
+      it "returns true if each cell in a row is filled with player's identity" do
+        board = Board.new(size: 3)
+        board.set_cell(0, 0, "X")
+        board.set_cell(0, 1, "X")
+        board.set_cell(0, 2, "X")
+        expect(board.is_row_filled?(0, "X")).to eq(true)
+      end
+      it "returns false if a cell in a row is nil" do 
+        board = Board.new
+        board.set_cell(0, 0, "X")
+        board.set_cell(0, 2, "X")
+        expect(board.is_row_filled?(0, "X")).to eq(false)
+      end
+      it "returns false if a cell in a row is not filled with player's identity" do 
+        board = Board.new
+        board.set_cell(0, 0, "O")
+        board.set_cell(0, 1, "X")
+        board.set_cell(0, 2, "X")
+        expect(board.is_row_filled?(0, "X")).to eq(false)
+      end
+    end
+
+    context "#isColumnFilled" do
+      it "returns true if each cell in a column is filled with player's identity" do
+        board = Board.new
+        board.set_cell(0, 0, "O")
+        board.set_cell(1, 0, "O")
+        board.set_cell(2, 0, "O")
+        expect(board.is_column_filled?(0, "O")).to eq(true)
+      end
+      it "returns false if a cell in a column is nil" do
+        board = Board.new
+        board.set_cell(0, 1, "O")
+        board.set_cell(1, 1, "O")
+        expect(board.is_column_filled?(1, "O")).to eq(false)
+      end
+      it "returns false if a cell in a column is not filled with player's identity" do
+        board = Board.new
+        board.set_cell(0, 2, "X")
+        board.set_cell(1, 2, "X")
+        board.set_cell(2, 2, "O")
+        expect(board.is_column_filled?(2, "X")).to eq(false)
+      end
+    end
+
+    context "#isBackwardDiagonalFilled" do
+      it "returns true if each cell in the backward diagonal is filled with player's identity" do
+        board = Board.new
+        board.set_cell(0, 0, "X")
+        board.set_cell(1, 1, "X")
+        board.set_cell(2, 2, "X")
+        expect(board.is_backward_diagonal_filled?("X")).to eq(true)
+      end
+      it "returns false if a cell in the backward diagonal is empty" do
+        board = Board.new
+        board.set_cell(0, 0, "O")
+        board.set_cell(2, 2, "O")
+        expect(board.is_backward_diagonal_filled?("O")).to eq(false)
+      end
+      it "returns false if a cell in the backward diagonal is not filled with player's identity" do
+        board = Board.new
+        board.set_cell(0, 0, "O")
+        board.set_cell(1, 1, "O")
+        board.set_cell(2, 2, "X")
+        expect(board.is_backward_diagonal_filled?("O")).to eq(false)
+      end
+    end
+    
+    context "#isForwardDiagonalFilled" do
+      it "returns true if each cell in the forward diagonal is filled with player's identity" do
+        board = Board.new
+        board.set_cell(0, 2, "X")
+        board.set_cell(1, 1, "X")
+        board.set_cell(2, 0, "X")
+        expect(board.is_forward_diagonal_filled?("X")).to eq(true)
+      end
+      it "returns false if a cell in the forward diagonal is empty" do
+        board = Board.new
+        board.set_cell(0, 2, "O")
+        board.set_cell(1, 1, "O")
+        expect(board.is_forward_diagonal_filled?("O")).to eq(false)
+      end
+      it "returns false if a cell in the forward diagonal is not filled with player's identity" do
+        board = Board.new
+        board.set_cell(0, 2, "O")
+        board.set_cell(1, 1, "X")
+        board.set_cell(2, 0, "O")
+        expect(board.is_forward_diagonal_filled?("O")).to eq(false)
+      end
+    end
   end
 end
