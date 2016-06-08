@@ -18,12 +18,9 @@ module TicTacToe
     def get_center_move
       move = {}
       center = board.get_size / 2
-      move[:x] = center
-      move[:y] = center
+      move[:x] = move[:y] = center
       if board.is_cell_empty?(move[:x], move[:y])
         move
-      else
-        nil
       end
     end
 

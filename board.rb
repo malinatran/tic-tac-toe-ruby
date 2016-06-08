@@ -59,5 +59,24 @@ module TicTacToe
         end
       end
     end
+
+    def is_row_filled?(y, identity)
+      self.grid[y].each do |cell|
+        
+      end
+    end
+
+    def is_col_filled?
+    end
+
+    def is_either_diagonal_filled?
+    end
+
+    def is_forward_diagonal_filled?
+    end
+
+    def is_backward_diagonal_filled?
+    end
+
   end
 end
