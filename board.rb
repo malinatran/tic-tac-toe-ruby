@@ -1,4 +1,8 @@
 module TicTacToe
+
+  class CellIsFilledError < StandardError
+  end
+
   class Board
 
     attr_reader :size, :grid
@@ -48,6 +52,8 @@ module TicTacToe
     def set_cell(x, y, identity)
       if grid[x][y].nil?
         grid[x][y] = identity
+      else 
+        raise CellIsFilledError, "Cell already has a value."
       end
     end
 
@@ -80,6 +86,10 @@ module TicTacToe
         end
       end
       true
+    end
+
+    def is_either_diagonal_filled?(identity)
+      is_forward_diagonal_filled?(identity) || is_backward_diagonal_filled?(identity)
     end
 
     def is_forward_diagonal_filled?(identity)

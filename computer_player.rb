@@ -1,6 +1,10 @@
 require "./board"
 
 module TicTacToe
+
+  class NoCenterCellError < StandardError
+  end
+
   class ComputerPlayer
     attr_reader :identity, :board
     def initialize(params)
@@ -20,14 +24,28 @@ module TicTacToe
         move[:x] = move[:y] = center
         if board.is_cell_empty?(move[:x], move[:y])
           move
-        # should I raise an error here?
         end
       else
-        nil
+        raise NoCenterCellError, "Center cell does not exist due to board's size."
       end
     end
 
-    def get_winning_move
+    def get_winning_move(identity)
+      empty_cells = board.get_empty_cells
+      empty_cells.each do |coordinates| 
+        x = coordinates[:x].to_i
+        y = coordinates[:y].to_i
+        board.set_cell(x, y, identity)
+        if board.is_row_filled?(x, identity) || 
+          board.is_column_filled?(y, identity) || 
+          board.is_either_diagonal_filled?(identity)
+          board.clear_cell(x, y)
+          move = {x: x, y: y}
+          return move 
+        else
+          board.clear_cell(x, y)
+        end
+      end
     end
 
     def get_corner_move
@@ -47,6 +65,9 @@ module TicTacToe
     end
 
     def get_random_move
+      empty_cells = board.get_empty_cells
+      random_index = rand(empty_cells.length)
+      empty_cells[random_index]
     end
   end
 end

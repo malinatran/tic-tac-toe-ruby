@@ -15,7 +15,12 @@ module TicTacToe
     end
 
     context "#createGrid" do
-      it "constructs a two-dimensional array" do
+      it "constructs a two-dimensional array based on size determined by user" do
+        board = Board.new(size: 2)
+        empty_board = [[nil, nil], [nil, nil]]
+        expect(board.grid).to eq(empty_board)
+      end
+      it "constructs a two-dimension array with a default size of three" do
         board = Board.new
         empty_board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
         expect(board.grid).to eq(empty_board)
@@ -42,6 +47,11 @@ module TicTacToe
         board = Board.new
         expect(board.is_cell_empty?(0,0)).to eq(true)
       end
+      it "returns false if cell has an identity" do
+        board = Board.new
+        board.set_cell(0, 1, "X")
+        expect(board.is_cell_empty?(0, 1)).to eq(false)
+      end
     end
 
     context "#getEmptyCells" do
@@ -51,6 +61,12 @@ module TicTacToe
         board.set_cell(0, 1, "X")
         board.set_cell(1, 0, "O")
         expect(board.get_empty_cells).to eq([{x: 1, y: 1}])
+      end
+      it "returns all empty cells in array" do
+        board = Board.new(size: 2)
+        board.set_cell(0, 0, "X")
+        board.set_cell(0, 1, "O")
+        expect(board.get_empty_cells).to eq([{x: 1, y: 0}, {x: 1, y: 1}])
       end
     end
 
@@ -63,37 +79,51 @@ module TicTacToe
         board.set_cell(1, 1, "X")
         expect(board.is_grid_filled?).to eq(true)
       end
+      it "returns false if one or some cells have values" do
+        board = Board.new(size: 2)
+        board.set_cell(0, 0, "O")
+        board.set_cell(0, 1, "X")
+        expect(board.is_grid_filled?).to eq(false)
+      end
     end
 
     context "#getCell" do
-      it "returns a cell" do
+      it "returns a cell that has a value" do
         board = Board.new
         board.set_cell(0, 2, "X")
         expect(board.get_cell(0, 2)).to eq("X")
       end
+      it "returns a cell that does not have a value" do
+        board = Board.new
+        expect(board.get_cell(1, 1)).to eq(nil)
+      end
     end
 
     context "#setCell" do
-      it "sets the value of a cell" do
+      it "sets the value of a cell if it does not already have a value" do
         board = Board.new
-        board.set_cell(1, 1, "O")
-        expect(board.grid[1][1]).to eq("O")
+        expect(board.set_cell(1, 1, "O")).to eq("O")
+      end
+      it "raises an exception if a cell already has a value" do
+        board = Board.new
+        board.set_cell(0, 0, "X")
+        expect{board.set_cell(0, 0, "O")}.to raise_error(CellIsFilledError)
       end
     end
 
     context "#clearCell" do
       it "sets the value of the cell to be empty" do
         board = Board.new
-        board.grid[0][0] = "X"
+        board.set_cell(0, 0, "X")
         expect(board.clear_cell(0,0)).to eq(nil)
       end
     end
 
     context "#clearGrid" do
-      it "iterates through grid and empties each cell" do
+      it "iterates through grid and empties the value of each cell" do
         board = Board.new
-        board.grid[0][0] = "X"
-        board.grid[2][1] = "O"
+        board.set_cell(0, 0, "X")
+        board.set_cell(2, 1, "O")
         board.clear_grid
         empty_board = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]        
         expect(board.grid).to eq(empty_board)

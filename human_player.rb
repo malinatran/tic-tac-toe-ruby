@@ -8,5 +8,8 @@ module TicTacToe
     def get_identity
       self.identity
     end
+
+    def submit_move
+    end
   end
 end
