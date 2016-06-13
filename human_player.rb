@@ -1,15 +1,12 @@
+require "./player"
+
 module TicTacToe
-  class HumanPlayer
+
+  class HumanPlayer < Player
     attr_reader :identity
-    def initialize(params = {})
-      @identity = params.fetch(:id, "O")
-    end
-
-    def get_identity
-      self.identity
-    end
-
-    def submit_move
+    
+    def default_identity
+      "O"
     end
   end
 end

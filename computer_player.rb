@@ -1,3 +1,4 @@
+require "./player"
 require "./board"
 
 module TicTacToe
@@ -5,15 +6,16 @@ module TicTacToe
   class NoCenterCellError < StandardError
   end
 
-  class ComputerPlayer
+  class ComputerPlayer < Player
     attr_reader :identity, :board
-    def initialize(params)
-      @identity = params.fetch(:id, "X")
-      @board = params.fetch(:board)
-    end
 
-    def get_identity
-      self.identity
+    def initialize(params)
+      @board = params.fetch(:board)
+      super(params)
+    end
+    
+    def default_identity
+      "X"
     end
 
     def get_center_move
