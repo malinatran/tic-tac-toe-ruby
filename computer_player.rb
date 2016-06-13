@@ -10,7 +10,7 @@ module TicTacToe
     attr_reader :marker, :board
 
     def initialize(params)
-      @board = params.fetch(:board)
+      @board = params.fetch(:board, board = Board.new)
       super(params)
     end
     

@@ -29,14 +29,6 @@ module TicTacToe
       end
     end
 
-    context "#get_grid" do
-      it "retrieves the grid" do
-        board = Board.new(size: 2)
-        two_by_two_board = [[nil, nil], [nil, nil]]
-        expect(board.get_grid).to eq(two_by_two_board)
-      end
-    end
-
     context "#get_size" do
       it "retrieves the grid's size" do
         board = Board.new(size: 8)
@@ -152,6 +144,7 @@ module TicTacToe
         board.set_cell(0, 2, "X")
         expect(board.is_row_filled?(0, "X")).to eq(false)
       end
+
       it "returns false if a cell in a row is not filled with player's identity" do 
         board = Board.new
         board.set_cell(0, 0, "O")
@@ -176,6 +169,7 @@ module TicTacToe
         board.set_cell(1, 1, "O")
         expect(board.is_column_filled?(1, "O")).to eq(false)
       end
+
       it "returns false if a cell in a column is not filled with player's identity" do
         board = Board.new
         board.set_cell(0, 2, "X")

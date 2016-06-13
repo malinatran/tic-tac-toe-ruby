@@ -4,7 +4,6 @@ module TicTacToe
   end
 
   class Board
-
     attr_reader :size, :grid
     
     def initialize(params = {})
@@ -14,10 +13,6 @@ module TicTacToe
 
     def create_grid(size)
       Array.new(size) { Array.new(size) }
-    end
-
-    def get_grid
-      self.grid
     end
 
     def get_size
