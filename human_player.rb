@@ -3,10 +3,10 @@ require "./player"
 module TicTacToe
 
   class HumanPlayer < Player
-    attr_reader :identity
+    attr_reader :marker
     
-    def default_identity
-      "O"
+    def default_marker
+      MARKERS[1]
     end
   end
 end

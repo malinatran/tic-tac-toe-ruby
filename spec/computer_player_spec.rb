@@ -6,14 +6,14 @@ require "./computer_player"
 module TicTacToe
   describe TicTacToe::ComputerPlayer do
     context "#initialize" do
-      it "initializes with an identity based on user input" do
-        comp_player = ComputerPlayer.new(id: "O", board: Board.new)
-        expect(comp_player.identity).to eq("O")
+      it "initializes with a marker based on user input" do
+        comp_player = ComputerPlayer.new(marker: "O", board: Board.new)
+        expect(comp_player.marker).to eq("O")
       end
       
-      it "initializes with a default identity" do
+      it "initializes with a default marker" do
         comp_player = ComputerPlayer.new(board: Board.new)
-        expect(comp_player.identity).to eq("X")
+        expect(comp_player.marker).to eq("X")
       end
     end
 
@@ -84,7 +84,7 @@ module TicTacToe
         expect(comp_player.get_corner_move).to eq({x: 0, y: 0})
       end
 
-      it "retrieves another corner cell if previous cell(s) already have an identity" do
+      it "retrieves another corner cell if previous cell(s) already have an marker" do
         board = Board.new
         comp_player = ComputerPlayer.new(board: board)
         board.set_cell(0, 0, "X")
@@ -92,7 +92,7 @@ module TicTacToe
         expect(comp_player.get_corner_move).to eq({x: 2, y: 0})
       end
 
-      it "returns nil if all corner cells already have an identity" do
+      it "returns nil if all corner cells already have an marker" do
         board = Board.new(size: 2)
         comp_player = ComputerPlayer.new(board: board)
         board.set_cell(0, 0, "X")

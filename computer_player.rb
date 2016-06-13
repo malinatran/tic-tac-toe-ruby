@@ -7,15 +7,15 @@ module TicTacToe
   end
 
   class ComputerPlayer < Player
-    attr_reader :identity, :board
+    attr_reader :marker, :board
 
     def initialize(params)
       @board = params.fetch(:board)
       super(params)
     end
     
-    def default_identity
-      "X"
+    def default_marker
+      MARKERS[0]
     end
 
     def get_center_move
@@ -32,15 +32,15 @@ module TicTacToe
       end
     end
 
-    def get_winning_move(identity)
+    def get_winning_move(marker)
       empty_cells = board.get_empty_cells
       empty_cells.each do |coordinates| 
         x = coordinates[:x].to_i
         y = coordinates[:y].to_i
-        board.set_cell(x, y, identity)
-        if board.is_row_filled?(x, identity) || 
-          board.is_column_filled?(y, identity) || 
-          board.is_either_diagonal_filled?(identity)
+        board.set_cell(x, y, marker)
+        if board.is_row_filled?(x, marker) || 
+          board.is_column_filled?(y, marker) || 
+          board.is_either_diagonal_filled?(marker)
           board.clear_cell(x, y)
           move = {x: x, y: y}
           return move 
