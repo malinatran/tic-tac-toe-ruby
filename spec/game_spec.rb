@@ -24,12 +24,20 @@ module TicTacToe
         expect(game.human_player.marker).to eq("L")
       end
 
-      it "produces a mapped grid" do
+      it "produces a mapped grid with first value always being at [0, 0]" do
         board = Board.new(size: 6)
         computer_player = ComputerPlayer.new(board: board, marker: "E")
         human_player = HumanPlayer.new(marker: "L")
         game = Game.new(board, computer_player, human_player)
         expect(game.map[1]).to eq([0, 0])
+      end
+
+      it "produces a mapped grid enumerated from left to right, top to bottom" do
+        board = Board.new
+        computer_player = ComputerPlayer.new(board: board, marker: "E")
+        human_player = HumanPlayer.new(marker: "L")
+        game = Game.new(board, computer_player, human_player)
+        expect(game.map[5]).to eq([1, 1])
       end
     end
   end
