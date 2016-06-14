@@ -7,12 +7,12 @@ module TicTacToe
   describe TicTacToe::ComputerPlayer do
     context "#initialize" do
       it "initializes with a marker based on user input" do
-        comp_player = ComputerPlayer.new(marker: "O", board: Board.new)
+        comp_player = ComputerPlayer.new(marker: "O")
         expect(comp_player.marker).to eq("O")
       end
       
       it "initializes with a default marker" do
-        comp_player = ComputerPlayer.new(board: Board.new)
+        comp_player = ComputerPlayer.new
         expect(comp_player.marker).to eq("X")
       end
     end

@@ -9,9 +9,8 @@ module TicTacToe
   class ComputerPlayer < Player
     attr_reader :marker, :board
 
-    def initialize(params)
-      @board = params.fetch(:board, board = Board.new)
-      super(params)
+    def post_initialize(params)
+      @board = params[:board]
     end
     
     def default_marker

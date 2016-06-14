@@ -7,6 +7,11 @@ module TicTacToe
 
     def initialize(params = {})
       @marker = params.fetch(:marker, default_marker)
+      post_initialize(params)
+    end
+
+    def post_initialize(params)
+      nil
     end
 
     def default_marker
