@@ -29,12 +29,12 @@ module TicTacToe
 
       it "produces a mapped grid with first value always being at [0, 0]" do
         game = Game.new
-        expect(game.map[1]).to eq([0, 0])
+        expect(game.mapped_grid[1]).to eq([0, 0])
       end
 
       it "produces a mapped grid enumerated from left to right, top to bottom" do
         game = Game.new
-        expect(game.map[5]).to eq([1, 1])
+        expect(game.mapped_grid[5]).to eq([1, 1])
       end
     end
   end
@@ -59,6 +59,19 @@ module TicTacToe
       game = Game.new(board: board)
       mapped_grid = {1=>[0, 0], 2=>[0, 1], 3=>[1, 0], 4=>[1, 1]}
       expect(game.create_grid_mapping(board.size)).to eq(mapped_grid)
+    end
+  end
+
+  context "#format_grid" do
+    it "returns the contents of the grid in a string, with a default of nine cells" do
+      game = Game.new
+      expect(game.format_grid).to eq("\n123\n456\n789\n")
+    end
+
+    it "returns the contents of the grid based on user input" do
+      board = Board.new(size: 2)
+      game = Game.new(board: board)
+      expect(game.format_grid).to eq("\n12\n34\n")
     end
   end
 end
