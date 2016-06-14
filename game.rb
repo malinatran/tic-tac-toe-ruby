@@ -7,10 +7,10 @@ module TicTacToe
   class Game
     attr_reader :board, :computer_player, :human_player, :map, :board_size_option, :marker_option
 
-    def initialize(board, computer_player, human_player)
-      @board = board                      || TicTacToe::Board.new
-      @computer_player = computer_player  || TicTacToe::ComputerPlayer.new
-      @human_player = human_player        || TicTacToe::HumanPlayer.new
+    def initialize(params = {})
+      @board = params[:board]                      || TicTacToe::Board.new
+      @computer_player = params[:computer_player]  || TicTacToe::ComputerPlayer.new
+      @human_player = params[:human_player]        || TicTacToe::HumanPlayer.new
       @map = create_grid_mapping(board.size)
     end
 
@@ -46,6 +46,5 @@ module TicTacToe
       ensure
       end
     end
-
   end
 end
