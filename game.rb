@@ -4,8 +4,10 @@ require "./human_player"
 
 module TicTacToe
 
+  PROMPT = "> "
+
   class Game
-    attr_reader :board, :computer_player, :human_player, :mapped_grid, :current_player
+    attr_reader :board, :computer_player, :human_player, :mapped_grid, :current_player, :opponent_player
 
     def initialize(params = {})
       @board = params[:board]                      || TicTacToe::Board.new
@@ -16,6 +18,8 @@ module TicTacToe
 
     def select_random_player
       @current_player = [computer_player, human_player].sample
+      not_current_player = [computer_player, human_player] - [current_player]
+      @opponent_player = not_current_player[0]
     end
 
     def switch_player
@@ -52,10 +56,14 @@ module TicTacToe
       return formatted_grid
     end
 
-    def draw_grid(formatted_grid)
-      print formatted_grid.split("").join(" | ")
+    def is_game_over?
+      if board.is_grid_filled?
+        true
+      else
+        false
+      end
     end
-    
+
     def pick_cell(x, y, marker)
       begin
         board.set_cell(x, y, marker)

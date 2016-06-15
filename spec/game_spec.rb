@@ -4,6 +4,9 @@ require "./game"
 module TicTacToe
   describe TicTacToe::Game do
     let(:game) { Game.new }
+    before :each do
+      srand(1)
+    end
 
     context "#initialize" do
       it "initializes the game with default values" do
@@ -45,8 +48,9 @@ module TicTacToe
   context "#select_random_player" do
     it "selects one of the players" do
       game = Game.new
-      srand(1)
-      expect(game.select_random_player).to eq(game.current_player)
+      game.select_random_player
+      expect(game.current_player).to_not eq(game.opponent_player)
+      expect(game.opponent_player).to_not eq(game.current_player)
     end
   end
 
@@ -69,15 +73,35 @@ module TicTacToe
   end
 
   context "#format_grid" do
-    it "returns the contents of the grid in a string, with a default of nine cells" do
+    it "returns the numerical value of a grid's cells in a string, with a default of nine cells" do
       game = Game.new
       expect(game.format_grid).to eq("\n123\n456\n789\n")
     end
 
-    it "returns the contents of the grid based on user input" do
+    it "returns the numerical value of a grid's cell based on user input" do
       board = Board.new(size: 2)
       game = Game.new(board: board)
       expect(game.format_grid).to eq("\n12\n34\n")
+    end
+  end
+
+  context "#is_game_over?" do
+    it "returns true if there is a winner or a tie" do
+      board = Board.new(size: 2)
+      game = Game.new(board: board)
+      board.set_cell(0, 0, "X")
+      board.set_cell(0, 1, "X")
+      board.set_cell(1, 0, "O")
+      board.set_cell(1, 1, "O")
+      expect(game.is_game_over?).to eq(true)
+    end
+
+    it "returns false if the game still contains cells and there are no winners" do
+      board = Board.new
+      game = Game.new(board: board)
+      board.set_cell(0, 0, "X")
+      board.set_cell(1, 1, "O")
+      expect(game.is_game_over?).to eq(false)
     end
   end
 end
