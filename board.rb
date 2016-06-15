@@ -44,9 +44,9 @@ module TicTacToe
       grid[x][y]
     end
 
-    def set_cell(x, y, identity)
+    def set_cell(x, y, marker)
       if grid[x][y].nil?
-        grid[x][y] = identity
+        grid[x][y] = marker
       else 
         raise CellIsFilledError, "Cell already has a value."
       end
@@ -65,33 +65,37 @@ module TicTacToe
       end
     end
 
-    def is_row_filled?(x, identity)
+    def is_row_filled?(x, marker)
       self.grid[x].each do |cell|
-        if cell != identity
+        if cell != marker
           return false
         end
       end
       true
     end
 
-    def is_column_filled?(y, identity)
+    def is_column_filled?(y, marker)
       self.grid.each do |cell|
-        if cell[y] != identity
+        if cell[y] != marker
           return false
         end
       end
       true
     end
 
-    def is_either_diagonal_filled?(identity)
-      is_forward_diagonal_filled?(identity) || is_backward_diagonal_filled?(identity)
+    def is_either_diagonal_filled?(marker)
+      is_forward_diagonal_filled?(marker) || is_backward_diagonal_filled?(marker)
+    end
+    
+    def is_anything_filled?(x, y, marker)
+      is_row_filled?(x, marker) || is_column_filled?(y, marker) || is_either_diagonal_filled?(marker)
     end
 
-    def is_forward_diagonal_filled?(identity)
+    def is_forward_diagonal_filled?(marker)
       i = 0
       size = self.get_size
       while i < size
-        if self.grid[i][size-1-i] != identity
+        if self.grid[i][size-1-i] != marker
           return false
         end
         i += 1
@@ -99,10 +103,10 @@ module TicTacToe
       true
     end
 
-    def is_backward_diagonal_filled?(identity)
+    def is_backward_diagonal_filled?(marker)
       i = 0
       while i < self.get_size
-        if self.grid[i][i] != identity
+        if self.grid[i][i] != marker
           return false
         end
         i += 1

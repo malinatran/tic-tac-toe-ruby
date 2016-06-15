@@ -1,3 +1,4 @@
+require "pry"
 require "./player"
 require "./board"
 
@@ -16,6 +17,21 @@ module TicTacToe
     def default_marker
       MARKERS[0]
     end
+    
+    def request_move
+      moves = [self.get_center_move,
+               self.get_winning_move(marker),
+               self.get_corner_move,
+               self.get_random_move]
+      i = 0
+      move = [] 
+      while move.length == 0 do
+        if moves[i] != nil
+          return moves[i]
+        end
+        i += 1
+      end
+    end
 
     def get_center_move
       size = board.get_size
@@ -27,7 +43,7 @@ module TicTacToe
           move
         end
       else
-        raise NoCenterCellError, "Center cell does not exist due to board's size."
+        nil
       end
     end
 
@@ -37,9 +53,7 @@ module TicTacToe
         x = coordinates[:x].to_i
         y = coordinates[:y].to_i
         board.set_cell(x, y, marker)
-        if board.is_row_filled?(x, marker) || 
-          board.is_column_filled?(y, marker) || 
-          board.is_either_diagonal_filled?(marker)
+        if board.is_anything_filled?(x, y, marker) 
           board.clear_cell(x, y)
           move = {x: x, y: y}
           return move 
@@ -47,6 +61,7 @@ module TicTacToe
           board.clear_cell(x, y)
         end
       end
+      nil
     end
 
     def get_corner_move

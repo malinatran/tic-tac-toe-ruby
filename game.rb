@@ -122,8 +122,3 @@ module TicTacToe
     end
   end
 end
-
- # game = TicTacToe::Game.new
- # game.solicit_board_size
- # game.solicit_marker
- # game.format_grid

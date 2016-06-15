@@ -3,7 +3,7 @@ module TicTacToe
   MARKERS = ["X", "O"]
 
   class Player
-    attr_reader :identity
+    attr_reader :marker
 
     def initialize(params = {})
       @marker = params.fetch(:marker, default_marker)
