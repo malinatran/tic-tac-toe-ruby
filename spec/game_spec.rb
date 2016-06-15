@@ -3,6 +3,8 @@ require "./game"
 
 module TicTacToe
   describe TicTacToe::Game do
+    let(:game) { Game.new }
+
     context "#initialize" do
       it "initializes the game with default values" do
         game = Game.new(board: Board.new, computer_player: ComputerPlayer.new, human_player: HumanPlayer.new)
@@ -12,9 +14,12 @@ module TicTacToe
       end
 
       it "initializes the game without arguments" do
-        game = Game.new
         expect(game.board).to_not eq(nil)
         expect(game.board.size).to eq(3)
+        expect(game.computer_player).to_not eq(nil)
+        expect(game.computer_player.marker).to eq("X")
+        expect(game.human_player).to_not eq(nil)
+        expect(game.human_player.marker).to eq("O")
       end
 
       it "initializes the game with values provided by user input" do
@@ -28,28 +33,29 @@ module TicTacToe
       end
 
       it "produces a mapped grid with first value always being at [0, 0]" do
-        game = Game.new
         expect(game.mapped_grid[1]).to eq([0, 0])
       end
 
       it "produces a mapped grid enumerated from left to right, top to bottom" do
-        game = Game.new
         expect(game.mapped_grid[5]).to eq([1, 1])
       end
     end
   end
 
-  context "#current_player" do
-    it "returns the current player" do
+  context "#select_random_player" do
+    it "selects one of the players" do
       game = Game.new
-      expect(game.current_player).to eq(game.computer_player)
+      srand(1)
+      expect(game.select_random_player).to eq(game.current_player)
     end
   end
 
   context "#switch_player" do
     it "returns the other player who was previously not the current player" do
       game = Game.new
-      expect(game.switch_player).to eq(game.human_player)
+      game.select_random_player
+      first_player = game.current_player 
+      expect(game.switch_player).to_not eq(first_player)
     end
   end
 

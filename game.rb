@@ -5,7 +5,7 @@ require "./human_player"
 module TicTacToe
 
   class Game
-    attr_reader :board, :computer_player, :human_player, :mapped_grid, :board_size_selection, :marker_selection
+    attr_reader :board, :computer_player, :human_player, :mapped_grid, :current_player
 
     def initialize(params = {})
       @board = params[:board]                      || TicTacToe::Board.new
@@ -14,64 +14,8 @@ module TicTacToe
       @mapped_grid = create_grid_mapping(board.size)
     end
 
-    def solicit_board_size
-      prompt = "> "
-      puts "Welcome to tic-tac-toe!\nDo you want to enter a custom board size? (Y or N)\n"
-      print prompt
-
-      while response = gets.chomp  
-        case response
-        when "Y"
-          self.select_board_size
-          break
-        when "N"
-          puts "Your board size is 3x3."
-          break
-        else
-          puts "Please enter Y or N."
-          print prompt
-        end
-      end
-    end
-
-    def select_board_size
-      prompt = "> "
-      puts "Please enter your board size:"
-      print prompt
-      @board_size_selection = gets.chomp.to_i
-      puts "Your board size is: #{board_size_selection}x#{board_size_selection}."
-    end
-
-    def solicit_marker
-      prompt = "> "
-      puts "Do you want to enter your own marker? (Y or N)\n"
-      print prompt
-
-      while response = gets.chomp
-        case response
-        when "Y" 
-          self.select_marker
-          break
-        when "N"
-          puts "Your marker is 'O'."
-          break
-        else
-          puts "Please enter Y or N."
-          print prompt
-        end
-      end
-    end
-
-    def select_marker
-      prompt = "> "
-      puts "Please enter your marker:"
-      print prompt
-      @marker_selection = gets.chomp.to_s
-      puts "Your marker is: #{marker_selection}."
-    end
-
-    def current_player
-      computer_player
+    def select_random_player
+      @current_player = [computer_player, human_player].sample
     end
 
     def switch_player
