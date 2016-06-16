@@ -13,13 +13,14 @@ module TicTacToe
       @board = params[:board]                      || TicTacToe::Board.new
       @computer_player = params[:computer_player]  || TicTacToe::ComputerPlayer.new
       @human_player = params[:human_player]        || TicTacToe::HumanPlayer.new
-      @mapped_grid = create_grid_mapping(board.size)
     end
 
     def select_random_player
       @current_player = [computer_player, human_player].sample
+      puts @current_player
       not_current_player = [computer_player, human_player] - [current_player]
       @opponent_player = not_current_player[0]
+      puts @opponent_player
     end
 
     def switch_player
@@ -32,25 +33,31 @@ module TicTacToe
 
     def create_grid_mapping(size)
       i = 1
-      mapped_grid = {}
+      @mapped_grid = {}
       size.times do |x|
         size.times do |y|
-          mapped_grid[i] = [x, y] 
+          @mapped_grid[i] = [x, y] 
           i += 1
         end
       end
-      mapped_grid
+      @mapped_grid
     end
 
-    def format_grid 
+    def format_grid(size)
       formatted_grid = ""
-      mapped_grid.each do |k, v|
-        if k == 1
-          formatted_grid << "\n#{k}"
-        elsif k % board.size == 0
-          formatted_grid << "#{k}\n"
-        else
+      @mapped_grid.each do |k, v|
+        if k == @mapped_grid.keys.last && k.to_s.length == 1
+          formatted_grid << "0#{k}"
+        elsif k == @mapped_grid.keys.last && k.to_s.length > 1
           formatted_grid << "#{k}"
+        elsif k % size == 0 && k.to_s.length == 1
+          formatted_grid << "0#{k}\n"
+        elsif k % size == 0 && k.to_s.length > 1
+          formatted_grid << "#{k}\n"
+        elsif k.to_s.length == 1
+          formatted_grid << "0#{k},"
+        else
+          formatted_grid << "#{k},"
         end
       end
       return formatted_grid

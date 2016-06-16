@@ -3,92 +3,103 @@ require "./game"
 module TicTacToe
 
   class Play
-    attr_reader :game, :current_player, :opponent_player, :board_size_selection, :marker_selection
-    attr_accessor :formatted_grid
+    attr_reader :game
+    attr_accessor :board_size_selection, :marker_selection
 
     def initialize
       @game = Game.new
-      @formatted_grid = @game.format_grid
     end
 
     def solicit_user_input
-      self.solicit_board_size
-      self.solicit_marker
+      self.display_options
     end
 
-    def start_game(game)
-      self.draw_grid
-      self.announce_current_player(game)
-    end
 
-    def solicit_board_size
-      puts "Welcome to tic-tac-toe!\nDo you want to enter a custom board size? (Y or N)\n"
+    def display_options
+      puts "Welcome to tic-tac-toe!"
+      main_options = "Enter 1, 2, 3, or 4 to continue:
+      (1) Change board size
+      (2) Change marker
+      (3) Proceed to game with a #{@board_size_selection || 3}x#{@board_size_selection || 3} board and #{@marker_selection || 'O'} as your marker
+      (4) Exit"
+      puts main_options
       print PROMPT
 
-      while response = gets.chomp  
+      while response = gets.chomp
         case response
-        when "Y"
+        when "1"
           self.select_board_size
           break
-        when "N"
-          puts "Your board size is 3x3."
+        when "2"
+          self.select_marker
           break
-        else
-          puts "Please enter Y or N."
+        when "3" 
+          self.draw_grid
+          self.request_moves
+          break
+        when "4"
+          puts "Adios!"
+          break
+        else 
+          puts main_options
           print PROMPT
         end
       end
     end
 
     def select_board_size
-      puts "Please enter your board size:"
+      board_size_option = "Please enter a board size between 2 to 10:"
+      puts board_size_option
       print PROMPT
-      @board_size_selection = gets.chomp.to_i
-      puts "Your board size is: #{board_size_selection}x#{board_size_selection}."
-    end
+      response = gets.chomp.to_i
 
-    def solicit_marker
-      puts "Do you want to enter your own marker? (Y or N)\n"
-      print PROMPT
-
-      while response = gets.chomp
-        case response
-        when "Y" 
-          self.select_marker
-          break
-        when "N"
-          puts "Your marker is 'O'."
+      while true do
+        if response <= 10 
+          @board_size_selection = response
+          puts "Your board size is: #{@board_size_selection}x#{@board_size_selection}.\n\n"
+          self.display_options
           break
         else
-          puts "Please enter Y or N."
+          puts board_size_selection
+          puts board_size_option
           print PROMPT
+          response = gets.chomp.to_i
         end
       end
     end
 
     def select_marker
-      puts "Please enter your marker:"
+      marker_option = "Please enter a marker that is a single letter or digit that is not 'X':"
+      puts marker_option
       print PROMPT
-      @marker_selection = gets.chomp.to_s
-      puts "Your marker is: #{marker_selection}."
+      response = gets.chomp.upcase
+
+      while true do
+        if response.length == 1 && response != "X" && response.match(/[a-zA-Z]/)
+          @marker_selection = response 
+          puts "Your marker is: #{@marker_selection}.\n\n"
+          self.display_options
+          break
+        else 
+          puts marker_option
+          print PROMPT
+          response = gets.chomp.upcase
+        end
+      end
     end
 
     def draw_grid
-      print formatted_grid.split("").join(" | ")
+      @game.create_grid_mapping(@board_size_selection || 3)
+      print @game.format_grid(@board_size_selection || 3).split(",").join(" | ")
       print "\n"
     end
 
-    def announce_current_player(game)
-      game.select_random_player
-      puts "Opponent player: #{game.opponent_player}"
-      puts "Current player: #{game.current_player}"
-    end
-
     def request_moves
-      if current_player = game.computer_player
-        game.computer_player.request_move
+      @game.select_random_player
+      if @game.current_player == @game.computer_player
+        @game.computer_player.request_move(board: @game.board, size: @board_size_selection, marker: MARKERS[0])
       else
-        puts "Enter the number of your move:"
+        puts "Enter your move:"
         print PROMPT
         move = gets.chomp
       end
@@ -98,4 +109,3 @@ end
 
 play = TicTacToe::Play.new
 play.solicit_user_input
-play.start_game(play.game)
