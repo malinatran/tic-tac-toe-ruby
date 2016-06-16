@@ -1,27 +1,30 @@
+require "pry"
 require "./player"
 require "./board"
 
 module TicTacToe
 
   class ComputerPlayer < Player
-    attr_reader :marker, :board
+    attr_reader :marker, :size, :board
 
-    # def post_initialize(params)
+     def post_initialize(params)
       # @board = params[:board]
-    # end
+    end
     
-    # def default_marker
+    def default_marker
       # MARKERS[0]
-    # end
+    end
     
     def request_move(params)
       @board = params[:board]
       @size = params[:size] || 3
       @marker = params[:marker]
-      moves = [self.get_center_move(@size),
-               self.get_winning_move(@marker),
-               self.get_corner_move,
-               self.get_random_move]
+      moves = [
+        self.get_center_move,
+        self.get_winning_move,
+        self.get_corner_move,
+        self.get_random_move
+      ]
       i = 0
       move = [] 
       while move.length == 0 do
@@ -32,10 +35,10 @@ module TicTacToe
       end
     end
 
-    def get_center_move(size)
+    def get_center_move
       move = {}
-      if size % 2 != 0
-        center = size / 2
+      if @size % 2 != 0
+        center = @size / 2
         move[:x] = move[:y] = center
         if @board.is_cell_empty?(move[:x], move[:y])
           move
@@ -45,13 +48,13 @@ module TicTacToe
       end
     end
 
-    def get_winning_move(marker)
+    def get_winning_move
       empty_cells = @board.get_empty_cells
       empty_cells.each do |coordinates| 
-        x = coordinates[:x].to_i
-        y = coordinates[:y].to_i
-        @board.set_cell(x, y, marker)
-        if @board.is_anything_filled?(x, y, marker) 
+        @board.set_cell(coordinates, marker)
+        x = coordinates[:x]
+        y = coordinates[:y]
+        if @board.is_anything_filled?(x, y, @marker) 
           @board.clear_cell(x, y)
           move = {x: x, y: y}
           return move 
@@ -85,3 +88,7 @@ module TicTacToe
     end
   end
 end
+
+board = TicTacToe::Board.new
+comp_player = TicTacToe::ComputerPlayer.new
+comp_player.request_move(board: board, size: 3, marker: "X")

@@ -17,23 +17,23 @@ module TicTacToe
 
     def select_random_player
       @current_player = [computer_player, human_player].sample
-      puts @current_player
       not_current_player = [computer_player, human_player] - [current_player]
       @opponent_player = not_current_player[0]
-      puts @opponent_player
     end
 
     def switch_player
-      if current_player == computer_player
-        current_player = human_player
+      if @current_player == computer_player
+        @current_player = human_player
       else
-        current_player = computer_player
+        @current_player = computer_player
       end
     end
 
-    def create_grid_mapping(size)
+    def create_grid_mapping(size=nil)
       i = 1
-      @mapped_grid = {}
+      if @mapped_grid.nil?
+        @mapped_grid = {}
+      end
       size.times do |x|
         size.times do |y|
           @mapped_grid[i] = [x, y] 
@@ -63,8 +63,15 @@ module TicTacToe
       return formatted_grid
     end
 
+    def set_cell(move, marker)
+      coordinates = move[:x], move[:y]
+      cell_number = @mapped_grid.key(coordinates)
+      @mapped_grid[marker] = @mapped_grid.delete(cell_number)
+      @board.set_cell(move, marker)
+    end
+
     def is_game_over?
-      if board.is_grid_filled?
+      if @board.is_grid_filled?
         true
       else
         false

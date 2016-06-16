@@ -44,9 +44,11 @@ module TicTacToe
       grid[x][y]
     end
 
-    def set_cell(x, y, marker)
-      if grid[x][y].nil?
-        grid[x][y] = marker
+    def set_cell(move, marker)
+      x = move[:x]
+      y = move[:y]
+      if @grid[x][y].nil?
+        @grid[x][y] = marker
       else 
         raise CellIsFilledError, "Cell already has a value."
       end
@@ -116,3 +118,6 @@ module TicTacToe
 
   end
 end
+
+board = TicTacToe::Board.new
+board.set_cell({x: 1, y: 1}, 'X')

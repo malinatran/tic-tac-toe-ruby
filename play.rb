@@ -10,17 +10,28 @@ module TicTacToe
       @game = Game.new
     end
 
-    def solicit_user_input
-      self.display_options
+    def start_game
+      @game.select_random_player
+      self.draw_grid
+      
+      while true do
+        if @game.is_game_over? == false
+          self.request_moves
+          self.draw_grid
+          @game.switch_player
+        else
+          self.declare_winner
+          break
+        end
+      end
     end
 
-
-    def display_options
+    def display_menu_options
       puts "Welcome to tic-tac-toe!"
       main_options = "Enter 1, 2, 3, or 4 to continue:
       (1) Change board size
       (2) Change marker
-      (3) Proceed to game with a #{@board_size_selection || 3}x#{@board_size_selection || 3} board and #{@marker_selection || 'O'} as your marker
+      (3) Proceed to game with a #{@board_size_selection || 3}x#{@board_size_selection || 3} board and #{@marker_selection || MARKERS[1]} as your marker
       (4) Exit"
       puts main_options
       print PROMPT
@@ -34,15 +45,10 @@ module TicTacToe
           self.select_marker
           break
         when "3" 
-          self.draw_grid
-          self.request_moves
           break
         when "4"
           puts "Adios!"
           break
-        else 
-          puts main_options
-          print PROMPT
         end
       end
     end
@@ -54,13 +60,12 @@ module TicTacToe
       response = gets.chomp.to_i
 
       while true do
-        if response <= 10 
+        if response <= 10 && response > 1
           @board_size_selection = response
           puts "Your board size is: #{@board_size_selection}x#{@board_size_selection}.\n\n"
-          self.display_options
+          self.display_menu_options
           break
         else
-          puts board_size_selection
           puts board_size_option
           print PROMPT
           response = gets.chomp.to_i
@@ -78,7 +83,7 @@ module TicTacToe
         if response.length == 1 && response != "X" && response.match(/[a-zA-Z]/)
           @marker_selection = response 
           puts "Your marker is: #{@marker_selection}.\n\n"
-          self.display_options
+          self.display_menu_options
           break
         else 
           puts marker_option
@@ -91,21 +96,30 @@ module TicTacToe
     def draw_grid
       @game.create_grid_mapping(@board_size_selection || 3)
       print @game.format_grid(@board_size_selection || 3).split(",").join(" | ")
-      print "\n"
+      print "\n\n"
     end
 
     def request_moves
-      @game.select_random_player
       if @game.current_player == @game.computer_player
-        @game.computer_player.request_move(board: @game.board, size: @board_size_selection, marker: MARKERS[0])
+        computer_move = @game.computer_player.request_move(board: @game.board, size: @board_size_selection, marker: MARKERS[0])
+        @game.set_cell(computer_move, MARKERS[0])
       else
         puts "Enter your move:"
         print PROMPT
-        move = gets.chomp
+        cell_number = gets.chomp.to_i
+        coordinates = @game.mapped_grid[cell_number]
+        player_move = {x: coordinates[0], y: coordinates[1]}
+        @game.set_cell(player_move, @marker_selection || MARKERS[1])
       end
+      puts @game.mapped_grid
+    end
+
+    def declare_winner
+      puts "Winner announced here"
     end
   end
 end
 
 play = TicTacToe::Play.new
-play.solicit_user_input
+play.display_menu_options
+play.start_game
