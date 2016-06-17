@@ -7,21 +7,18 @@ module TicTacToe
   class ComputerPlayer < Player
     attr_reader :marker, :size, :board
 
-     def post_initialize(params)
-      # @board = params[:board]
-    end
-    
     def default_marker
-      # MARKERS[0]
+      MARKERS[0]
     end
-    
+
     def request_move(params)
       @board = params[:board]
-      @size = params[:size] || 3
-      @marker = params[:marker]
+      @size = params[:size]
+      @opponent_marker = params[:opponent_marker]
       moves = [
         self.get_center_move,
-        self.get_winning_move,
+        self.get_winning_move(@marker),
+        self.get_winning_move(@opponent_marker),
         self.get_corner_move,
         self.get_random_move
       ]
@@ -48,13 +45,14 @@ module TicTacToe
       end
     end
 
-    def get_winning_move
+    def get_winning_move(marker)
       empty_cells = @board.get_empty_cells
       empty_cells.each do |coordinates| 
         @board.set_cell(coordinates, marker)
         x = coordinates[:x]
         y = coordinates[:y]
-        if @board.is_anything_filled?(x, y, @marker) 
+        if @board.is_row_filled?(x, marker) || 
+          @board.is_column_filled?(y, marker) || @board.is_either_diagonal_filled?(marker)
           @board.clear_cell(x, y)
           move = {x: x, y: y}
           return move 

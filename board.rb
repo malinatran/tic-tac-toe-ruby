@@ -88,10 +88,6 @@ module TicTacToe
     def is_either_diagonal_filled?(marker)
       is_forward_diagonal_filled?(marker) || is_backward_diagonal_filled?(marker)
     end
-    
-    def is_anything_filled?(x, y, marker)
-      is_row_filled?(x, marker) || is_column_filled?(y, marker) || is_either_diagonal_filled?(marker)
-    end
 
     def is_forward_diagonal_filled?(marker)
       i = 0
@@ -115,9 +111,5 @@ module TicTacToe
       end
       true
     end
-
   end
 end
-
-board = TicTacToe::Board.new
-board.set_cell({x: 1, y: 1}, 'X')

@@ -34,74 +34,75 @@ module TicTacToe
         expect(game.computer_player.marker).to eq("E")
         expect(game.human_player.marker).to eq("L")
       end
+    end
 
-      it "produces a mapped grid with first value always being at [0, 0]" do
-        expect(game.mapped_grid[1]).to eq([0, 0])
+    context "#select_random_player" do
+      it "selects one of the players" do
+        game = Game.new
+        game.select_random_player
+        expect(game.current_player).to_not eq(game.opponent_player)
+        expect(game.opponent_player).to_not eq(game.current_player)
+      end
+    end
+
+    context "#switch_player" do
+      it "returns the other player who was previously not the current player" do
+        game = Game.new
+        game.select_random_player
+        first_player = game.current_player 
+        expect(game.switch_player).to_not eq(first_player)
+      end
+    end
+
+    context "#winner" do
+      it "returns the winner's marker if there is a backward diagonal win" do
+        board = Board.new
+        game = Game.new(board: board)
+        game.select_random_player
+        board.set_cell({:x=>0, :y=>0}, "O")
+        board.set_cell({:x=>1, :y=>1}, "O")
+        board.set_cell({:x=>2, :y=>2}, "O")
+        expect(game.winner).to eq("O")
       end
 
-      it "produces a mapped grid enumerated from left to right, top to bottom" do
-        expect(game.mapped_grid[5]).to eq([1, 1])
+      it "returns the winner's marker if there is a forward diagonal win" do
+        board = Board.new
+        game = Game.new(board: board)
+        game.select_random_player
+        board.set_cell({:x=>0, :y=>2}, "X")
+        board.set_cell({:x=>1, :y=>1}, "X")
+        board.set_cell({:x=>2, :y=>0}, "X")
+        expect(game.winner).to eq("X")
       end
-    end
-  end
 
-  context "#select_random_player" do
-    it "selects one of the players" do
-      game = Game.new
-      game.select_random_player
-      expect(game.current_player).to_not eq(game.opponent_player)
-      expect(game.opponent_player).to_not eq(game.current_player)
-    end
-  end
+      it "returns the winner's marker if there is a row or horizontal win" do
+        board = Board.new
+        game = Game.new(board: board)
+        game.select_random_player
+        board.set_cell({:x=>1, :y=>0}, "X")
+        board.set_cell({:x=>1, :y=>1}, "X")
+        board.set_cell({:x=>1, :y=>2}, "X")
+        expect(game.winner).to eq("X")
+      end
 
-  context "#switch_player" do
-    it "returns the other player who was previously not the current player" do
-      game = Game.new
-      game.select_random_player
-      first_player = game.current_player 
-      expect(game.switch_player).to_not eq(first_player)
-    end
-  end
+      it "returns the winner's marker if there is a column or vertical win" do
+        board = Board.new
+        game = Game.new(board: board)
+        game.select_random_player
+        board.set_cell({:x=>0, :y=>0}, "O")
+        board.set_cell({:x=>0, :y=>1}, "O")
+        board.set_cell({:x=>0, :y=>2}, "O")
+        expect(game.winner).to eq("O")
+      end 
 
-  context "#create_grid_mapping" do
-    it "connects numerical values with positions in two-dimensional array representing the grid" do
-      board = Board.new(size: 2)
-      game = Game.new(board: board)
-      mapped_grid = {1=>[0, 0], 2=>[0, 1], 3=>[1, 0], 4=>[1, 1]}
-      expect(game.create_grid_mapping(board.size)).to eq(mapped_grid)
-    end
-  end
-
-  context "#format_grid" do
-    it "returns the numerical value of a grid's cells in a string, with a default of nine cells" do
-      game = Game.new
-      expect(game.format_grid).to eq("\n123\n456\n789\n")
-    end
-
-    it "returns the numerical value of a grid's cell based on user input" do
-      board = Board.new(size: 2)
-      game = Game.new(board: board)
-      expect(game.format_grid).to eq("\n12\n34\n")
-    end
-  end
-
-  context "#is_game_over?" do
-    it "returns true if there is a winner or a tie" do
-      board = Board.new(size: 2)
-      game = Game.new(board: board)
-      board.set_cell(0, 0, "X")
-      board.set_cell(0, 1, "X")
-      board.set_cell(1, 0, "O")
-      board.set_cell(1, 1, "O")
-      expect(game.is_game_over?).to eq(true)
-    end
-
-    it "returns false if the game still contains cells and there are no winners" do
-      board = Board.new
-      game = Game.new(board: board)
-      board.set_cell(0, 0, "X")
-      board.set_cell(1, 1, "O")
-      expect(game.is_game_over?).to eq(false)
+      it "returns nil if there is no winner" do
+        board = Board.new
+        game = Game.new(board: board)
+        game.select_random_player
+        board.set_cell({:x=>0, :y=>0}, "O")
+        board.set_cell({:x=>0, :y=>1}, "O")
+        expect(game.winner).to eq(nil)
+      end
     end
   end
 end

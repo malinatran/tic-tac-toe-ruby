@@ -1,3 +1,4 @@
+require "pry"
 require "./board"
 require "./computer_player"
 require "./human_player"
@@ -7,7 +8,7 @@ module TicTacToe
   PROMPT = "> "
 
   class Game
-    attr_reader :board, :computer_player, :human_player, :mapped_grid, :current_player, :opponent_player
+    attr_reader :board, :computer_player, :human_player, :current_player, :opponent_player
 
     def initialize(params = {})
       @board = params[:board]                      || TicTacToe::Board.new
@@ -29,62 +30,31 @@ module TicTacToe
       end
     end
 
-    def create_grid_mapping(size=nil)
-      i = 1
-      if @mapped_grid.nil?
-        @mapped_grid = {}
-      end
-      size.times do |x|
-        size.times do |y|
-          @mapped_grid[i] = [x, y] 
-          i += 1
-        end
-      end
-      @mapped_grid
-    end
-
-    def format_grid(size)
-      formatted_grid = ""
-      @mapped_grid.each do |k, v|
-        if k == @mapped_grid.keys.last && k.to_s.length == 1
-          formatted_grid << "0#{k}"
-        elsif k == @mapped_grid.keys.last && k.to_s.length > 1
-          formatted_grid << "#{k}"
-        elsif k % size == 0 && k.to_s.length == 1
-          formatted_grid << "0#{k}\n"
-        elsif k % size == 0 && k.to_s.length > 1
-          formatted_grid << "#{k}\n"
-        elsif k.to_s.length == 1
-          formatted_grid << "0#{k},"
-        else
-          formatted_grid << "#{k},"
-        end
-      end
-      return formatted_grid
-    end
-
     def set_cell(move, marker)
-      coordinates = move[:x], move[:y]
-      cell_number = @mapped_grid.key(coordinates)
-      @mapped_grid[marker] = @mapped_grid.delete(cell_number)
       @board.set_cell(move, marker)
     end
 
-    def is_game_over?
-      if @board.is_grid_filled?
-        true
-      else
-        false
+    def winner
+      if @board.is_either_diagonal_filled?(@current_player.marker)
+        return @board.get_cell(@board.size / 2, @board.size / 2)
       end
-    end
 
-    def pick_cell(x, y, marker)
-      begin
-        board.set_cell(x, y, marker)
-      rescue
-        print(marker)
-      ensure
+      if @board.is_either_diagonal_filled?(@opponent_player.marker)
+        return @board.get_cell(@board.size / 2, @board.size / 2)
       end
+
+      @board.size.times do |n|
+        if @board.is_row_filled?(n, @current_player.marker) || 
+           @board.is_column_filled?(n, @current_player.marker)
+          return @current_player.marker
+        elsif @board.is_row_filled?(n, @opponent_player.marker) || 
+              @board.is_column_filled?(n, @opponent_player.marker)
+          return @opponent_player.marker
+        end
+      end
+
+      return "tie" if @board.is_grid_filled?
+      nil
     end
   end
 end

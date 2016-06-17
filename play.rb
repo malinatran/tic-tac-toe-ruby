@@ -4,26 +4,30 @@ module TicTacToe
 
   class Play
     attr_reader :game
-    attr_accessor :board_size_selection, :marker_selection
+    attr_accessor :board_size, :marker
 
     def initialize
       @game = Game.new
+      @board_size = 3
+      @marker = MARKERS[1]
     end
 
     def start_game
       @game.select_random_player
-      self.draw_grid
-      
-      while true do
-        if @game.is_game_over? == false
-          self.request_moves
-          self.draw_grid
-          @game.switch_player
-        else
-          self.declare_winner
-          break
-        end
+      puts "Here's the board:"
+    end
+
+    def play_game
+      while !@game.winner
+        self.draw_board
+        print "\n"
+        self.request_moves
+        @game.switch_player
       end
+
+      self.draw_board
+      print "\n"
+      self.declare_winner
     end
 
     def display_menu_options
@@ -31,7 +35,7 @@ module TicTacToe
       main_options = "Enter 1, 2, 3, or 4 to continue:
       (1) Change board size
       (2) Change marker
-      (3) Proceed to game with a #{@board_size_selection || 3}x#{@board_size_selection || 3} board and #{@marker_selection || MARKERS[1]} as your marker
+      (3) Proceed to game with a #{@board_size}x#{@board_size} board and #{@marker} as your marker
       (4) Exit"
       puts main_options
       print PROMPT
@@ -45,10 +49,11 @@ module TicTacToe
           self.select_marker
           break
         when "3" 
+          self.start_game
           break
         when "4"
           puts "Adios!"
-          break
+          exit
         end
       end
     end
@@ -61,8 +66,8 @@ module TicTacToe
 
       while true do
         if response <= 10 && response > 1
-          @board_size_selection = response
-          puts "Your board size is: #{@board_size_selection}x#{@board_size_selection}.\n\n"
+          @board_size = response
+          puts "Your board size is: #{@board_size}x#{@board_size}.\n\n"
           self.display_menu_options
           break
         else
@@ -81,8 +86,8 @@ module TicTacToe
 
       while true do
         if response.length == 1 && response != "X" && response.match(/[a-zA-Z]/)
-          @marker_selection = response 
-          puts "Your marker is: #{@marker_selection}.\n\n"
+          @marker = response 
+          puts "Your marker is: #{@marker}.\n\n"
           self.display_menu_options
           break
         else 
@@ -93,33 +98,46 @@ module TicTacToe
       end
     end
 
-    def draw_grid
-      @game.create_grid_mapping(@board_size_selection || 3)
-      print @game.format_grid(@board_size_selection || 3).split(",").join(" | ")
-      print "\n\n"
+    def draw_board
+      @game.board.grid.each_with_index do |x, row|
+        x.each_with_index do |y, col|
+          print y || (row * @board_size + col + 1)
+          print " | " if @board_size - col > 1
+        end
+        print "\n"
+      end
     end
 
     def request_moves
       if @game.current_player == @game.computer_player
-        computer_move = @game.computer_player.request_move(board: @game.board, size: @board_size_selection, marker: MARKERS[0])
+        puts "Computer made a move:"
+        computer_move = @game.computer_player.request_move(board: @game.board, 
+                                                           size: @board_size, 
+                                                           opponent_marker: @marker)
         @game.set_cell(computer_move, MARKERS[0])
       else
         puts "Enter your move:"
         print PROMPT
-        cell_number = gets.chomp.to_i
-        coordinates = @game.mapped_grid[cell_number]
-        player_move = {x: coordinates[0], y: coordinates[1]}
-        @game.set_cell(player_move, @marker_selection || MARKERS[1])
+        cell_number = gets.chomp.to_i - 1
+        row = (cell_number / @board_size)
+        col = (cell_number % @board_size)
+        player_move = {x: row, y: col}
+        @game.set_cell(player_move, @marker)
       end
-      puts @game.mapped_grid
     end
 
     def declare_winner
-      puts "Winner announced here"
+      if @game.winner == "tie"
+        puts "It was a tie!"
+      elsif @game.winner == MARKERS[0]
+        puts "Computer wins!"
+      else
+        puts "Human wins!"
+      end
     end
   end
 end
 
 play = TicTacToe::Play.new
 play.display_menu_options
-play.start_game
+play.play_game
