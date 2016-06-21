@@ -1,11 +1,15 @@
 ## Tic-Tac-Toe | Ruby
 
-### Objectives
+#### Objectives
 * Build a command-line game in Ruby
 * Incorporate Minimax to create an unbeatable AI
 * Adhere to SOLID princples and incorporate TDD
 
-To run tests, run `bundle exec rspec spec`.
+#### Play
+To run the game, enter `ruby play.rb` in the root directory. A menu directory will give you the option to enter customized values for the board's size and your own marker _or_ alternatively, you may opt into default values (e.g. a board size of three and a marker of "O"). You may enter `4` to exit the program at any given time. 
+
+#### Tests
+To run tests, enter `bundle exec rspec spec`.
 
 #### Organization
 In the `lib` folder, you will find the following files and corresponding spec files in the `spec` folder:
