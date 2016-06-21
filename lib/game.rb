@@ -1,4 +1,3 @@
-require "pry"
 module TicTacToe
 
   class Game
