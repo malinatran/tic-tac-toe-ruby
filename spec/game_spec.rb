@@ -15,8 +15,8 @@ module TicTacToe
     context "#initialize" do
       it "initializes a game with a board" do
         sample_board = [[nil, nil, nil],
-                        [nil, nil, nil],
-                        [nil, nil, nil]]
+          [nil, nil, nil],
+          [nil, nil, nil]]
         expect(board.grid).to eq(sample_board)
         expect(board.size).to eq(3)
       end
@@ -47,6 +47,97 @@ module TicTacToe
         game.select_player
         first_player = game.current_player
         expect(game.switch_player).to_not eq(first_player)
+      end
+    end
+
+    context "#is_game_over?" do
+      it "should return true if there is either a winner" do
+        board.set_cell({x: 0, y: 0}, "X") 
+        board.set_cell({x: 0, y: 1}, "X") 
+        board.set_cell({x: 0, y: 2}, "X") 
+        expect(game.is_game_over?).to eq(true)
+      end
+
+      it "should return true if there is a draw" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "O")
+        board.set_cell({x: 0, y: 2}, "O")
+        board.set_cell({x: 1, y: 0}, "O")
+        board.set_cell({x: 1, y: 1}, "X")
+        board.set_cell({x: 1, y: 2}, "X")
+        board.set_cell({x: 2, y: 0}, "X")
+        board.set_cell({x: 2, y: 1}, "O")
+        board.set_cell({x: 2, y: 2}, "O")
+        expect(game.is_game_over?).to eq(true)
+      end
+
+      it "should return false if the game is still in session" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "X")
+        board.set_cell({x: 0, y: 2}, "O")
+        expect(game.is_game_over?).to eq(false)
+      end
+    end
+
+    context "#check_for_winner" do
+      it "should return the marker of the winner" do
+        board.set_cell({x: 0, y: 0}, "X") 
+        board.set_cell({x: 0, y: 1}, "X") 
+        board.set_cell({x: 0, y: 2}, "X") 
+        expect(game.check_for_winner(computer_player)).to eq("X")
+      end
+
+      it "should return nil if there is no winner" do
+        board.set_cell({x: 0, y: 2}, "X") 
+        expect(game.check_for_winner(human_player)).to eq(nil)
+      end
+    end
+
+    context "win?" do
+      it "should return true if there is a winner" do
+        board.set_cell({x: 0, y: 0}, "X") 
+        board.set_cell({x: 0, y: 1}, "X") 
+        board.set_cell({x: 0, y: 2}, "X") 
+        expect(game.win?).to eq(true)
+      end
+
+      it "should return false if there isn't a winner" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "X")
+        board.set_cell({x: 0, y: 2}, "O")
+        expect(game.win?).to eq(false)
+      end
+    end
+
+    context "#draw?" do
+      it "should return true if the board is filled and there is no winner" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "O")
+        board.set_cell({x: 0, y: 2}, "O")
+        board.set_cell({x: 1, y: 0}, "O")
+        board.set_cell({x: 1, y: 1}, "X")
+        board.set_cell({x: 1, y: 2}, "X")
+        board.set_cell({x: 2, y: 0}, "X")
+        board.set_cell({x: 2, y: 1}, "O")
+        board.set_cell({x: 2, y: 2}, "O")
+        expect(game.draw?).to eq(true)
+      end
+
+      it "should return false if there isn't a tie yet" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "X")
+        board.set_cell({x: 0, y: 2}, "O")
+        expect(game.draw?).to eq(false)
+      end
+
+      it "should return false if there is a winner" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "X")
+        board.set_cell({x: 0, y: 2}, "X")
+        board.set_cell({x: 1, y: 0}, "O")
+        board.set_cell({x: 2, y: 0}, "O")
+        board.set_cell({x: 2, y: 2}, "O")
+        expect(game.draw?).to eq(false)
       end
     end
   end
