@@ -33,18 +33,46 @@ module TicTacToe
     end
 
     context "#display_menu" do
-      it "should receive a valid menu option as user input" do
-        input.string = "3"
-        expect(user_interface.display_menu).to eq("3")
+      it "should call methods to display message and allow user input" do
+        expect(user_interface).to receive(:display).with(any_args)
+        expect(user_interface).to receive(:select_menu)
+        user_interface.display_menu
       end
     end
 
-    context "#display_board" do
-      it "should render the board at each game state" do
-        grid = [[nil, nil, nil],
-                [nil, nil, nil],
-                [nil, nil, nil]]
-        expect(user_interface.display_board).to eq(grid)
+    context "#select_menu" do
+      it "should call a method when user inputs correct value" do
+        input.string = "3"
+        expect(user_interface).to receive(:start_game)
+        user_interface.select_menu
+      end
+    end
+    
+    context "#display_size_options" do
+      it "should call methods to display message and allow user input to select board size" do
+        expect(user_interface).to receive(:display).with(any_args)
+        expect(user_interface).to receive(:select_size)
+        user_interface.display_size_options
+      end
+    end
+
+    context "#display_marker_options" do
+      it "should call methods to display message and allow user input to select marker" do
+        expect(user_interface).to receive(:display).with(any_args)
+        expect(user_interface).to receive(:select_marker)
+        user_interface.display_marker_options
+      end
+    end
+
+    context "#start_game" do
+      it "should select and announce a player as current player" do
+      end
+    end
+
+    context "#draw_board" do
+      it "should render the board with each cell's numerical value" do
+        board = "1 | 2 | 3\n4 | 5 | 6\n7 | 8 | 9\n"
+        expect(user_interface.draw_board).to eq(board)
       end
     end
   end
