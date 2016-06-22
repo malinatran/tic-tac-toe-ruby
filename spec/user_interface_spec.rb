@@ -1,6 +1,7 @@
 require_relative "spec_helper"
 require_relative "../lib/game"
 require_relative "../lib/computer_player"
+require_relative "../lib/human_player"
 require_relative "../lib/user_interface"
 
 module TicTacToe
@@ -9,7 +10,8 @@ module TicTacToe
     let(:input) { StringIO.new }
     let(:output) { StringIO.new }
     let(:board) { Board.new }
-    let(:user_interface) { UserInterface.new(input, output, board) }
+    let(:human_player) { HumanPlayer.new }
+    let(:user_interface) { UserInterface.new(board: board, human_player: human_player, input: input, output: output) }
 
     context "#get_input" do
       it "should receive user input" do 

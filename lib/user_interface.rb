@@ -5,11 +5,11 @@ module TicTacToe
   class UserInterface
     attr_accessor :input, :output
 
-    def initialize(input = STDIN, output = STDOUT, board)
-      @input = input
-      @output = output
-      @board = board || TicTacToe::Board.new
-      @marker = "O"
+    def initialize(params)
+      @input = params[:input] || STDIN
+      @output = params[:output] || STDOUT
+      @board = params[:board]
+      @marker = params[:human_player].marker
       @size = @board.size 
     end
 
