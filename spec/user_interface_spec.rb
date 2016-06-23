@@ -9,14 +9,6 @@ module TicTacToe
     let(:output) { StringIO.new }
     let(:user_interface) { UserInterface.new(input, output) }
 
-    context "#get_input" do
-      it "should receive user input" do
-        example = "testing"
-        input.string = example
-        expect(user_interface.get_input).to eq("testing")
-      end
-    end
-
     context "#display_menu" do
       it "should call methods to display message and allow user input" do
         size = 3
@@ -57,18 +49,6 @@ module TicTacToe
       end
     end
 
-    context "#is_size_valid?" do
-      it "should return true if size is valid" do
-        size = 3
-        expect(user_interface.is_size_valid?(size)).to eq(true)
-      end
-
-      it "should return false if size is invalid" do
-        size = 1000
-        expect(user_interface.is_size_valid?(size)).to eq(false)
-      end
-    end
-
     context "#display_marker_options" do
       it "should call methods to display message and allow user input to select marker" do
         expect(user_interface).to receive(:display).with(any_args)
@@ -88,18 +68,6 @@ module TicTacToe
         marker = "O"
         allow(user_interface).to receive(:is_marker_valid?).and_return(true)
         allow(user_interface).to receive(:select_marker).and_return(marker)
-      end
-    end
-
-    context "#is_marker_valid?" do
-      it "should return true if marker is valid" do
-        marker = "G"
-        expect(user_interface.is_marker_valid?(marker)).to eq(true)
-      end
-
-      it "should return false if marker is the same as computer marker and therefore invalid" do
-        marker = "X"
-        expect(user_interface.is_marker_valid?(marker)).to eq(false)
       end
     end
 
@@ -139,20 +107,6 @@ module TicTacToe
         move = 4
         allow(user_interface).to receive(:is_move_valid?).and_return(true)
         allow(user_interface).to receive(:select_move).and_return(move)
-      end
-    end
-
-    context "#is_move_valid?" do
-      it "should return true if move is valid" do
-        move = 1
-        size = 3
-        expect(user_interface.is_move_valid?(move, size)).to eq(true)
-      end
-
-      it "should return false if move is invalid" do
-        move = 10
-        size = 3
-        expect(user_interface.is_move_valid?(move, size)).to eq(false)
       end
     end
   end

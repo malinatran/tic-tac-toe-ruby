@@ -10,18 +10,14 @@ module TicTacToe
       @output = output
     end
 
-    def get_input
-      @input.gets
-    end
 
     def display_menu(size, marker)
-      welcome_message = "Welcome to tic-tac-toe!"
       @menu_option = "Enter 1, 2, 3, or 4 to continue:
       (1) Change board size
       (2) Change marker
       (3) Proceed to game with with a #{size}x#{size} board and #{marker} as your marker
       (4) Exit"
-      display(welcome_message, NEW_LINE, @menu_option, NEW_LINE, PROMPT)
+      display(default_messages[:welcome], NEW_LINE, @menu_option, NEW_LINE, PROMPT)
       select_menu
     end
 
@@ -53,7 +49,7 @@ module TicTacToe
     end
 
     def display_size_options
-      display(size_message, NEW_LINE, PROMPT)
+      display(default_messages[:size], NEW_LINE, PROMPT)
       select_size
     end
 
@@ -68,13 +64,8 @@ module TicTacToe
       end
     end
 
-    def is_size_valid?(size)
-      size = size.to_i
-      size <= 9 && size > 1 ? true : false 
-    end
-
     def display_marker_options
-      display(marker_message, NEW_LINE, PROMPT)
+      display(default_messages[:marker], NEW_LINE, PROMPT)
       select_marker
     end
 
@@ -89,16 +80,12 @@ module TicTacToe
       end
     end
 
-    def is_marker_valid?(marker)
-      marker != "X" && marker.length == 1 ? true : false
-    end
-
     def display_board(board)
-      display(board_message, NEW_LINE, draw_board(board))
+      display(default_messages[:board], NEW_LINE, draw_board(board))
     end
 
     def display_move_request(size)
-      display(move_message, NEW_LINE, PROMPT)
+      display(default_messages[:move], NEW_LINE, PROMPT)
       select_move(size)
     end
 
@@ -112,13 +99,11 @@ module TicTacToe
       end
     end
 
-    def is_move_valid?(move, size)
-      move = move.to_i
-      cell_nums = size * size
-      move <= cell_nums && move > 0 ? true : false
-    end
-
     private
+
+    def get_input
+      @input.gets
+    end
 
     def display(*messages)
       messages.each do |message|
@@ -126,20 +111,27 @@ module TicTacToe
       end
     end
 
-    def size_message
-      "Enter a board size:"
+    def default_messages
+      { welcome:  "Welcome to tic-tac-toe!",
+        size:     "Enter a board size:",
+        marker:   "Enter a marker:",
+        board:    "The board:",
+        move:     "Enter your move:" }
     end
 
-    def marker_message
-      "Enter a marker:" 
+    def is_size_valid?(size)
+      size = size.to_i
+      size <= 9 && size > 1 ? true : false 
     end
 
-    def board_message
-      "The board:"
+    def is_marker_valid?(marker)
+      marker != "X" && marker.length == 1 ? true : false
     end
 
-    def move_message
-      "Enter your move:"
+    def is_move_valid?(move, size)
+      move = move.to_i
+      cell_nums = size * size
+      move <= cell_nums && move > 0 ? true : false
     end
 
     def draw_board(board)
