@@ -11,6 +11,10 @@ module TicTacToe
       @players = [@computer_player, @human_player]
     end
 
+    def select_player
+      @current_player = @players.sample
+    end
+
     def switch_player
       @current_player == @computer_player ? @current_player = @human_player :
                                             @current_player = @computer_player
@@ -42,12 +46,19 @@ module TicTacToe
 
     def request_move
       @user_interface.display_board(@board)
-      if @current_player == @computer_player
-        @computer_player.request_move(@board, @human_player.marker)
+
+      if is_computer_the_current_player? 
+        request_computer_move
+      else
+        request_human_move
       end
     end
+    
+    def request_computer_move
+      @computer_player.request_move(@board, @human_player.marker)
+    end
   
-    def return_human_move
+    def request_human_move
       @user_interface.request_move(@board.size)
     end
 
@@ -66,13 +77,13 @@ module TicTacToe
       @board.is_grid_filled? && win? == false
     end
 
-    def select_player
-      @current_player = @players.sample
-    end
-
     def play_game
       switch_player
       request_move
+    end
+
+    def is_computer_the_current_player?
+      @current_player == @computer_player
     end
   end
 end

@@ -88,7 +88,7 @@ module TicTacToe
     end
 
     def select_move(size)
-      move = get_input
+      move = gets.chomp
 
       # while true do
         get_valid_move(move, size)
