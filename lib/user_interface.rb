@@ -1,44 +1,27 @@
-require_relative "game"
-
-module TicTacToe
-
-  class UserInterface
+module TicTacToe 
+  class UserInterface 
     attr_accessor :input, :output
 
-    def initialize(params)
-      @input = params[:input] || STDIN
-      @output = params[:output] || STDOUT
-      @board = params[:board]
-      @marker = params[:human_player].marker
-      @size = @board.size 
+    NEW_LINE = "\n"
+    PROMPT = "> "
+
+    def initialize(input = STDIN, output = STDOUT)
+      @input = input 
+      @output = output
     end
 
     def get_input
       @input.gets.chomp
     end
-  
-    def line_break
-      "\n"
-    end
 
-    def prompt
-      "> "
-    end
-
-    def display(*messages)
-      messages.each do |message|
-        output.print message
-      end
-    end
-
-    def display_menu
+    def display_menu(size, marker)
       welcome_message = "Welcome to tic-tac-toe!"
       @menu_option = "Enter 1, 2, 3, or 4 to continue:
       (1) Change board size
       (2) Change marker
-      (3) Proceed to game with with a #{@size}x#{@size} board and #{@marker} as your marker
+      (3) Proceed to game with with a #{size}x#{size} board and #{marker} as your marker
       (4) Exit"
-      display(welcome_message, line_break, @menu_option, line_break, prompt)
+      display(welcome_message, NEW_LINE, @menu_option, NEW_LINE, PROMPT)
       select_menu
     end
     
@@ -65,66 +48,123 @@ module TicTacToe
       end
     end
 
+    def start_game
+      # this should direct to Game
+    end
+
     def display_size_options
-      @size_message = "Enter a board size:"
-      display(@size_message, line_break, prompt)
+      display(size_message, NEW_LINE, PROMPT)
       select_size
     end
 
     def select_size
-      size = get_input.to_i
-    
-      while true do
-        if size.match(/[0-9]/)
-          @size = size
-          display("Your board is: #{@size}x#{@size}.")
-          display_menu
-          break
-        else
-          display(@size_message, line_break, prompt)
-        end
-      end
+      size = get_input
+
+      # while true do 
+        get_valid_size(size)
+      # end
     end
 
     def display_marker_options
-      @marker_message = "Enter a marker:"
-      display(@marker_message, line_break, prompt)
+      display(marker_message, NEW_LINE, PROMPT)
       select_marker
     end
 
     def select_marker
-      marker = get_input.capitalize
+      marker = get_input
 
-      while true do
-        if marker.match(/[a-zA-Z]/) && marker != "X"
-          @marker = marker[0]
-          display("Your marker is: #{@marker}.")
-          display_menu
-          break
-        else
-          display(@marker_message, line_break, prompt)
-        end
+      # while true do
+        get_valid_marker(marker)
+      # end
+    end
+
+    def display_board(board)
+      display(board_message, NEW_LINE, draw_board(board))
+    end
+
+    def request_move(size)
+      display(move_message, NEW_LINE, PROMPT)
+      select_move(size)
+    end
+
+    def select_move(size)
+      move = get_input
+
+      # while true do
+        get_valid_move(move, size)
+      # end
+    end
+
+    private
+
+    def display(*messages)
+      messages.each do |message|
+        output.print message
       end
     end
 
-    def start_game
-      # game.select_player
-      # announce player
-      # draw board
+    def size_message
+      "Enter a board size:"
+    end
+    
+    def marker_message
+      "Enter a marker:" 
     end
 
-    def draw_board
+    def board_message
+      "The board:"
+    end
+
+    def move_message
+      "Enter your move:"
+    end
+
+    def get_valid_size(size)
+      size = size.to_i
+
+      if size <= 9 && size > 1
+        display("Your board is: #{size}x#{size}.")
+        return size
+      else
+        display(size_message, NEW_LINE, PROMPT)
+      end
+    end
+
+    def get_valid_marker(marker)
+      marker = marker.capitalize
+
+      if marker.match(/[a-zA-Z]/) && marker != "X" && marker.length == 1
+        display("Your marker is: #{marker}.")
+        return marker
+      else
+        display(marker_message, NEW_LINE, PROMPT)
+      end
+    end
+      
+    def get_valid_move(move, size)
+      move = move.to_i
+      cell_nums = size * size
+
+      if move <= cell_nums && move > 0
+        return move
+      else
+        display(move_message, NEW_LINE, PROMPT)
+      end
+    end
+
+    def draw_board(board)
       printed_board = ""
-      @board.grid.each_with_index do |row, i|
+      
+      board.grid.each_with_index do |row, i|
         row.each_with_index do |column, j|
-          cell_num = (i * @size) + j + 1
+          cell_num = (i * board.size) + j + 1
           printed_board += "#{cell_num}"
-          printed_board += " | " if j < @size - 1
-          printed_board += "\n" if (j + 1) % @size == 0
+          printed_board += " | " if j < board.size - 1
+          printed_board += "\n" if (j + 1) % board.size == 0
         end
       end
+
       printed_board
     end
   end
 end
-

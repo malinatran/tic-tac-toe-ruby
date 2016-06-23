@@ -2,16 +2,21 @@ require_relative "spec_helper"
 require_relative "../lib/game"
 require_relative "../lib/computer_player"
 require_relative "../lib/human_player"
+require_relative "../lib/user_interface"
 
 module TicTacToe
   describe TicTacToe::Game do
     let(:board) { Board.new }
     let(:computer_player) { ComputerPlayer.new }
     let(:human_player) { HumanPlayer.new }
+    let(:input) { StringIO.new }
+    let(:output) { StringIO.new }
+    let(:user_interface) { UserInterface.new(input, output) }
     let(:game) { Game.new(board: board, 
                           computer_player: computer_player, 
-                          human_player: human_player) }
-
+                          human_player: human_player,
+                          user_interface: user_interface) }
+                                            
     context "#initialize" do
       it "initializes a game with a board" do
         sample_board = [[nil, nil, nil],
@@ -96,7 +101,33 @@ module TicTacToe
     context "#play_game" do
       it "should continue to switch players while the game is continuing" do
         expect(game).to receive(:switch_player) 
+        expect(game).to receive(:request_move)
         game.play_game
+      end
+    end
+
+    context "#request_move" do
+      it "should call on a method to display the board" do
+        expect(user_interface).to receive(:display_board).with(any_args)
+        game.request_move
+      end
+
+      it "should request a move from the computer player if current player is computer player" do
+        allow(game).to receive(:current_player).and_return(:computer_player)
+        expect(computer_player).to receive(:request_move).with(any_args)
+        game.request_move
+      end
+    end
+
+    context "#return_human_move" do
+      it "should call a method in the User Interface class" do
+        expect(user_interface).to receive(:request_move).with(any_args)
+        game.return_human_move
+      end
+      
+      it "should validate the move input by human and then return the move" do
+        input.string = "5"
+        expect(game.return_move).to eq(5)
       end
     end
   end

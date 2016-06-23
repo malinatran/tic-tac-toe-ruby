@@ -7,11 +7,8 @@ module TicTacToe
       @board = params[:board]
       @computer_player = params[:computer_player]    || TicTacToe::ComputerPlayer.new
       @human_player = params[:human_player]          || TicTacToe::HumanPlayer.new
+      @user_interface = params[:user_interface]
       @players = [@computer_player, @human_player]
-    end
-
-    def select_player
-      @current_player = @players.sample
     end
 
     def switch_player
@@ -37,8 +34,21 @@ module TicTacToe
       nil
     end
 
-    def play_game
-      switch_player
+    def play_game_loop
+      while !is_game_over?
+        play_game
+      end
+    end
+
+    def request_move
+      @user_interface.display_board(@board)
+      if @current_player == @computer_player
+        @computer_player.request_move(@board, @human_player.marker)
+      end
+    end
+  
+    def return_human_move
+      @user_interface.request_move(@board.size)
     end
 
     private
@@ -54,6 +64,15 @@ module TicTacToe
 
     def draw?
       @board.is_grid_filled? && win? == false
+    end
+
+    def select_player
+      @current_player = @players.sample
+    end
+
+    def play_game
+      switch_player
+      request_move
     end
   end
 end

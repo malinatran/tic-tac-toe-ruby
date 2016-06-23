@@ -16,6 +16,14 @@ module TicTacToe
       end
     end
 
+    context "#set_size" do
+      it "sets the size of the board given user input" do
+        new_size = 5
+        board.set_size(new_size)
+        expect(board.size).to eq(new_size)
+      end
+    end
+
     context "#create_grid" do
       it "constructs a two-dimensional array based on size determined by user" do
         board = Board.new(2)
