@@ -37,17 +37,35 @@ module TicTacToe
 
     context "#display_size_options" do
       it "should call methods to display message and allow user input to select board size" do
-        expect(user_interface).to receive(:display).with(any_args)
+        expect(user_interface).to receive(:display).with("Enter a board size:", "\n", "> ")
         expect(user_interface).to receive(:select_size)
         user_interface.display_size_options
       end
     end
 
     context "#select_size" do
-      it "should return a size if size is valid" do
-        size = "8"
-        input.string = size
-        expect(user_interface.select_size).to eq(8)
+      it "should call method when user inputs an invalid size" do
+        allow(user_interface).to receive(:is_size_valid?).and_return(false, true)
+        expect(user_interface).to receive(:display_size_options).with(no_args)
+        user_interface.select_size
+      end
+
+      it "should return the size if input is valid" do
+        size = "5"
+        allow(user_interface).to receive(:is_size_valid?).and_return(true)
+        allow(user_interface).to receive(:select_size).and_return(size)
+      end
+    end
+
+    context "#is_size_valid?" do
+      it "should return true if size is valid" do
+        size = 3
+        expect(user_interface.is_size_valid?(size)).to eq(true)
+      end
+
+      it "should return false if size is invalid" do
+        size = 1000
+        expect(user_interface.is_size_valid?(size)).to eq(false)
       end
     end
 
@@ -60,10 +78,28 @@ module TicTacToe
     end
 
     context "#select_marker" do
-      it "should return a marker if marker is valid" do
+      it "should call method when user inputs an invalid marker" do
+        allow(user_interface).to receive(:is_marker_valid?).and_return(false, true)
+        expect(user_interface).to receive(:display_marker_options).with(no_args)
+        user_interface.select_marker
+      end
+
+      it "should return the marker if input is valid" do
         marker = "O"
-        input.string = marker
-        expect(user_interface.select_marker).to eq("O")
+        allow(user_interface).to receive(:is_marker_valid?).and_return(true)
+        allow(user_interface).to receive(:select_marker).and_return(marker)
+      end
+    end
+
+    context "#is_marker_valid?" do
+      it "should return true if marker is valid" do
+        marker = "G"
+        expect(user_interface.is_marker_valid?(marker)).to eq(true)
+      end
+
+      it "should return false if marker is the same as computer marker and therefore invalid" do
+        marker = "X"
+        expect(user_interface.is_marker_valid?(marker)).to eq(false)
       end
     end
 
@@ -81,21 +117,42 @@ module TicTacToe
       end
     end
 
-    context "#request_move" do
+    context "#display_move_request" do
       it "should call methods to display message and prompt user for input" do
         size = 3
         expect(user_interface).to receive(:display).with(any_args)
         expect(user_interface).to receive(:select_move)
-        user_interface.request_move(size)
+        user_interface.display_move_request(size)
       end
     end
 
     context "#select_move" do
       it "should call method to ensure that move is valid" do
+        move = 20
         size = 3
-        move = "1"
-        input.string = move
-        expect(user_interface.select_move(size)).to eq(1)
+        allow(user_interface).to receive(:is_move_valid?).and_return(false, true)
+        expect(user_interface).to receive(:display_move_request)
+        user_interface.select_move(size)
+      end
+
+      it "should return the move if input is valid" do
+        move = 4
+        allow(user_interface).to receive(:is_move_valid?).and_return(true)
+        allow(user_interface).to receive(:select_move).and_return(move)
+      end
+    end
+
+    context "#is_move_valid?" do
+      it "should return true if move is valid" do
+        move = 1
+        size = 3
+        expect(user_interface.is_move_valid?(move, size)).to eq(true)
+      end
+
+      it "should return false if move is invalid" do
+        move = 10
+        size = 3
+        expect(user_interface.is_move_valid?(move, size)).to eq(false)
       end
     end
   end

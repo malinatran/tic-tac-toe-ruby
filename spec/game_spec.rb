@@ -98,12 +98,20 @@ module TicTacToe
       end
     end
 
+    context "#play_game_loop" do
+      it "should continue to call on method to play game while game is not over" do
+        allow(game).to receive(:is_game_over?).and_return(false, true)
+        expect(game).to receive(:play_game).with(no_args)
+        game.play_game_loop
+      end
+    end
+
     context "#request_move" do
       it "should call on a method to display the board" do
         expect(user_interface).to receive(:display_board).with(any_args)
         game.request_move
       end
-      
+
       it "should request a move from the computer if current player is computer player" do
         allow(game).to receive(:is_computer_the_current_player?).and_return(true, false)
         expect(game).to receive(:request_computer_move)
