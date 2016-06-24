@@ -157,7 +157,7 @@ module TicTacToe
       @game.board.grid.each_with_index do |row, i|
         row.each_with_index do |cell, j|
           cell_num = (i * @size) + j + 1
-          board << (cell || cell_num.to_s)
+          board << (cell || cell_num.to_s).to_s.center(3)
           board << " | " if j < @size - 1
           board << "\n" if (j + 1) % @size == 0
         end
