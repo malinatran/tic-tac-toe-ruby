@@ -8,10 +8,16 @@
 #### Play
 To run the game, enter `ruby play.rb` in the root directory. 
 
-A menu directory will give you the option to `1` enter customized values for the board's size, `2` your own marker _or_ alternatively, `3` you may opt into default values (e.g. a board size of three and a marker of "O"). You may enter `4` to exit the program. The board will reset and the menu will reappear after each game is done. 
+A menu directory will give you the option to:
+`1` enter customized value for the board's size between 2 to 9 
+`2` enter your own marker, which must be a single character that is not "X" (computer's designated marker)
+`3` opt into game with default values (e.g. a board size of three and a marker of "O") 
+`4` exit the program. 
+
+Please note: the board will reset and the menu will reappear after each game is done. 
 
 #### Tests
-To run tests, enter `bundle exec rspec spec`.
+To run tests, first enter `bundle install` and then `bundle exec rspec spec`.
 
 #### File Structure & Organization
 In the `lib` folder, you will find the following files and corresponding spec files in the `spec` folder:
