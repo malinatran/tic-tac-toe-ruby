@@ -1,6 +1,7 @@
 require_relative "spec_helper"
 require_relative "../lib/user_interface"
 require_relative "../lib/board"
+require_relative "../lib/game"
 
 module TicTacToe
   describe TicTacToe::UserInterface do
@@ -8,6 +9,14 @@ module TicTacToe
     let(:input) { StringIO.new }
     let(:output) { StringIO.new }
     let(:user_interface) { UserInterface.new(input, output) }
+    let(:game) { Game.new }
+
+    context "#start_game" do
+      it "should call methods to display wlecome message and menu options" do
+        expect(game).to receive(:start_game)
+        user_interface.start_game
+      end
+    end
 
     context "#display_menu" do
       it "should call methods to display message and allow user input" do
@@ -107,6 +116,21 @@ module TicTacToe
         move = 4
         allow(user_interface).to receive(:is_move_valid?).and_return(true)
         allow(user_interface).to receive(:select_move).and_return(move)
+      end
+    end
+
+    context "#declare_draw" do
+      it "should display the draw message" do
+        expect(user_interface).to receive(:display).with("Nobody wins!")
+        user_interface.declare_draw
+      end
+    end
+
+    context "#declare_winner" do
+      it "should display the name of the winner" do
+        winner = "computer"
+        expect(user_interface).to receive(:display).with("And the winner is... computer!")
+        user_interface.declare_winner(winner) 
       end
     end
   end

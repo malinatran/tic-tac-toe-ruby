@@ -10,7 +10,6 @@ module TicTacToe
       @output = output
     end
 
-
     def display_menu(size, marker)
       @menu_option = "Enter 1, 2, 3, or 4 to continue:
       (1) Change board size
@@ -27,13 +26,13 @@ module TicTacToe
       while choice do 
         case choice
         when "1"
-          select_size
+          display_size_options
           break
         when "2"
-          select_marker
+          display_marker_options
           break
         when "3"
-          start_game
+          start_game = true 
           break
         when "4"
           puts "Adios!"
@@ -45,7 +44,7 @@ module TicTacToe
     end
 
     def start_game
-      # this should direct to Game
+      false
     end
 
     def display_size_options
@@ -95,10 +94,18 @@ module TicTacToe
       if !is_move_valid?(move, size)
         display_move_request(size)
       else
-        return move
+        return move.to_i
       end
     end
 
+    def declare_draw
+      display(default_messages[:draw])
+    end
+
+    def declare_winner(winner)
+      display("And the winner is... #{winner}!")
+    end
+  
     private
 
     def get_input
@@ -116,7 +123,8 @@ module TicTacToe
         size:     "Enter a board size:",
         marker:   "Enter a marker:",
         board:    "The board:",
-        move:     "Enter your move:" }
+        move:     "Enter your move:",
+        draw:     "Nobody wins!" }
     end
 
     def is_size_valid?(size)

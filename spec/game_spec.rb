@@ -40,10 +40,26 @@ module TicTacToe
       end
     end
 
+    context "#start_game" do
+      it "should start the tic-tac-toe game by selecting a player, drawing the board, and entering into game loop" do
+        allow(user_interface).to receive(:start_game).and_return(true)
+        expect(game).to receive(:select_player)
+        expect(game).to receive(:play_game_loop)
+        game.start_game
+      end
+    end
+
     context "#select_player" do
       it "randomly selects one of the players" do
         allow(game).to receive(:select_player).and_return(:computer_player)
         expect(game.select_player).to eq(:computer_player)
+      end
+    end
+
+    context "#retrieve_size" do
+      it "retrieves size input by the user and passes to board" do
+        expect(user_interface).to receive(:select_size).with(no_args)
+        game.retrieve_size
       end
     end
 
@@ -85,11 +101,11 @@ module TicTacToe
     end
 
     context "#get_winner" do
-      it "should return the marker of the winner" do
+      it "should return the winner" do
         board.set_cell({x: 0, y: 0}, "X") 
         board.set_cell({x: 0, y: 1}, "X") 
         board.set_cell({x: 0, y: 2}, "X") 
-        expect(game.get_winner(computer_player)).to eq("X")
+        expect(game.get_winner(computer_player)).to eq(computer_player)
       end
 
       it "should return nil if there is no winner" do
@@ -107,20 +123,18 @@ module TicTacToe
     end
 
     context "#request_move" do
-      it "should call on a method to display the board" do
-        expect(user_interface).to receive(:display_board).with(any_args)
-        game.request_move
-      end
-
       it "should request a move from the computer if current player is computer player" do
         allow(game).to receive(:is_computer_the_current_player?).and_return(true, false)
-        expect(game).to receive(:request_computer_move)
+        expect(game).to receive(:request_computer_move).and_return({x: 1, y: 1})
+        expect(board).to receive(:set_cell).with(any_args)
         game.request_move
       end
 
-      it "should request a move from the user if current plalyer is not computer player" do
+      # error: stack level too deep
+      it "should request a move from the user if current player is not computer player" do
         allow(game).to receive(:is_computer_the_current_player?).and_return(false)
-        expect(game).to receive(:request_human_move)
+        expect(game).to receive(:map_move).with(any_args)
+        expect(board).to receive(:set_cell).with(any_args)
         game.request_move
       end
     end
@@ -130,12 +144,45 @@ module TicTacToe
         expect(computer_player).to receive(:request_move).with(any_args)
         game.request_computer_move
       end
+
+      it "should return a hash representing the move" do
+        expect(computer_player).to receive(:request_move).and_return({x: 1, y: 1})
+        game.request_computer_move
+      end
     end
 
     context "#request_human_move" do
       it "should call a method in the User Interface class" do
-        expect(user_interface).to receive(:request_move).with(any_args)
+        expect(user_interface).to receive(:display_move_request).with(any_args)
         game.request_human_move
+      end
+
+      it "should return a cell number representing the move" do
+        # not sure how to test value
+      end
+    end
+
+    context "#map_move" do
+      it "should translate the move to a hash of coordinates" do
+        move = 3
+        expect(game.map_move(move)).to eq({x: 0, y: 2})
+      end
+    end
+
+    context "#declare_outcome" do
+      it "should update the UI with a message about draw" do
+        allow(game).to receive(:is_game_over?).and_return(true, false)
+        allow(game).to receive(:draw?).and_return(true, false)
+        expect(user_interface).to receive(:declare_draw).with(no_args)
+        game.declare_outcome
+      end
+
+      it "should update the UI with a message about winner" do
+        allow(game).to receive(:is_game_over?).and_return(true, false)
+        allow(game).to receive(:draw?).and_return(false)
+        allow(game).to receive(:win?).and_return(true)
+        expect(user_interface).to receive(:declare_winner).with(any_args)
+        game.declare_outcome
       end
     end
   end
