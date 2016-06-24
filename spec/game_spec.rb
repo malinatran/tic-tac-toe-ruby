@@ -17,8 +17,8 @@ module TicTacToe
     context "#initialize" do
       it "initializes a game with a board" do
         sample_board = [[nil, nil, nil],
-          [nil, nil, nil],
-          [nil, nil, nil]]
+                        [nil, nil, nil],
+                        [nil, nil, nil]]
         expect(board.grid).to eq(sample_board)
         expect(board.size).to eq(3)
       end
@@ -38,7 +38,7 @@ module TicTacToe
     end
 
     context "#make_computer_move" do
-      it "should set call methods to request and make move on the board" do
+      it "sets call methods to request and make move on the board" do
         expect(game).to receive(:request_computer_move).with(no_args)
         expect(board).to receive(:set_cell)
         game.make_computer_move
@@ -46,7 +46,7 @@ module TicTacToe
     end
 
     context "#make_human_move" do
-      it "should call methods to map move and set cell" do
+      it "calls methods to map move and set cell" do
         move = 3
         expect(game).to receive(:map_move).with(any_args).and_return({x: 0, y: 2})
         expect(board).to receive(:set_cell)
@@ -55,14 +55,14 @@ module TicTacToe
     end
 
     context "#is_game_over?" do
-      it "should return true if there is either a winner" do
+      it "returns true if there is either a winner" do
         board.set_cell({x: 0, y: 0}, "X") 
         board.set_cell({x: 0, y: 1}, "X") 
         board.set_cell({x: 0, y: 2}, "X") 
         expect(game.is_game_over?).to eq(true)
       end
 
-      it "should return true if there is a draw" do
+      it "returns true if there is a draw" do
         board.set_cell({x: 0, y: 0}, "X")
         board.set_cell({x: 0, y: 1}, "O")
         board.set_cell({x: 0, y: 2}, "O")
@@ -75,7 +75,7 @@ module TicTacToe
         expect(game.is_game_over?).to eq(true)
       end
 
-      it "should return false if the game is still in session" do
+      it "returns false if the game is still in session" do
         board.set_cell({x: 0, y: 0}, "X")
         board.set_cell({x: 0, y: 1}, "X")
         board.set_cell({x: 0, y: 2}, "O")
@@ -84,27 +84,27 @@ module TicTacToe
     end
 
     context "#get_winner" do
-      it "should return the winner" do
+      it "returns the winner" do
         board.set_cell({x: 0, y: 0}, "X") 
         board.set_cell({x: 0, y: 1}, "X") 
         board.set_cell({x: 0, y: 2}, "X") 
         expect(game.get_winner(computer_player)).to eq(computer_player)
       end
 
-      it "should return nil if there is no winner" do
+      it "returns nil if there is no winner" do
         board.set_cell({x: 0, y: 2}, "X") 
         expect(game.get_winner(human_player)).to eq(nil)
       end
     end
 
     context "#declare_outcome" do
-      it "return information about draw" do
+      it "returns information about draw" do
         allow(game).to receive(:is_game_over?).and_return(true, false)
         allow(game).to receive(:draw?).and_return(true, false)
         expect(game.declare_outcome).to eq("draw")
       end
 
-      it "return information about winner" do
+      it "returns information about winner" do
         allow(game).to receive(:is_game_over?).and_return(true, false)
         allow(game).to receive(:draw?).and_return(false)
         allow(game).to receive(:win?).and_return(true, false)
