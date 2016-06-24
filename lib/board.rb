@@ -41,7 +41,7 @@ module TicTacToe
       if @grid[x][y].nil?
         @grid[x][y] = marker
       else 
-        raise "Cell already has a value."
+        raise CellIsFilledError, "Cell already has a value."
       end
     end
 

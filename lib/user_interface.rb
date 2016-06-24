@@ -37,7 +37,11 @@ module TicTacToe
         if @game.current_player == @game.human_player
           display_board
           move = select_move
-          @game.make_human_move(move)
+          begin 
+            @game.make_human_move(move)
+          rescue Exception => message
+            display(NEW_LINE, message, NEW_LINE)
+          end
         else
           @game.make_computer_move
         end
