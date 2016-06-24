@@ -11,13 +11,6 @@ module TicTacToe
     let(:user_interface) { UserInterface.new(input, output) }
     let(:game) { Game.new }
 
-    context "#start_game" do
-      it "should call methods to display wlecome message and menu options" do
-        expect(game).to receive(:start_game)
-        user_interface.start_game
-      end
-    end
-
     context "#display_menu" do
       it "should call methods to display message and allow user input" do
         size = 3
@@ -30,8 +23,8 @@ module TicTacToe
 
     context "#select_menu" do
       it "should call a method when user inputs correct value" do
-        input.string = "3"
-        expect(user_interface).to receive(:start_game)
+        input.string = "2"
+        expect(user_interface).to receive(:display_marker_options)
         user_interface.select_menu
       end
     end
