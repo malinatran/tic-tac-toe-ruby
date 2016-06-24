@@ -135,7 +135,7 @@ module TicTacToe
     end
 
     def is_size_valid?(size)
-      size <= 9 && size > 1
+      size <= 10 && size > 1
     end
 
     def is_marker_valid?(marker)

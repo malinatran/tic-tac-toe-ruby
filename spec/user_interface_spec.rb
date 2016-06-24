@@ -33,7 +33,6 @@ module TicTacToe
         user_interface.instance_variable_set(:@size, 5)
         user_interface.initialize_game
         expect(game.board.size).to eq(5)
-        # expect(game.human_player.marker).to eq("F")
       end
 
       it "should set the human player marker" do
