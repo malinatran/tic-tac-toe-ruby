@@ -1,7 +1,29 @@
 ## Tic-Tac-Toe | Ruby
 
-### Objectives
+#### Objectives
 * Build a command-line game in Ruby
+* Incorporate Minimax to create an unbeatable AI (TODO next week)
 * Adhere to SOLID princples and incorporate TDD
 
-To run tests, run `bundle install` and `rspec spec/<NAME OF FILE>` in project's root directory. The following files should replace `<NAME OF FILE>`: `board.rb`, `computer_player.rb`, `human_player.rb`, and `game.rb`.
+#### Play
+To run the game, enter `ruby play.rb` in the root directory. 
+
+A menu directory will give you the option to:
+`1` enter customized value for the board's size between 2 to 10 
+`2` enter your own marker, which must be a single character that is not "X" (computer's designated marker)
+`3` opt into game with default values (e.g. a board size of three and a marker of "O") 
+`4` exit the program. 
+
+Please note: the board will reset and the menu will reappear after each game is done. 
+
+#### Tests
+To run tests, first enter `bundle install` and then `bundle exec rspec spec`.
+
+#### File Structure & Organization
+In the `lib` folder, you will find the following files and corresponding spec files in the `spec` folder:
+* `board.rb`: has functionalities related to the grid, its cells, and winning moves
+* `computer_player.rb`: enables interaction with board to retrieve cells and make moves
+* `human_player.rb`: only accepts a marker provided by user input or default marker 
+* `player.rb`: serves as superclass of `computer_player` and `human_player`
+* `user_interface.rb`: handles methods dealing with the command line
+* `game.rb`: contains knowledge pertaining to game, including game state, players, and moves 

@@ -5,12 +5,12 @@ module TicTacToe
   class Player
     attr_reader :marker
 
-    def initialize(params = {})
-      @marker = params.fetch(:marker, default_marker)
+    def initialize(marker = nil)
+      @marker = marker || default_marker
     end
 
     def default_marker
-      raise NotImplementedError
+      nil
     end
   end
 end

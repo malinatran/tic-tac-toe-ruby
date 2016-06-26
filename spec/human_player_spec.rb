@@ -1,11 +1,11 @@
-require "spec_helper"
-require "./human_player"
+require_relative "spec_helper"
+require_relative "../lib/human_player"
 
 module TicTacToe
   describe TicTacToe::HumanPlayer do
     context "#initialize" do
       it "initializes with a marker based on user input" do
-        human_player = HumanPlayer.new(marker: "M")
+        human_player = HumanPlayer.new("M")
         expect(human_player.marker).to eq("M")
       end
 
