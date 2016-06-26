@@ -121,7 +121,11 @@ module TicTacToe
 
       it "renders a default 3x3 board with each cell's numerical value" do
         user_interface.instance_variable_set(:@game, game)
-        expect(user_interface).to receive(:display).with("\n", "1 | 2 | 3\n4 | 5 | 6\n7 | 8 | 9\n", "\n")
+        expect(user_interface).to receive(:display).with(
+          "\n",
+          " 1 | 2 | 3 \n 4 | 5 | 6 \n 7 | 8 | 9 \n",
+          "\n"
+        )
         user_interface.display_board
       end
     end
