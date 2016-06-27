@@ -1,5 +1,5 @@
 require_relative "spec_helper"
-require_relative "../lib/user_interface_helper"
+require_relative "../lib/helper"
 
 module TicTacToe
   describe TicTacToe::Helper do
@@ -74,6 +74,14 @@ module TicTacToe
         move = 10
         size = 3
         expect(helper.is_move_valid?(move, size)).to eq(false)
+      end
+    end
+
+    context "#map_move" do
+      it "returns the coordinates of the cell number" do
+        move = 5
+        size = 3
+        expect(helper.map_move(move, size)).to eq({x: 1, y: 1})
       end
     end
   end

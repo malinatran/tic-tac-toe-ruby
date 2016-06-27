@@ -42,5 +42,12 @@ module TicTacToe
       cell_nums = size * size
       move <= cell_nums && move > 0 ? true : false
     end
+    
+    def map_move(move, size) 
+      move -= 1
+      x = move / size
+      y = move % size
+      {x: x, y: y}
+    end
   end
 end
