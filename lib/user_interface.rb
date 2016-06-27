@@ -8,6 +8,16 @@ module TicTacToe
 
     NEW_LINE = "\n"
     PROMPT = "> "
+    DEFAULT_MESSAGES = 
+      { welcome:  "Welcome to tic-tac-toe!",
+        goodbye:  "Adios!",
+        size:     "Enter a board size:",
+        marker:   "Enter a marker:",
+        move:     "Enter your move:",
+        draw:     "Nobody won!",
+        computer: "Computer won!",
+        human:    "You (somehow) won!" }
+
 
     def initialize(input = STDIN, output = STDOUT)
       @input = input 
@@ -17,10 +27,10 @@ module TicTacToe
     end
 
     def run_menu_loop
-      display(default_messages[:welcome])
+      display(DEFAULT_MESSAGES[:welcome])
 
       begin
-        display(NEW_LINE, default_messages[:menu], NEW_LINE)
+        display(NEW_LINE, menu, NEW_LINE)
         menu_option = get_input
         perform_menu_action(menu_option)
       end until @quit_game
@@ -61,14 +71,14 @@ module TicTacToe
         initialize_game
         run_game_loop
       when "4"
-        puts "Adios!"
+        display(DEFAULT_MESSAGES[:goodbye], NEW_LINE)
         @quit_game = true
       end
     end
 
     def select_size
       begin 
-        display(default_messages[:size], NEW_LINE)
+        display(DEFAULT_MESSAGES[:size], NEW_LINE)
         size = get_input.to_i
       end until is_size_valid?(size)
 
@@ -77,7 +87,7 @@ module TicTacToe
 
     def select_marker
       begin
-        display(default_messages[:marker], NEW_LINE)
+        display(DEFAULT_MESSAGES[:marker], NEW_LINE)
         marker = get_input
       end until is_marker_valid?(marker)
 
@@ -90,7 +100,7 @@ module TicTacToe
 
     def select_move
       begin
-        display(default_messages[:move], NEW_LINE)
+        display(DEFAULT_MESSAGES[:move], NEW_LINE)
         move = get_input.to_i
       end until is_move_valid?(move) 
 
@@ -101,11 +111,11 @@ module TicTacToe
       outcome = @game.declare_outcome
 
       if outcome == "draw"
-        display(default_messages[:draw], NEW_LINE)
+        display(DEFAULT_MESSAGES[:draw], NEW_LINE)
       elsif outcome == "computer"
-        display(default_messages[:computer], NEW_LINE)
+        display(DEFAULT_MESSAGES[:computer], NEW_LINE)
       else 
-        display(default_messages[:human], NEW_LINE)
+        display(DEFAULT_MESSAGES[:human], NEW_LINE)
       end
     end
 
@@ -122,20 +132,12 @@ module TicTacToe
       end
     end
 
-    # Should I make this a constant?
-    def default_messages
-      { welcome:  "Welcome to tic-tac-toe!",
-        menu:     "Enter 1, 2, 3, or 4 to continue:
-        (1) Change board size
-        (2) Change marker
-        (3) Proceed to game with with a #{@size}x#{@size} board and #{@marker} as your marker
-        (4) Exit",
-        size:     "Enter a board size:",
-        marker:   "Enter a marker:",
-        move:     "Enter your move:",
-        draw:     "Nobody won!",
-        computer: "Computer won!",
-        human:    "You (somehow) won!" }
+    def menu
+     "Enter 1, 2, 3, or 4 to continue:
+      (1) Change board size
+      (2) Change marker
+      (3) Proceed to game with with a #{@size}x#{@size} board and #{@marker} as your marker
+      (4) Exit"
     end
 
     def is_size_valid?(size)
