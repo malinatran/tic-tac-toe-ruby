@@ -6,16 +6,10 @@ require_relative "helper"
 module TicTacToe 
   class UserInterface 
 
-    def initialize
-      @size = 3
-      @marker = "O"
-      @helper = Helper.new
-    end
-
-    def initialize_game
-      board = Board.new(@size)
-      human_player = HumanPlayer.new(@marker)
-      @game = Game.new(board: board, human_player: human_player)
+    def initialize(params = {})
+      @size = params[:size]
+      @marker = params[:marker]
+      @helper = params[:helper]
     end
 
     def menu
@@ -88,23 +82,23 @@ module TicTacToe
       @marker = marker
     end
 
-    def draw_board
-      board = ""
+    def draw_board(board)
+      mapped_board = ""
 
-      @game.board.grid.each_with_index do |row, i|
+      board.each_with_index do |row, i|
         row.each_with_index do |cell, j|
           cell_num = (i * @size) + j + 1
-          board << (cell || cell_num.to_s).to_s.center(3)
-          board << "|" if j < @size - 1
-          board << "\n" if (j + 1) % @size == 0
+          mapped_board << (cell || cell_num.to_s).to_s.center(3)
+          mapped_board << "|" if j < @size - 1
+          mapped_board << "\n" if (j + 1) % @size == 0
         end
       end
 
-      board
+      mapped_board
     end
 
-    def display_board
-      @helper.display(Helper::NEW_LINE, draw_board, Helper::NEW_LINE)
+    def display_board(board)
+      @helper.display(Helper::NEW_LINE, draw_board(board), Helper::NEW_LINE)
     end
 
     def select_move

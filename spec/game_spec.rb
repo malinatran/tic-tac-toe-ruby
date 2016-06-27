@@ -1,7 +1,4 @@
 require_relative "spec_helper"
-require_relative "../lib/board"
-require_relative "../lib/computer_player"
-require_relative "../lib/human_player"
 require_relative "../lib/game"
 
 module TicTacToe
@@ -13,6 +10,14 @@ module TicTacToe
                           computer_player: computer_player, 
                           human_player: human_player) }
     let(:current_player) { computer_player }
+    let(:input) { StringIO.new }
+    let(:output) { StringIO.new }
+    let(:helper) { Helper.new(input, output) }
+    let(:size) { 3 }
+    let(:marker) { "M" }
+    let(:user_interface) { UserInterface.new(size: size,
+                                             marker: marker,
+                                             helper: helper) } 
 
     context "#initialize" do
       it "initializes a game with a board" do
@@ -34,6 +39,43 @@ module TicTacToe
         expect(board.size).to eq(5) 
         expect(computer_player.marker).to eq("M")
         expect(human_player.marker).to eq("O")
+      end
+    end
+    
+    context "#run_game_loop" do
+      it "displays the board when current player is human player" do 
+        game.instance_variable_set(:@current_player, game.human_player)
+        input.string = "1"
+        allow(game).to receive(:is_game_over?).and_return(false, true)
+        expect(user_interface).to receive(:display_board).exactly(2).times
+        game.run_game_loop
+      end  
+
+      it "asks human to make move" do 
+        user_interface.instance_variable_set(:@game, game)
+        game.instance_variable_set(:@current_player, game.human_player)
+        input.string = "1"
+        allow(game).to receive(:is_game_over?).and_return(false, true)
+        allow(game).to receive(:make_human_move)
+        expect(user_interface).to receive(:select_move)
+        user_interface.run_game_loop
+      end
+
+      it "calls a method to make the human's move" do 
+        user_interface.instance_variable_set(:@game, game)
+        game.instance_variable_set(:@current_player, game.human_player)
+        input.string = "1"
+        allow(game).to receive(:is_game_over?).and_return(false, true)
+        expect(game).to receive(:make_human_move).with(1)
+        user_interface.run_game_loop
+      end
+
+      it "calls a method to make the computer's move" do 
+        user_interface.instance_variable_set(:@game, game)
+        game.instance_variable_set(:@current_player, game.computer_player)
+        allow(game).to receive(:is_game_over?).and_return(false, true)
+        expect(game).to receive(:make_computer_move)
+        user_interface.run_game_loop
       end
     end
 
