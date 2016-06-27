@@ -113,7 +113,7 @@ module TicTacToe
         move = @helper.get_input.to_i
       end until @helper.is_move_valid?(move, @size) 
 
-      move
+      @helper.map_move(move, @size)
     end
 
     def display_outcome

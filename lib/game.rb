@@ -16,14 +16,13 @@ module TicTacToe
     end
 
     def make_computer_move
-      computer_move = request_computer_move
-      @board.set_cell(computer_move, @computer_player.marker)
+      move = request_computer_move
+      @board.set_cell(move, @computer_player.marker)
       switch_player
     end
 
     def make_human_move(move)
-      human_move = map_move(move)
-      @board.set_cell(human_move, @human_player.marker)
+      @board.set_cell(move, @human_player.marker)
       switch_player
     end
 
@@ -84,13 +83,6 @@ module TicTacToe
 
     def request_computer_move
       @computer_player.request_move(@board, @human_player.marker)
-    end
-
-    def map_move(move)
-      move -= 1
-      x = move / @board.size
-      y = move % @board.size
-      {x: x, y: y}
     end
     
     def declare_winner

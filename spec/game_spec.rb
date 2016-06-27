@@ -48,7 +48,6 @@ module TicTacToe
     context "#make_human_move" do
       it "calls methods to map move and set cell" do
         move = 3
-        expect(game).to receive(:map_move).with(any_args).and_return({x: 0, y: 2})
         expect(board).to receive(:set_cell)
         game.make_human_move(move)
       end

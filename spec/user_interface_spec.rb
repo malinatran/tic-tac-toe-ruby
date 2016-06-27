@@ -108,7 +108,7 @@ module TicTacToe
       it "returns the move if input is valid" do
         input.string = "5"
         allow(user_interface).to receive(:is_move_valid?).and_return(true)
-        expect(user_interface.select_move).to eq(5)
+        expect(user_interface.select_move).to eq({x: 1, y: 1})
       end
     end
 
