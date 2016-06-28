@@ -12,11 +12,11 @@ module TicTacToe
 
     def request_move(board, opponent_marker)
       @opponent_marker = opponent_marker
-      moves = [self.get_center_move(board),
-               self.get_winning_move(board, marker),
-               self.get_winning_move(board, @opponent_marker),
-               self.get_corner_move(board),
-               self.get_random_move(board)]
+      moves = [get_center_move(board),
+               get_winning_move(board, marker),
+               get_winning_move(board, @opponent_marker),
+               get_corner_move(board),
+               get_random_move(board)]
       i = 0
       move = [] 
       while move.length == 0 do

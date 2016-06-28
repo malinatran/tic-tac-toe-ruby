@@ -5,11 +5,11 @@ require_relative "../lib/user_interface"
 module TicTacToe
   describe TicTacToe::UserInterface do
 
-    let(:input) { StringIO.new }
-    let(:output) { StringIO.new }
-    let(:helper) { Helper.new(input, output) }
-    let(:user_interface) { UserInterface.new(helper) }
-    let(:board) { TicTacToe::Board.new.grid }
+    let(:input)           { StringIO.new }
+    let(:output)          { StringIO.new }
+    let(:helper)          { Helper.new(input, output) }
+    let(:user_interface)  { UserInterface.new(helper) }
+    let(:board)           { TicTacToe::Board.new.grid }
 
     context "#initialize" do
       it "receives an argument and sets instance variables" do
