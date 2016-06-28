@@ -10,6 +10,11 @@ module TicTacToe
       @size = size || 3 
       @grid = create_grid
     end
+    
+    def size=(size)
+      @size = size
+      @grid = create_grid
+    end
 
     def create_grid
       Array.new(@size) { Array.new(@size) }

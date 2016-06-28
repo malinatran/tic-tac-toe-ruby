@@ -3,6 +3,7 @@ require_relative "../lib/board"
 
 module TicTacToe
   describe TicTacToe::Board do
+
     let(:board) { Board.new }
 
     context "#initialize" do
@@ -13,6 +14,15 @@ module TicTacToe
 
       it "initializes with a default size of three" do
         expect(board.size).to eq(3)
+      end
+    end
+
+    context "#size" do
+      it "sets the size and creates a new grid based on that size" do
+        size = 5
+        board.size=(size)
+        expect(board.size).to eq(5)
+        expect(board.grid.size).to eq(5)
       end
     end
 

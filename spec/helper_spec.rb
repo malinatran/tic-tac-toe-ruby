@@ -3,6 +3,7 @@ require_relative "../lib/helper"
 
 module TicTacToe
   describe TicTacToe::Helper do
+
     let(:input) { StringIO.new }
     let(:output) { StringIO.new }
     let(:helper) { Helper.new(input, output) }
@@ -82,6 +83,15 @@ module TicTacToe
         move = 5
         size = 3
         expect(helper.map_move(move, size)).to eq({x: 1, y: 1})
+      end
+    end
+
+    context "#draw_board" do
+      it "renders a board as a string with each cell's numerical value" do
+        board = [[nil, nil], [nil, nil]]
+        size = 2
+        mapped_board = " 1 | 2 \n 3 | 4 \n"
+        expect(helper.draw_board(board, size)).to eq(mapped_board)
       end
     end
   end

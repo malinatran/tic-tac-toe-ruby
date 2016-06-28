@@ -1,4 +1,4 @@
-require_relative = "board"
+require_relative "board"
 require_relative "computer_player"
 require_relative "human_player"
 require_relative "user_interface"
@@ -12,9 +12,23 @@ module TicTacToe
       @board = params[:board]
       @computer_player = params[:computer_player]    || ComputerPlayer.new
       @human_player = params[:human_player]          || HumanPlayer.new
+      @user_interface = params[:user_interface] 
       @players = [@computer_player, @human_player]
       @current_player = @players.sample
-      @user_interface = params[:user_interface]      || UserInterface.new
+    end
+
+    def start_game
+      while options = @user_interface.get_options
+        @size = options[:size]
+        @marker = options[:marker]
+        set_options
+        run_game_loop
+      end
+    end
+
+    def set_options
+      @board.size = @size
+      @human_player.marker = @marker
     end
 
     def run_game_loop
@@ -25,12 +39,16 @@ module TicTacToe
           begin
             make_human_move(move)
           rescue Exception => message
-            @user_interface.helper.display(message)
+            @user_interface.display_error(message)
           end
         else
           make_computer_move
         end
       end
+
+      @user_interface.display_board(@board.grid)
+      outcome = declare_outcome 
+      @user_interface.display_outcome(outcome)
     end
 
     def make_computer_move
