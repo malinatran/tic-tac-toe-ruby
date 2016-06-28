@@ -33,4 +33,4 @@ In the `lib` folder, you will find the following files and corresponding spec fi
 * `play.rb`: is the entry point of the game and initializes all of the above classes
 
 #### Organization
-![Organization](https://s32.postimg.org/xv6pqd9it/1_mteatran_Malinas_Mac_Book_Pro_vim.png =250x)
+![Organization](https://s32.postimg.org/xv6pqd9it/1_mteatran_Malinas_Mac_Book_Pro_vim.png =150x)
