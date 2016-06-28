@@ -9,10 +9,11 @@
 To run the game, enter `ruby play.rb` in the root directory. 
 
 A menu directory will give you the option to:
-1.  Enter customized value for the board's size between 3 to 10
-2.  Enter your own marker, which must be a single character that is not "X" (computer's designated marker)
-3.  Opt into game with default values (e.g. a board size of three and a marker of "O") 
-4.  Exit the program 
+
+1. Enter customized value for the board's size between 3 to 10
+2. Enter your own marker, which must be a single character that is not "X" (computer's designated marker
+3. Opt into game with default values (e.g. a board size of three and a marker of "O")
+4. Exit the program
 
 Please note: the board will reset and the menu will reappear after each game is done and the outcome has been announced. 
 
