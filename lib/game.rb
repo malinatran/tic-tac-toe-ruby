@@ -118,7 +118,7 @@ module TicTacToe
     end
 
     def request_computer_move
-      @computer_player.get_moves(@board, @human_player.marker)
+      @computer_player.request_move(@board, @human_player.marker)
     end
     
     def declare_winner
