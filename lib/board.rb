@@ -29,7 +29,7 @@ module TicTacToe
 
       @size.times do |x|
         @size.times do |y|
-          if self.is_cell_empty?({x: x, y: y})
+          if is_cell_empty?({x: x, y: y})
             empty_squares << {x: x, y: y}
           end
         end
@@ -39,7 +39,7 @@ module TicTacToe
     end
 
     def is_grid_filled?
-      self.get_empty_cells.length == 0
+      get_empty_cells.length == 0
     end
     
     def set_cell(move, marker)
@@ -63,7 +63,7 @@ module TicTacToe
         end
       end
     end
-
+    
     def is_row_filled?(x, marker)
       @grid[x].each do |cell|
         if cell != marker

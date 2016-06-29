@@ -1,3 +1,4 @@
+require "pry"
 require_relative "player"
 require_relative "board"
 
@@ -8,6 +9,49 @@ module TicTacToe
 
     def default_marker
       MARKERS[0]
+    end
+
+    def minimax(board, player_marker, opponent_marker)
+      return score(board, player_marker, opponent_marker) if is_game_over?(board, opponent_marker)
+
+      scores = {}
+      moves = board.get_empty_cells
+
+      moves.each do |move|
+        board_copy = board.dup
+        if board_copy.is_cell_empty?(move)
+          board_copy.set_cell(move, player_marker)
+        end
+        scores[move] = minimax(board_copy, switch(player_marker), switch(opponent_marker))
+      end
+
+      best_move(player_marker, scores)
+    end
+
+    def score(board, player_marker, opponent_marker)
+      if get_winner(board, player_marker) == "X"
+        return 10
+      elsif get_winner(board, player_marker) == opponent_marker
+        return -10
+      else
+        0
+      end
+    end
+
+    def switch(player_marker)
+      player_marker == "X" ? "O" : "X"
+    end
+
+    def best_move(player_marker, scores)
+      if player_marker == "X"
+        scores.key(10)
+      elsif player_marker == "O"
+        scores.key(-10)
+      end
+    end
+
+    def is_game_over?(board, opponent_marker)
+      draw?(board, opponent_marker) || win?(board, opponent_marker)
     end
 
     def request_move(board, opponent_marker)
@@ -42,13 +86,45 @@ module TicTacToe
       board.set_cell(move, marker)
 
       if board.is_row_filled?(x, marker) || board.is_column_filled?(y, marker) ||
-         board.is_either_diagonal_filled?(marker)
+        board.is_either_diagonal_filled?(marker)
         board.clear_cell(move)
         return true
       else
         board.clear_cell(move)
         return false
       end
+    end
+
+    private
+
+    def draw?(board, opponent_marker)
+      board.is_grid_filled? && win?(board, opponent_marker) == false
+    end
+
+    def win?(board, opponent_marker)
+      player_markers = [marker, opponent_marker]
+
+      player_markers.each do |player_marker|
+        if !get_winner(board, player_marker).nil?
+          return true
+        end
+      end
+
+      false
+    end
+
+    def get_winner(board, player_marker)
+      if board.is_either_diagonal_filled?(player_marker)
+        return player_marker
+      end
+
+      board.size.times do |n| 
+        if board.is_row_filled?(n, player_marker) || board.is_column_filled?(n, player_marker)
+          return player_marker 
+        end
+      end
+
+      nil
     end
   end
 end
