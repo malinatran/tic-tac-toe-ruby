@@ -1,4 +1,3 @@
-require "pry"
 require_relative "player"
 require_relative "board"
 
@@ -22,9 +21,9 @@ module TicTacToe
 
       moves.each do |move|
         if is_winning_move?(board, move, marker)
-          scores[move] = 15
+          scores[move] = 10
         elsif is_winning_move?(board, move, opponent_marker)
-          scores[move] = -15
+          scores[move] = -10
         else
           scores[move] = 0
         end
@@ -34,13 +33,7 @@ module TicTacToe
     end
 
     def select_optimal_move(scores)
-      unless scores.key(15).nil?
-        return scores.key(15)
-      end
-
-      unless scores.key(0).nil?
-        return scores.key(0)
-      end
+      scores.key(10) || scores.key(-10) || scores.key(0)
     end
 
     def is_winning_move?(board, move, marker)
@@ -48,7 +41,8 @@ module TicTacToe
       y = move[:y]
       board.set_cell(move, marker)
 
-      if board.is_row_filled?(x, marker) || board.is_column_filled?(y, marker) || board.is_either_diagonal_filled?(marker)
+      if board.is_row_filled?(x, marker) || board.is_column_filled?(y, marker) ||
+         board.is_either_diagonal_filled?(marker)
         board.clear_cell(move)
         return true
       else

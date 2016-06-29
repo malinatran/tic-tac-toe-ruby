@@ -5,7 +5,7 @@ module TicTacToe
   describe TicTacToe::ComputerPlayer do
 
     let (:comp_player) { ComputerPlayer.new }
-    let (:board)       { comp_player.instance_variable_get(:@board) || Board.new }
+    let (:board)       { Board.new }
 
     context "#initialize" do
       it "initializes with a marker based on user input" do
@@ -36,8 +36,8 @@ module TicTacToe
         board.set_cell({x: 0, y: 1}, "O")
         board.set_cell({x: 1, y: 1}, "O")
         moves = [{x: 0, y: 2}, {x: 1, y: 2}, {x: 2, y: 0}, {x: 2, y: 1}, {x: 2, y: 2}] 
-        scores = {{x: 2, y: 0} => 15,
-          {x: 2, y: 1} => -15,
+        scores = {{x: 2, y: 0} => 10,
+          {x: 2, y: 1} => -10,
           {x: 0, y: 2} => 0,
           {x: 1, y: 2} => 0,
           {x: 2, y: 2} => 0}
@@ -46,18 +46,25 @@ module TicTacToe
     end
 
     context "#select_optimal_move" do
-      it "returns a move with a score of 15" do
-        scores = {{x: 2, y: 1} => -15,
+      it "returns a move with a score of 10 to secure win" do
+        scores = {{x: 2, y: 1} => -10,
           {x: 0, y: 2} => 0,
-          {x: 2, y: 0} => 15,
+          {x: 2, y: 0} => 10,
           {x: 1, y: 2} => 0,
           {x: 2, y: 2} => 0}
         expect(comp_player.select_optimal_move(scores)).to eq({x: 2, y: 0})
       end
 
-      it "returns first available move with a score of 0, if hash a score of 15 is not available" do
-        scores = {{x: 2, y: 1} => -15,
+      it "returns a blocking move with a score of -10, if a winning move is unavailable" do
+        scores = {{x: 2, y: 1} => -10,
           {x: 0, y: 2} => 0,
+          {x: 1, y: 2} => 0,
+          {x: 2, y: 2} => 0}
+        expect(comp_player.select_optimal_move(scores)).to eq({x: 2, y: 1})
+      end
+
+      it "returns a move with a score of 0, if a blocking move is unavailable" do
+        scores = {{x: 0, y: 2} => 0,
           {x: 1, y: 2} => 0,
           {x: 2, y: 2} => 0}
         expect(comp_player.select_optimal_move(scores)).to eq({x: 0, y: 2})
