@@ -85,7 +85,7 @@ module TicTacToe
     def declare_outcome
       if is_game_over?
         if draw?
-          return "draw"
+          return DRAW
         elsif win?
           declare_winner
         end
@@ -106,6 +106,7 @@ module TicTacToe
           return true
         end
       end
+
       false
     end
 
@@ -123,9 +124,9 @@ module TicTacToe
     
     def declare_winner
       if @winner == @computer_player
-        return "computer"
+        return COMPUTER
       elsif @winner == @human_player
-        return "you"
+        return HUMAN 
       end
     end
   end

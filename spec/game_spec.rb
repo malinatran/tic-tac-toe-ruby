@@ -152,7 +152,7 @@ module TicTacToe
       it "returns information about draw" do
         allow(game).to receive(:is_game_over?).and_return(true, false)
         allow(game).to receive(:draw?).and_return(true, false)
-        expect(game.declare_outcome).to eq("draw")
+        expect(game.declare_outcome).to eq("Draw")
       end
 
       it "returns information about winner" do
