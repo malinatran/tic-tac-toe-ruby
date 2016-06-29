@@ -2,8 +2,8 @@ require_relative "player"
 require_relative "board"
 
 module TicTacToe
-
   class ComputerPlayer < Player
+
     attr_reader :marker
 
     def default_marker

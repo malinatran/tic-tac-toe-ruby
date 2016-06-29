@@ -4,9 +4,7 @@ require_relative "human_player"
 require_relative "user_interface"
 
 module TicTacToe
-
   class Game
-    attr_reader :board, :computer_player, :human_player, :players, :current_player
 
     def initialize(params = {})
       @board = params[:board]

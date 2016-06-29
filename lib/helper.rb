@@ -21,6 +21,7 @@ module TicTacToe
       human:    "You (somehow) won!" }
 
   class Helper
+
     attr_accessor :input, :output
 
     def initialize(input = STDIN, output = STDOUT)
