@@ -26,6 +26,7 @@ module TicTacToe
 
     def get_empty_cells
       empty_squares = []
+
       @size.times do |x|
         @size.times do |y|
           if self.is_cell_empty?({x: x, y: y})
@@ -33,6 +34,7 @@ module TicTacToe
           end
         end
       end
+
       empty_squares
     end
 
