@@ -48,7 +48,7 @@ module TicTacToe
       if @grid[x][y].nil?
         @grid[x][y] = marker
       else 
-        raise CellIsFilledError, "Cell (#{x}, #{y}) already has a value."
+        raise CellIsFilledError, "Cell already has a value."
       end
     end
 
@@ -110,6 +110,20 @@ module TicTacToe
 
     def dup
       Marshal.load(Marshal.dump(self))
+    end
+
+    def winner(marker)
+      if is_either_diagonal_filled?(marker)
+        return marker 
+      end
+
+      @size.times do |n| 
+        if is_row_filled?(n, marker) || is_column_filled?(n, marker)
+          return marker
+        end
+      end
+      
+      nil
     end
   end
 end
