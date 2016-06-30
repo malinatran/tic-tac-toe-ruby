@@ -113,7 +113,7 @@ module TicTacToe
 
     context "#display_outcome" do
       it "displays message about whether there is a draw or winner" do
-        outcome = "draw"
+        outcome = "Draw" 
         expect(helper).to receive(:display).exactly(1).times
         expect(helper).to receive(:display).and_return("Nobody won!\n")
         user_interface.display_outcome(outcome)

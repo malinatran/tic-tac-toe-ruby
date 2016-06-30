@@ -18,35 +18,32 @@ module TicTacToe
     end
 
     def get_options
-      @helper.display(Helper::DEFAULT_MESSAGES[:welcome])
+      @helper.display(DEFAULT_MESSAGES[:welcome])
 
       begin
-        @helper.display(Helper::NEW_LINE, menu, Helper::NEW_LINE)
+        @helper.display(NEW_LINE, menu, NEW_LINE)
         menu_option = @helper.get_input
         case menu_option
-        when "1"
+        when OPTIONS[:one] 
           select_size 
-        when "2"
+        when OPTIONS[:two] 
           select_marker 
-        when "3"
-          return { size: @size, 
-            marker: @marker }
-        when "4"
-          @helper.display(Helper::DEFAULT_MESSAGES[:goodbye], 
-                          Helper::NEW_LINE)
+        when OPTIONS[:three] 
+          return { size: @size, marker: @marker }
+        when OPTIONS[:four]
+          @helper.display(DEFAULT_MESSAGES[:goodbye], NEW_LINE)
           @quit_game = true
         end
       end until @quit_game
     end
 
     def display_error(message)
-      @helper.display(Helper::NEW_LINE, message, Helper::NEW_LINE)
+      @helper.display(NEW_LINE, message, NEW_LINE)
     end
 
     def select_size
       begin 
-        @helper.display(Helper::DEFAULT_MESSAGES[:size], 
-                        Helper::NEW_LINE)
+        @helper.display(DEFAULT_MESSAGES[:size], NEW_LINE)
         size = @helper.get_input.to_i
       end until @helper.is_size_valid?(size)
 
@@ -55,8 +52,7 @@ module TicTacToe
 
     def select_marker
       begin
-        @helper.display(Helper::DEFAULT_MESSAGES[:marker], 
-                        Helper::NEW_LINE)
+        @helper.display(DEFAULT_MESSAGES[:marker], NEW_LINE)
         marker = @helper.get_input
       end until @helper.is_marker_valid?(marker)
 
@@ -65,8 +61,7 @@ module TicTacToe
 
     def select_move
       begin
-        @helper.display(Helper::DEFAULT_MESSAGES[:move], 
-                        Helper::NEW_LINE)
+        @helper.display(DEFAULT_MESSAGES[:move], NEW_LINE)
         move = @helper.get_input.to_i
       end until @helper.is_move_valid?(move, @size) 
 
@@ -74,23 +69,19 @@ module TicTacToe
     end
 
     def display_board(board)
-      @helper.display(Helper::NEW_LINE, 
-                      @helper.draw_board(board, @size), 
-                      Helper::NEW_LINE)
+      @helper.display(NEW_LINE, @helper.draw_board(board, @size), NEW_LINE)
     end
 
     def display_outcome(outcome)
-      if outcome == "draw"
-        @helper.display(Helper::DEFAULT_MESSAGES[:draw], 
-                        Helper::NEW_LINE)
-      elsif outcome == "computer"
-        @helper.display(Helper::DEFAULT_MESSAGES[:computer], 
-                        Helper::NEW_LINE)
-      else 
-        @helper.display(Helper::DEFAULT_MESSAGES[:human], 
-                        Helper::NEW_LINE)
+      if outcome == DRAW
+        @helper.display(DEFAULT_MESSAGES[:draw], NEW_LINE)
+      elsif outcome == COMPUTER
+        @helper.display(DEFAULT_MESSAGES[:computer], NEW_LINE)
+      elsif outcome == HUMAN 
+        @helper.display(DEFAULT_MESSAGES[:human], NEW_LINE)
       end
-      @helper.display(Helper::NEW_LINE)
+
+      @helper.display(NEW_LINE)
     end
   end
 end

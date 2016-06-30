@@ -4,9 +4,7 @@ require_relative "human_player"
 require_relative "user_interface"
 
 module TicTacToe
-
   class Game
-    attr_reader :board, :computer_player, :human_player, :players, :current_player
 
     def initialize(params = {})
       @board = params[:board]
@@ -85,7 +83,7 @@ module TicTacToe
     def declare_outcome
       if is_game_over?
         if draw?
-          return "draw"
+          return DRAW
         elsif win?
           declare_winner
         end
@@ -106,6 +104,7 @@ module TicTacToe
           return true
         end
       end
+
       false
     end
 
@@ -118,14 +117,16 @@ module TicTacToe
     end
 
     def request_computer_move
-      @computer_player.request_move(@board, @human_player.marker)
+      score = @computer_player.minimax(@board, @current_player.marker, @human_player.marker)
+
+      return @computer_player.move
     end
     
     def declare_winner
       if @winner == @computer_player
-        return "computer"
+        return COMPUTER
       elsif @winner == @human_player
-        return "you"
+        return HUMAN 
       end
     end
   end
