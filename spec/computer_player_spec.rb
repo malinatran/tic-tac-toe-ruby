@@ -6,6 +6,7 @@ module TicTacToe
 
     let (:comp_player) { ComputerPlayer.new }
     let (:board)       { Board.new }
+    let (:depth)       { 0 }
 
     context "#initialize" do
       it "initializes with a marker based on user input" do
@@ -24,15 +25,15 @@ module TicTacToe
         board = Board.new(2)
         board.set_cell({x: 0, y: 0}, "X")
         board.set_cell({x: 1, y: 0}, "X")
-        expect(comp_player.minimax(board, "X", "O")).to eq(10)
+        expect(comp_player.minimax(board, depth, "X", "O")).to eq(10)
       end
 
-      it "iterates through relatively complex board and returns move with a score of 10" do
+      it "iterates through relatively complex board and returns move with a score minus depth" do
         board.set_cell({x: 0, y: 0}, "O")
         board.set_cell({x: 0, y: 1}, "O")
         board.set_cell({x: 0, y: 2}, "X")
         board.set_cell({x: 1, y: 1}, "X")
-        expect(comp_player.minimax(board, "X", "O")).to eq(10)
+        expect(comp_player.minimax(board, depth, "X", "O")).to eq(9)
       end
     end
 
@@ -41,21 +42,21 @@ module TicTacToe
         board.set_cell({x: 0, y: 0}, "X")
         board.set_cell({x: 1, y: 0}, "X")
         board.set_cell({x: 2, y: 0}, "X")
-        expect(comp_player.score(board, "O")).to eq(10)
+        expect(comp_player.score(board, depth, "O")).to eq(10)
       end
       
       it "returns a score of -10 if the winner is the human player" do
         board.set_cell({x: 0, y: 0}, "O")
         board.set_cell({x: 1, y: 0}, "O")
         board.set_cell({x: 2, y: 0}, "O")
-        expect(comp_player.score(board, "O")).to eq(-10)
+        expect(comp_player.score(board, depth, "O")).to eq(-10)
       end
       
       it "returns 0 if there is no winner and the game is not a draw" do
         board.set_cell({x: 1, y: 0}, "O")
         board.set_cell({x: 0, y: 0}, "X")
         board.set_cell({x: 0, y: 1}, "O")
-        expect(comp_player.score(board, "X")).to eq(0)
+        expect(comp_player.score(board, depth, "X")).to eq(0)
       end
 
       it "returns 0 if the game is a draw" do
@@ -68,7 +69,7 @@ module TicTacToe
         board.set_cell({x: 2, y: 0}, "O")
         board.set_cell({x: 2, y: 1}, "X")
         board.set_cell({x: 2, y: 2}, "O")
-        expect(comp_player.score(board, "O")).to eq(0)
+        expect(comp_player.score(board, depth, "O")).to eq(0)
       end
     end
 

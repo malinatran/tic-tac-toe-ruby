@@ -10,6 +10,7 @@ module TicTacToe
   COMPUTER = "Computer"
   HUMAN = "Human"
   DRAW = "Draw"
+  DEPTH = 0
   DEFAULT_MESSAGES = 
     { welcome:  "Welcome to tic-tac-toe!",
       goodbye:  "Adios!",

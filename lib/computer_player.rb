@@ -10,29 +10,30 @@ module TicTacToe
       MARKERS[0]
     end
 
-    def minimax(board, current_marker, opponent_marker)
+    def minimax(board, depth, current_marker, opponent_marker)
       if is_game_over?(board, opponent_marker)
-        return score(board, opponent_marker)
+        return score(board, depth, opponent_marker)
       end
-
+  
+      depth += 1
       scores = {}
       moves = board.get_empty_cells
 
       moves.each do |move|
         board_copy = board.dup
         board_copy.set_cell(move, current_marker)
-        scores[move] = minimax(board_copy, switch(current_marker), switch(opponent_marker))
+        scores[move] = minimax(board_copy, depth, switch(current_marker), switch(opponent_marker))
       end
 
       @selected_move, best_score = best_move(current_marker, scores)
       best_score
     end
 
-    def score(board, opponent_marker)
+    def score(board, depth, opponent_marker)
       if board.winner(marker) == marker
-        10
+        10 - depth
       elsif board.winner(opponent_marker) == opponent_marker
-        -10
+        depth - 10
       else
         0
       end 
