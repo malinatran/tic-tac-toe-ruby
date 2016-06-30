@@ -39,8 +39,12 @@ module TicTacToe
           rescue Exception => message
             @user_interface.display_error(message)
           end
-        else
-          make_computer_move
+        elsif @current_player == @computer_player
+          if is_computer_the_first_player? 
+            make_first_move
+          else
+            make_computer_move
+          end
         end
       end
 
@@ -91,6 +95,27 @@ module TicTacToe
     end
 
     private
+
+    def is_computer_the_first_player?
+      total_cells = @board.size * @board.size
+      @board.get_empty_cells.length == total_cells && @board.retrieve_cells(@computer_player.marker).length == 0
+    end
+
+    def make_first_move
+      move = get_center_or_first_cell
+
+      @board.set_cell(move, @computer_player.marker)
+      switch_player
+    end
+
+    def get_center_or_first_cell
+      if @board.size % 2 == 0
+        return {x: 0, y: 0}
+      else
+        center = @board.size / 2
+        return {x: center, y: center} 
+      end
+    end
 
     def switch_player
       @current_player = (@current_player == @computer_player) ?

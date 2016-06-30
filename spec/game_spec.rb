@@ -82,7 +82,8 @@ module TicTacToe
       it "calls a method to make the computer's move" do 
         game.instance_variable_set(:@current_player, computer_player)
         allow(game).to receive(:is_game_over?).and_return(false, true)
-        expect(game).to receive(:make_computer_move)
+        allow(game).to receive(:is_computer_the_first_player?).and_return(true)
+        expect(game).to receive(:make_first_move)
         game.run_game_loop
       end
     end

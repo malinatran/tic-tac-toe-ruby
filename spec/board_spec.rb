@@ -116,6 +116,21 @@ module TicTacToe
       end
     end
 
+    context "#retrieve_cells" do
+      it "retrieves a single cell with player's marker" do
+        board = Board.new(2)
+        board.set_cell({x: 0, y: 0}, "X")
+        expect(board.retrieve_cells("X")).to eq([{x: 0, y: 0}])
+      end
+
+      it "retrieves multiple cells with a player's marker" do
+        board.set_cell({x: 1, y: 1}, "X")
+        board.set_cell({x: 1, y: 2}, "m")
+        board.set_cell({x: 2, y: 0}, "m")
+        expect(board.retrieve_cells("m")).to eq([{x: 1, y: 2}, {x: 2, y: 0}])
+      end
+    end 
+
     context "#is_row_filled?" do
       it "returns true if each cell in a row is filled with player's identity" do
         board.set_cell({x: 0, y: 0}, "X")
