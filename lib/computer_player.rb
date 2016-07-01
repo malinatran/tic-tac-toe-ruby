@@ -4,7 +4,7 @@ require_relative "board"
 module TicTacToe
   class ComputerPlayer < Player
 
-    attr_reader :marker, :selected_move
+    attr_reader :marker, :move
 
     def default_marker
       MARKERS[0]
@@ -17,16 +17,15 @@ module TicTacToe
   
       depth += 1
       scores = {}
-      moves = board.get_empty_cells
 
-      moves.each do |move|
-        board_copy = board.dup
-        board_copy.set_cell(move, current_marker)
-        scores[move] = minimax(board_copy, depth, switch(current_marker), switch(opponent_marker))
+      board.get_empty_cells.each do |cell|
+        next_game_state = board.dup
+        next_game_state.set_cell(cell, current_marker)
+        scores[cell] = minimax(next_game_state, depth, switch(current_marker, opponent_marker), opponent_marker)
       end
 
-      @selected_move, best_score = best_move(current_marker, scores)
-      best_score
+      @move, score = best_move(current_marker, scores)
+      score
     end
 
     def score(board, depth, opponent_marker)
@@ -39,8 +38,8 @@ module TicTacToe
       end 
     end
 
-    def switch(current_marker)
-      current_marker == "X" ? "O" : "X"
+    def switch(current_marker, opponent_player)
+      current_marker == marker ? opponent_player : marker
     end
 
     def best_move(current_marker, scores)

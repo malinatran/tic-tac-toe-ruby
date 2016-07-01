@@ -142,9 +142,8 @@ module TicTacToe
     end
 
     def request_computer_move
-      score = @computer_player.minimax(@board, DEPTH, @current_player.marker, @human_player.marker)
-
-      @computer_player.selected_move
+      @computer_player.minimax(@board, DEPTH, @current_player.marker, @human_player.marker)
+      return @computer_player.move
     end
     
     def declare_winner

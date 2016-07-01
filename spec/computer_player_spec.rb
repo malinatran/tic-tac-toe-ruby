@@ -76,7 +76,8 @@ module TicTacToe
     context "#switch" do
       it "switches current player mark to other player and returns that value" do
         player_marker = "X"
-        expect(comp_player.switch(player_marker)).to eq("O")
+        opponent_marker = "O"
+        expect(comp_player.switch(player_marker, opponent_marker)).to eq("O")
       end
     end
 
