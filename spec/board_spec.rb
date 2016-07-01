@@ -228,28 +228,5 @@ module TicTacToe
         expect(board_copy.grid).to_not eq(board.grid)
       end
     end
-
-    context "#winner" do
-      it "checks diagonals, rows, and columns to see if marker is a winner and returns a winner" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 2, y: 2}, "X")
-        expect(board.winner("X")).to eq("X")
-      end
-
-      it "returns nil if marker is not a winner" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 1, y: 1}, "O")
-        board.set_cell({x: 2, y: 2}, "X")
-        expect(board.winner("O")).to eq(nil)
-      end
-
-      it "returns nil if there is a winner but it is not the marker" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 2, y: 2}, "X")
-        expect(board.winner("O")).to eq(nil)
-      end
-    end
   end
 end

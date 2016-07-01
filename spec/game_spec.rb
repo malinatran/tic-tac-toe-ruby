@@ -19,8 +19,8 @@ module TicTacToe
     context "#initialize" do
       it "initializes a game with a board" do
         sample_board = [[nil, nil, nil],
-                        [nil, nil, nil],
-                        [nil, nil, nil]]
+          [nil, nil, nil],
+          [nil, nil, nil]]
         expect(board.grid).to eq(sample_board)
         expect(board.size).to eq(3)
       end
@@ -38,7 +38,7 @@ module TicTacToe
         expect(human_player.marker).to eq("O")
       end
     end
-    
+
     context "#start_game" do
       it "calls several methods when user provides custom size and marker" do
         options = { size: 3, marker: "F" }
@@ -73,6 +73,7 @@ module TicTacToe
       it "calls a method to make human for move" do 
         game.instance_variable_set(:@current_player, human_player)
         allow(game).to receive(:is_game_over?).and_return(false, true)
+        allow(game).to receive(:is_computer_the_current_player?).and_return(false)
         input.string = "1"
         allow(user_interface).to receive(:select_move).and_return(1)
         expect(game).to receive(:make_human_move)
@@ -82,70 +83,9 @@ module TicTacToe
       it "calls a method to make the computer's move" do 
         game.instance_variable_set(:@current_player, computer_player)
         allow(game).to receive(:is_game_over?).and_return(false, true)
-        allow(game).to receive(:is_computer_the_first_player?).and_return(true)
-        expect(game).to receive(:make_first_move)
+        allow(game).to receive(:is_computer_the_current_player?).and_return(true)
+        expect(game).to receive(:make_computer_move)
         game.run_game_loop
-      end
-    end
-
-    context "#make_computer_move" do
-      it "sets call methods to request and make move on the board and switch player" do
-        expect(game).to receive(:request_computer_move).with(no_args)
-        expect(board).to receive(:set_cell)
-        expect(game).to receive(:switch_player)
-        game.make_computer_move
-      end
-    end
-
-    context "#make_human_move" do
-      it "calls methods to map move and set cell and switch player" do
-        move = {x: 0, y: 1} 
-        expect(board).to receive(:set_cell)
-        expect(game).to receive(:switch_player)
-        game.make_human_move(move)
-      end
-    end
-
-    context "#is_game_over?" do
-      it "returns true if there is either a winner" do
-        board.set_cell({x: 0, y: 0}, "X") 
-        board.set_cell({x: 0, y: 1}, "X") 
-        board.set_cell({x: 0, y: 2}, "X") 
-        expect(game.is_game_over?).to eq(true)
-      end
-
-      it "returns true if there is a draw" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 0, y: 1}, "O")
-        board.set_cell({x: 0, y: 2}, "O")
-        board.set_cell({x: 1, y: 0}, "O")
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 1, y: 2}, "X")
-        board.set_cell({x: 2, y: 0}, "X")
-        board.set_cell({x: 2, y: 1}, "O")
-        board.set_cell({x: 2, y: 2}, "O")
-        expect(game.is_game_over?).to eq(true)
-      end
-
-      it "returns false if the game is still in session" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 0, y: 1}, "X")
-        board.set_cell({x: 0, y: 2}, "O")
-        expect(game.is_game_over?).to eq(false)
-      end
-    end
-
-    context "#get_winner" do
-      it "returns the winner" do
-        board.set_cell({x: 0, y: 0}, "X") 
-        board.set_cell({x: 0, y: 1}, "X") 
-        board.set_cell({x: 0, y: 2}, "X") 
-        expect(game.get_winner(computer_player)).to eq(computer_player)
-      end
-
-      it "returns nil if there is no winner" do
-        board.set_cell({x: 0, y: 2}, "X") 
-        expect(game.get_winner(human_player)).to eq(nil)
       end
     end
 

@@ -31,7 +31,9 @@ module TicTacToe
 
     def run_game_loop
       until is_game_over?
-        if @current_player == @human_player
+        if is_computer_the_current_player?
+          make_computer_move
+        else
           @user_interface.display_board(@board.grid)
           move = @user_interface.select_move
           begin
@@ -39,49 +41,12 @@ module TicTacToe
           rescue Exception => message
             @user_interface.display_error(message)
           end
-        elsif @current_player == @computer_player
-          if is_computer_the_first_player? 
-            make_first_move
-          else
-            make_computer_move
-          end
         end
       end
 
       @user_interface.display_board(@board.grid)
       outcome = declare_outcome 
       @user_interface.display_outcome(outcome)
-    end
-
-    def make_computer_move
-      move = request_computer_move
-      @board.set_cell(move, @computer_player.marker)
-      switch_player
-    end
-
-    def make_human_move(move)
-      @board.set_cell(move, @human_player.marker)
-      switch_player
-    end
-
-    def is_game_over?
-      win? || draw?
-    end
-
-    def get_winner(player)
-      if @board.is_either_diagonal_filled?(player.marker)
-        @winner = player
-        return @winner
-      end
-
-      @board.size.times do |n| 
-        if @board.is_row_filled?(n, player.marker) || @board.is_column_filled?(n, player.marker)
-          @winner = player
-          return @winner
-        end
-      end
-
-      nil
     end
 
     def declare_outcome
@@ -95,6 +60,22 @@ module TicTacToe
     end
 
     private
+    
+    def is_game_over?
+      win? || draw?
+    end
+
+    def is_computer_the_current_player?
+      @current_player == @computer_player
+    end
+
+    def make_computer_move
+      if is_computer_the_first_player? 
+        make_first_move
+      else
+        make_minimax_move
+      end
+    end
 
     def is_computer_the_first_player?
       total_cells = @board.size * @board.size
@@ -117,6 +98,22 @@ module TicTacToe
       end
     end
 
+    def make_minimax_move
+      move = request_computer_move
+      @board.set_cell(move, @computer_player.marker)
+      switch_player
+    end
+
+    def request_computer_move
+      @computer_player.minimax(@board, DEPTH, @current_player.marker, @human_player.marker)
+      return @computer_player.move
+    end
+
+    def make_human_move(move)
+      @board.set_cell(move, @human_player.marker)
+      switch_player
+    end
+
     def switch_player
       @current_player = (@current_player == @computer_player) ?
         @human_player :
@@ -125,7 +122,7 @@ module TicTacToe
 
     def win?
       @players.each do |player|
-        if !get_winner(player).nil?
+        if is_winner?(player)
           return true
         end
       end
@@ -137,15 +134,22 @@ module TicTacToe
       @board.is_grid_filled? && win? == false
     end
 
-    def is_computer_the_current_player?
-      @current_player == @computer_player
+    def is_winner?(player)
+      if @board.is_either_diagonal_filled?(player.marker)
+        @winner = player
+        return true
+      end
+
+      @board.size.times do |n| 
+        if @board.is_row_filled?(n, player.marker) || @board.is_column_filled?(n, player.marker)
+          @winner = player
+          return true
+        end
+      end
+
+      false
     end
 
-    def request_computer_move
-      @computer_player.minimax(@board, DEPTH, @current_player.marker, @human_player.marker)
-      return @computer_player.move
-    end
-    
     def declare_winner
       if @winner == @computer_player
         return COMPUTER

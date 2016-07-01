@@ -29,9 +29,9 @@ module TicTacToe
     end
 
     def score(board, depth, opponent_marker)
-      if board.winner(marker) == marker
+      if is_winner?(board, marker)
         10 - depth
-      elsif board.winner(opponent_marker) == opponent_marker
+      elsif is_winner?(board, opponent_marker)
         depth - 10
       else
         0
@@ -64,7 +64,21 @@ module TicTacToe
       player_markers = [marker, opponent_marker]
 
       player_markers.each do |player_marker|
-        if !board.winner(player_marker).nil?
+        if is_winner?(board, player_marker)
+          return true
+        end
+      end
+
+      false
+    end
+
+    def is_winner?(board, current_marker)
+      if board.is_either_diagonal_filled?(current_marker)
+        return true
+      end
+
+      board.size.times do |n|
+        if board.is_row_filled?(n, current_marker) || board.is_column_filled?(n, current_marker)
           return true
         end
       end
