@@ -2,6 +2,8 @@ require_relative "board"
 require_relative "computer_player"
 require_relative "human_player"
 require_relative "user_interface"
+require_relative "game_state"
+require_relative "constants"
 
 module TicTacToe
   class Game
@@ -29,44 +31,46 @@ module TicTacToe
       @human_player.marker = @marker
     end
 
+    def generate_markers
+      markers = []
+
+      @players.each do |player|
+        markers << player.marker
+      end
+
+      markers
+    end
+
     def run_game_loop
-      until is_game_over?
+      markers = generate_markers
+
+      until TicTacToe::is_game_over?(@board, markers)
         if is_computer_the_current_player?
           make_computer_move
         else
-          @user_interface.display_board(@board.grid)
-          move = @user_interface.select_move
-          begin
-            make_human_move(move)
-          rescue Exception => message
-            @user_interface.display_error(message)
-          end
+          make_human_move  
         end
       end
 
       @user_interface.display_board(@board.grid)
-      outcome = declare_outcome 
+      outcome = declare_outcome(@board, markers)
       @user_interface.display_outcome(outcome)
     end
 
-    def declare_outcome
-      if is_game_over?
-        if draw?
-          return DRAW
-        elsif win?
-          declare_winner
-        end
-      end
-    end
-
     private
-    
-    def is_game_over?
-      win? || draw?
-    end
 
     def is_computer_the_current_player?
       @current_player == @computer_player
+    end
+
+    def make_human_move
+      @user_interface.display_board(@board.grid)
+      move = @user_interface.select_move
+      begin
+        set_human_move(move)
+      rescue Exception => message
+        @user_interface.display_error(message)
+      end
     end
 
     def make_computer_move
@@ -109,7 +113,7 @@ module TicTacToe
       return @computer_player.move
     end
 
-    def make_human_move(move)
+    def set_human_move(move)
       @board.set_cell(move, @human_player.marker)
       switch_player
     end
@@ -120,41 +124,21 @@ module TicTacToe
         @computer_player
     end
 
-    def win?
+    def declare_outcome(board, markers)
+      if TicTacToe::is_game_over?(board, markers) 
+        if TicTacToe::draw?(board, markers)
+          return DRAW
+        elsif TicTacToe::win?(board, markers)
+          determine_winner
+        end
+      end
+    end
+
+    def determine_winner
       @players.each do |player|
-        if is_winner?(player)
-          return true
+        if TicTacToe::is_winner?(@board, player.marker)
+          return player.marker
         end
-      end
-
-      false
-    end
-
-    def draw?
-      @board.is_grid_filled? && win? == false
-    end
-
-    def is_winner?(player)
-      if @board.is_either_diagonal_filled?(player.marker)
-        @winner = player
-        return true
-      end
-
-      @board.size.times do |n| 
-        if @board.is_row_filled?(n, player.marker) || @board.is_column_filled?(n, player.marker)
-          @winner = player
-          return true
-        end
-      end
-
-      false
-    end
-
-    def declare_winner
-      if @winner == @computer_player
-        return COMPUTER
-      elsif @winner == @human_player
-        return HUMAN 
       end
     end
   end

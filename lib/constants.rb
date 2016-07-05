@@ -8,9 +8,7 @@ module TicTacToe
       two: "2",
       three: "3",
       four: "4" }
-  COMPUTER = "Computer"
-  HUMAN = "Human"
-  DRAW = "Draw"
+  DRAW = "Draw",
   DEPTH = 0
   DEFAULT_MESSAGES = 
     { welcome:  "Welcome to tic-tac-toe!",

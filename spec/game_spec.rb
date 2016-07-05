@@ -62,20 +62,25 @@ module TicTacToe
       end
     end
 
+    context "#generate_markers" do
+      it "creates an array of markers" do
+        expect(game.generate_markers).to eq(["X", "O"])
+      end
+    end
+
     context "#run_game_loop" do
       it "calls methods to display board, select move, and make human move if current player is human" do 
-        allow(game).to receive(:is_game_over?).and_return(false, true)
+        allow(TicTacToe).to receive(:is_game_over?).and_return(false, true)
         allow(game).to receive(:is_computer_the_current_player?).and_return(false)
         input.string = "1"
-        allow(user_interface).to receive(:select_move).and_return(1)
-        expect(user_interface).to receive(:display_board).exactly(2).times
-        expect(user_interface).to receive(:select_move)
         expect(game).to receive(:make_human_move)
+        expect(user_interface).to receive(:display_board)
+        expect(user_interface).to receive(:display_outcome)
         game.run_game_loop
       end  
 
       it "calls a method to make the computer's move" do 
-        allow(game).to receive(:is_game_over?).and_return(false, true)
+        allow(TicTacToe).to receive(:is_game_over?).and_return(false, true)
         allow(game).to receive(:is_computer_the_current_player?).and_return(true)
         expect(game).to receive(:make_computer_move)
         expect(user_interface).to receive(:display_board)
@@ -84,27 +89,11 @@ module TicTacToe
       end
 
       it "calls several methods to display board and outcome regardless of current player" do
-        allow(game).to receive(:is_game_over?).and_return(true)
+        allow(TicTacToe).to receive(:is_game_over?).and_return(true)
         expect(user_interface).to receive(:display_board)
         expect(game).to receive(:declare_outcome)
         expect(user_interface).to receive(:display_outcome)
         game.run_game_loop
-      end
-    end
-
-    context "#declare_outcome" do
-      it "returns information about draw" do
-        allow(game).to receive(:is_game_over?).and_return(true, false)
-        allow(game).to receive(:draw?).and_return(true, false)
-        expect(game.declare_outcome).to eq("Draw")
-      end
-
-      it "returns information about winner" do
-        allow(game).to receive(:is_game_over?).and_return(true, false)
-        allow(game).to receive(:draw?).and_return(false)
-        allow(game).to receive(:win?).and_return(true, false)
-        expect(game).to receive(:declare_winner)
-        game.declare_outcome
       end
     end
   end

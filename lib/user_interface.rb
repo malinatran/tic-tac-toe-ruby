@@ -1,5 +1,6 @@
 require_relative "user_interface_helper"
 require_relative "input_validator"
+require_relative "constants"
 
 module TicTacToe 
   class UserInterface 
@@ -77,9 +78,9 @@ module TicTacToe
     def display_outcome(outcome)
       if outcome == DRAW
         @ui_helper.display(DEFAULT_MESSAGES[:draw], NEW_LINE)
-      elsif outcome == COMPUTER
+      elsif outcome == MARKERS[0]
         @ui_helper.display(DEFAULT_MESSAGES[:computer], NEW_LINE)
-      elsif outcome == HUMAN 
+      else 
         @ui_helper.display(DEFAULT_MESSAGES[:human], NEW_LINE)
       end
 

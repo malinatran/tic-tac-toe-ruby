@@ -33,7 +33,7 @@ module TicTacToe
         board.set_cell({x: 0, y: 1}, "O")
         board.set_cell({x: 0, y: 2}, "X")
         board.set_cell({x: 1, y: 1}, "X")
-        expect(comp_player.minimax(board, depth, "X", "O")).to eq(9)
+        expect(comp_player.minimax(board, depth, "X", "O")).to eq(8)
       end
     end
 
@@ -86,42 +86,6 @@ module TicTacToe
         scores = {{x: 0, y: 0} => 10,
           {x: 1, y: 2} => -10}
         expect(comp_player.best_move("X", scores)).to eq([{x: 0, y: 0}, 10])
-      end
-    end
-
-    context "#is_game_over?" do
-      it "returns true if there is a win" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 1, y: 0}, "X")
-        board.set_cell({x: 2, y: 0}, "X")
-        expect(comp_player.is_game_over?(board, "X")).to eq(true)  
-      end
-
-      it "returns true if there is a win regardless of opponent marker value" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 1, y: 0}, "X")
-        board.set_cell({x: 2, y: 0}, "X")
-        expect(comp_player.is_game_over?(board, "O")).to eq(true)  
-      end
-
-      it "returns true if there is a draw" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 0, y: 1}, "O")
-        board.set_cell({x: 0, y: 2}, "X")
-        board.set_cell({x: 1, y: 0}, "O")
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 1, y: 2}, "X")
-        board.set_cell({x: 2, y: 0}, "O")
-        board.set_cell({x: 2, y: 1}, "X")
-        board.set_cell({x: 2, y: 2}, "O")
-        expect(comp_player.is_game_over?(board, "X")).to eq(true)
-      end
-
-      it "returns false if game is not over" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 1, y: 0}, "O")
-        board.set_cell({x: 1, y: 1}, "X")
-        expect(comp_player.is_game_over?(board, "O")).to eq(false)
       end
     end
   end

@@ -1,4 +1,5 @@
 require_relative "player"
+require_relative "constants"
 
 module TicTacToe
   class HumanPlayer < Player
