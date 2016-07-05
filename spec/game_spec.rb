@@ -7,14 +7,15 @@ module TicTacToe
     let(:board)           { Board.new }
     let(:computer_player) { ComputerPlayer.new }
     let(:human_player)    { HumanPlayer.new }
-    let(:user_interface)  { UserInterface.new(helper) }
+    let(:user_interface)  { UserInterface.new(ui_helper, validator) }
     let(:game)            { Game.new(board: board, 
                                      computer_player: computer_player, 
                                      human_player: human_player,
                                      user_interface: user_interface) }
     let(:input)           { StringIO.new }
     let(:output)          { StringIO.new }
-    let(:helper)          { Helper.new(input, output) }
+    let(:ui_helper)       { UserInterfaceHelper.new }
+    let(:validator)       { InputValidator.new } 
 
     context "#initialize" do
       it "initializes a game with a board" do

@@ -1,8 +1,7 @@
 module TicTacToe
-  
-  MARKERS = ["X", "O"]
-
   class Player
+
+    MARKERS = ["X", "O"]
 
     attr_reader :marker
 
