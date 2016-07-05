@@ -20,4 +20,5 @@ module TicTacToe
       draw:     "Nobody won!",
       computer: "Computer won!",
       human:    "You (somehow) won!" }
+
 end

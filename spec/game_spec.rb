@@ -63,29 +63,31 @@ module TicTacToe
     end
 
     context "#run_game_loop" do
-      it "displays the board when current player is human player" do 
-        game.instance_variable_set(:@current_player, human_player)
-        input.string = "1"
-        allow(game).to receive(:is_game_over?).and_return(false, true)
-        expect(user_interface).to receive(:display_board).exactly(2).times
-        game.run_game_loop
-      end  
-
-      it "calls a method to make human for move" do 
-        game.instance_variable_set(:@current_player, human_player)
+      it "calls methods to display board, select move, and make human move if current player is human" do 
         allow(game).to receive(:is_game_over?).and_return(false, true)
         allow(game).to receive(:is_computer_the_current_player?).and_return(false)
         input.string = "1"
         allow(user_interface).to receive(:select_move).and_return(1)
+        expect(user_interface).to receive(:display_board).exactly(2).times
+        expect(user_interface).to receive(:select_move)
         expect(game).to receive(:make_human_move)
         game.run_game_loop
-      end
+      end  
 
       it "calls a method to make the computer's move" do 
-        game.instance_variable_set(:@current_player, computer_player)
         allow(game).to receive(:is_game_over?).and_return(false, true)
         allow(game).to receive(:is_computer_the_current_player?).and_return(true)
         expect(game).to receive(:make_computer_move)
+        expect(user_interface).to receive(:display_board)
+        expect(user_interface).to receive(:display_outcome)
+        game.run_game_loop
+      end
+
+      it "calls several methods to display board and outcome regardless of current player" do
+        allow(game).to receive(:is_game_over?).and_return(true)
+        expect(user_interface).to receive(:display_board)
+        expect(game).to receive(:declare_outcome)
+        expect(user_interface).to receive(:display_outcome)
         game.run_game_loop
       end
     end
