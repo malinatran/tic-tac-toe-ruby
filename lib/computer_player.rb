@@ -19,9 +19,9 @@ module TicTacToe
       scores = {}
 
       board.get_empty_cells.each do |cell|
-        next_game_state = board.dup
-        next_game_state.set_cell(cell, current_marker)
-        scores[cell] = minimax(next_game_state, depth, switch(current_marker, opponent_marker), opponent_marker)
+        board.set_cell(cell, current_marker)
+        scores[cell] = minimax(board, depth, switch(current_marker, opponent_marker), opponent_marker)
+        board.clear_cell(cell)
       end
 
       @move, score = best_move(current_marker, scores)

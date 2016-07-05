@@ -122,9 +122,5 @@ module TicTacToe
       end
       true
     end
-
-    def dup
-      Marshal.load(Marshal.dump(self))
-    end
   end
 end

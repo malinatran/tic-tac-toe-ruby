@@ -218,15 +218,5 @@ module TicTacToe
         expect(board.is_forward_diagonal_filled?("O")).to eq(false)
       end
     end
-
-    context "#dup" do
-      it "makes a copy of the board and its grid" do
-        board_copy = board.dup
-        board_copy.set_cell({x: 0, y: 0}, "m")
-        board_copy.set_cell({x: 1, y: 1}, "m")
-        board_copy.set_cell({x: 2, y: 2}, "m")
-        expect(board_copy.grid).to_not eq(board.grid)
-      end
-    end
   end
 end
