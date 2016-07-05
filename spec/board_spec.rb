@@ -3,6 +3,7 @@ require_relative "../lib/board"
 
 module TicTacToe
   describe TicTacToe::Board do
+
     let(:board) { Board.new }
 
     context "#initialize" do
@@ -13,6 +14,15 @@ module TicTacToe
 
       it "initializes with a default size of three" do
         expect(board.size).to eq(3)
+      end
+    end
+
+    context "#size" do
+      it "sets the size and creates a new grid based on that size" do
+        size = 5
+        board.size=(size)
+        expect(board.size).to eq(5)
+        expect(board.grid.size).to eq(5)
       end
     end
 
@@ -106,6 +116,21 @@ module TicTacToe
       end
     end
 
+    context "#retrieve_cells" do
+      it "retrieves a single cell with player's marker" do
+        board = Board.new(2)
+        board.set_cell({x: 0, y: 0}, "X")
+        expect(board.retrieve_cells("X")).to eq([{x: 0, y: 0}])
+      end
+
+      it "retrieves multiple cells with a player's marker" do
+        board.set_cell({x: 1, y: 1}, "X")
+        board.set_cell({x: 1, y: 2}, "m")
+        board.set_cell({x: 2, y: 0}, "m")
+        expect(board.retrieve_cells("m")).to eq([{x: 1, y: 2}, {x: 2, y: 0}])
+      end
+    end 
+
     context "#is_row_filled?" do
       it "returns true if each cell in a row is filled with player's identity" do
         board.set_cell({x: 0, y: 0}, "X")
@@ -191,6 +216,16 @@ module TicTacToe
         board.set_cell({x: 1, y: 1}, "X")
         board.set_cell({x: 2, y: 0}, "O")
         expect(board.is_forward_diagonal_filled?("O")).to eq(false)
+      end
+    end
+
+    context "#dup" do
+      it "makes a copy of the board and its grid" do
+        board_copy = board.dup
+        board_copy.set_cell({x: 0, y: 0}, "m")
+        board_copy.set_cell({x: 1, y: 1}, "m")
+        board_copy.set_cell({x: 2, y: 2}, "m")
+        expect(board_copy.grid).to_not eq(board.grid)
       end
     end
   end

@@ -3,8 +3,10 @@ require_relative "../lib/computer_player"
 
 module TicTacToe
   describe TicTacToe::ComputerPlayer do
-    let (:board) { Board.new }
+
     let (:comp_player) { ComputerPlayer.new }
+    let (:board)       { Board.new }
+    let (:depth)       { 0 }
 
     context "#initialize" do
       it "initializes with a marker based on user input" do
@@ -18,89 +20,108 @@ module TicTacToe
       end
     end
 
-    context "#request_move" do
-      it "returns center cell as the first move for any given game" do
-        expect(comp_player.request_move(board, "M")).to eq({x: 1, y: 1})
-      end
-
-      it "returns the first corner cell that is available if center cell is not available" do
-        board.set_cell({x: 1, y: 1}, "X")
-        expect(comp_player.request_move(board, "O")).to eq({x: 0, y: 0})
-      end
-    end
-
-    context "#get_center_move" do
-      it "retrieves the center cell of a 3x3 grid" do
-        expect(comp_player.get_center_move(board)).to eq({x: 1, y: 1})
-      end
-
-      it "retrieves the center cell of a 5x5 grid" do
-        board = Board.new(5)
-        expect(comp_player.get_center_move(board)).to eq({x: 2, y: 2}) 
-      end
-
-      it "returns nil if there is no center cell (e.g. 2x2) on the grid" do
+    context "#minimax" do
+      it "iterates through simple board and returns move with a score of 10" do
         board = Board.new(2)
         board.set_cell({x: 0, y: 0}, "X")
-        expect(comp_player.get_center_move(board)).to eq(nil) 
-      end
-    end
-
-    context "#get_winning_move" do
-      it "retrieves the cell that would fill a row" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 0, y: 1}, "X")
-        expect(comp_player.get_winning_move(board, "X")).to eq({x: 0, y: 2})
+        board.set_cell({x: 1, y: 0}, "X")
+        expect(comp_player.minimax(board, depth, "X", "O")).to eq(10)
       end
 
-      it "retrieves the cell that would fill a column" do
-        board.set_cell({x: 2, y: 2}, "X")
-        board.set_cell({x: 2, y: 1}, "X")
-        expect(comp_player.get_winning_move(board, "X")).to eq({x: 2, y: 0})
-      end
-
-      it "retrieves the cell that would fill a diagonal" do
+      it "iterates through relatively complex board and returns move with a score minus depth" do
         board.set_cell({x: 0, y: 0}, "O")
-        board.set_cell({x: 1, y: 1}, "O")
-        expect(comp_player.get_winning_move(board, "O")).to eq({x: 2, y: 2})
-      end
-
-      it "returns nil when there are no available winning cells" do
-        expect(comp_player.get_winning_move(board, "X")).to eq(nil)
+        board.set_cell({x: 0, y: 1}, "O")
+        board.set_cell({x: 0, y: 2}, "X")
+        board.set_cell({x: 1, y: 1}, "X")
+        expect(comp_player.minimax(board, depth, "X", "O")).to eq(9)
       end
     end
 
-    context "#get_corner_move" do
-      it "retrieves one of the four corner cells of a grid" do
-        expect(comp_player.get_corner_move(board)).to eq({x: 0, y: 0})
-      end
-
-      it "retrieves another corner cell if previous cell(s) already have a marker" do
+    context "#score" do
+      it "returns a score of 10 if the winner is the AI" do
         board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 0, y: 2}, "O")
-        expect(comp_player.get_corner_move(board)).to eq({x: 2, y: 0})
+        board.set_cell({x: 1, y: 0}, "X")
+        board.set_cell({x: 2, y: 0}, "X")
+        expect(comp_player.score(board, depth, "O")).to eq(10)
       end
       
-      it "retrieves the third corner cell if two other corner cells already have a marker" do
+      it "returns a score of -10 if the winner is the human player" do
+        board.set_cell({x: 0, y: 0}, "O")
+        board.set_cell({x: 1, y: 0}, "O")
+        board.set_cell({x: 2, y: 0}, "O")
+        expect(comp_player.score(board, depth, "O")).to eq(-10)
+      end
+      
+      it "returns 0 if there is no winner and the game is not a draw" do
+        board.set_cell({x: 1, y: 0}, "O")
         board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 0, y: 2}, "O")
-        expect(comp_player.get_corner_move(board)).to eq({x: 2, y: 0})
+        board.set_cell({x: 0, y: 1}, "O")
+        expect(comp_player.score(board, depth, "X")).to eq(0)
       end
 
-      it "returns nil if all corner cells already have an marker" do
+      it "returns 0 if the game is a draw" do
         board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 0, y: 2}, "O")
-        board.set_cell({x: 2, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "O")
+        board.set_cell({x: 0, y: 2}, "X")
+        board.set_cell({x: 1, y: 0}, "O")
+        board.set_cell({x: 1, y: 1}, "X")
+        board.set_cell({x: 1, y: 2}, "X")
+        board.set_cell({x: 2, y: 0}, "O")
+        board.set_cell({x: 2, y: 1}, "X")
         board.set_cell({x: 2, y: 2}, "O")
-        expect(comp_player.get_corner_move(board)).to eq(nil)
+        expect(comp_player.score(board, depth, "O")).to eq(0)
       end
     end
 
-    context "#get_random_move" do
-      it "returns an available cell" do 
-        board = Board.new(2)
+    context "#switch" do
+      it "switches current player mark to other player and returns that value" do
+        player_marker = "X"
+        opponent_marker = "O"
+        expect(comp_player.switch(player_marker, opponent_marker)).to eq("O")
+      end
+    end
+
+    context "#best_move" do
+      it "returns the most optimal move for AI" do
+        scores = {{x: 0, y: 0} => 10,
+          {x: 1, y: 2} => -10}
+        expect(comp_player.best_move("X", scores)).to eq([{x: 0, y: 0}, 10])
+      end
+    end
+
+    context "#is_game_over?" do
+      it "returns true if there is a win" do
         board.set_cell({x: 0, y: 0}, "X")
-        expect(comp_player.get_random_move(board)).not_to eq({x: 0, y: 0}) 
+        board.set_cell({x: 1, y: 0}, "X")
+        board.set_cell({x: 2, y: 0}, "X")
+        expect(comp_player.is_game_over?(board, "X")).to eq(true)  
+      end
+
+      it "returns true if there is a win regardless of opponent marker value" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 1, y: 0}, "X")
+        board.set_cell({x: 2, y: 0}, "X")
+        expect(comp_player.is_game_over?(board, "O")).to eq(true)  
+      end
+
+      it "returns true if there is a draw" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 0, y: 1}, "O")
+        board.set_cell({x: 0, y: 2}, "X")
+        board.set_cell({x: 1, y: 0}, "O")
+        board.set_cell({x: 1, y: 1}, "X")
+        board.set_cell({x: 1, y: 2}, "X")
+        board.set_cell({x: 2, y: 0}, "O")
+        board.set_cell({x: 2, y: 1}, "X")
+        board.set_cell({x: 2, y: 2}, "O")
+        expect(comp_player.is_game_over?(board, "X")).to eq(true)
+      end
+
+      it "returns false if game is not over" do
+        board.set_cell({x: 0, y: 0}, "X")
+        board.set_cell({x: 1, y: 0}, "O")
+        board.set_cell({x: 1, y: 1}, "X")
+        expect(comp_player.is_game_over?(board, "O")).to eq(false)
       end
     end
   end

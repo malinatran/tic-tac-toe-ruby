@@ -5,9 +5,14 @@ module TicTacToe
 
   class Board
     attr_reader :size, :grid
-    
+
     def initialize(size = nil)
       @size = size || 3 
+      @grid = create_grid
+    end
+
+    def size=(size)
+      @size = size
       @grid = create_grid
     end
 
@@ -21,20 +26,22 @@ module TicTacToe
 
     def get_empty_cells
       empty_squares = []
+
       @size.times do |x|
         @size.times do |y|
-          if self.is_cell_empty?({x: x, y: y})
+          if is_cell_empty?({x: x, y: y})
             empty_squares << {x: x, y: y}
           end
         end
       end
+
       empty_squares
     end
 
     def is_grid_filled?
-      self.get_empty_cells.length == 0
+      get_empty_cells.length == 0
     end
-    
+
     def set_cell(move, marker)
       x = move[:x]
       y = move[:y]
@@ -57,6 +64,21 @@ module TicTacToe
       end
     end
 
+    def retrieve_cells(marker)
+      player_cells = []
+
+      @size.times do |x|
+        @size.times do |y|
+          if @grid[x][y] == marker 
+            player_cells << {x: x, y: y}
+          end
+        end
+      end
+
+      player_cells
+    end
+
+
     def is_row_filled?(x, marker)
       @grid[x].each do |cell|
         if cell != marker
@@ -67,8 +89,8 @@ module TicTacToe
     end
 
     def is_column_filled?(y, marker)
-      @grid.each do |cell|
-        if cell[y] != marker
+      @grid.each do |row|
+        if row[y] != marker
           return false
         end
       end
@@ -99,6 +121,10 @@ module TicTacToe
         i += 1
       end
       true
+    end
+
+    def dup
+      Marshal.load(Marshal.dump(self))
     end
   end
 end

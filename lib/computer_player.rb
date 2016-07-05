@@ -2,81 +2,88 @@ require_relative "player"
 require_relative "board"
 
 module TicTacToe
-
   class ComputerPlayer < Player
-    attr_reader :marker
+
+    attr_reader :marker, :move
 
     def default_marker
       MARKERS[0]
     end
 
-    def request_move(board, opponent_marker)
-      @opponent_marker = opponent_marker
-      moves = [self.get_center_move(board),
-               self.get_winning_move(board, marker),
-               self.get_winning_move(board, @opponent_marker),
-               self.get_corner_move(board),
-               self.get_random_move(board)]
-      i = 0
-      move = [] 
-      while move.length == 0 do
-        if moves[i] != nil
-          return moves[i]
-        end
-        i += 1
+    def minimax(board, depth, current_marker, opponent_marker)
+      if is_game_over?(board, opponent_marker)
+        return score(board, depth, opponent_marker)
       end
+  
+      depth += 1
+      scores = {}
+
+      board.get_empty_cells.each do |cell|
+        next_game_state = board.dup
+        next_game_state.set_cell(cell, current_marker)
+        scores[cell] = minimax(next_game_state, depth, switch(current_marker, opponent_marker), opponent_marker)
+      end
+
+      @move, score = best_move(current_marker, scores)
+      score
     end
 
-    def get_center_move(board)
-      move = {}
-      if board.size % 2 != 0
-        center = board.size / 2
-        move[:x] = move[:y] = center
-        if board.is_cell_empty?(move)
-          move
-        end
+    def score(board, depth, opponent_marker)
+      if is_winner?(board, marker)
+        10 - depth
+      elsif is_winner?(board, opponent_marker)
+        depth - 10
       else
-        nil
+        0
+      end 
+    end
+
+    def switch(current_marker, opponent_player)
+      current_marker == marker ? opponent_player : marker
+    end
+
+    def best_move(current_marker, scores)
+      if current_marker == "X"
+        scores.max_by {|k, v| v}
+      else
+        scores.min_by {|k, v| v}
       end
     end
 
-    def get_winning_move(board, marker)
-      empty_cells = board.get_empty_cells
-      empty_cells.each do |coordinates| 
-        board.set_cell(coordinates, marker)
-        x = coordinates[:x]
-        y = coordinates[:y]
-        if board.is_row_filled?(x, marker) || 
-          board.is_column_filled?(y, marker) || 
-          board.is_either_diagonal_filled?(marker)
-          board.clear_cell({x: x, y: y})
-          move = {x: x, y: y}
-          return move 
-        else
-          board.clear_cell({x: x, y: y})
+    def is_game_over?(board, opponent_marker)
+      draw?(board, opponent_marker) || win?(board, opponent_marker)
+    end
+
+    private
+
+    def draw?(board, opponent_marker)
+      board.is_grid_filled? && !win?(board, opponent_marker)
+    end
+
+    def win?(board, opponent_marker)
+      player_markers = [marker, opponent_marker]
+
+      player_markers.each do |player_marker|
+        if is_winner?(board, player_marker)
+          return true
         end
       end
-      nil
+
+      false
     end
 
-    def get_corner_move(board)
-      edge = board.size - 1
-      corner_moves = [{x: 0,    y: 0},
-                      {x: 0,    y: edge},
-                      {x: edge, y: 0},
-                      {x: edge, y: edge}]
-      corner_moves.each do |corner| 
-        if board.grid[corner[:x]][corner[:y]].nil? 
-          return corner 
+    def is_winner?(board, current_marker)
+      if board.is_either_diagonal_filled?(current_marker)
+        return true
+      end
+
+      board.size.times do |n|
+        if board.is_row_filled?(n, current_marker) || board.is_column_filled?(n, current_marker)
+          return true
         end
       end
-      nil
-    end
 
-    def get_random_move(board)
-      empty_cells = board.get_empty_cells
-      random_index = rand(empty_cells.length)
-      empty_cells[random_index]
+      false
     end
   end
 end

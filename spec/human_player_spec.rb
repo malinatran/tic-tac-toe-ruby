@@ -3,6 +3,7 @@ require_relative "../lib/human_player"
 
 module TicTacToe
   describe TicTacToe::HumanPlayer do
+
     context "#initialize" do
       it "initializes with a marker based on user input" do
         human_player = HumanPlayer.new("M")

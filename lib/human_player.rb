@@ -1,9 +1,9 @@
 require_relative "player"
 
 module TicTacToe
-
   class HumanPlayer < Player
-    attr_reader :marker
+
+    attr_accessor :marker
     
     def default_marker
       MARKERS[1]

@@ -3,6 +3,7 @@ module TicTacToe
   MARKERS = ["X", "O"]
 
   class Player
+
     attr_reader :marker
 
     def initialize(marker = nil)

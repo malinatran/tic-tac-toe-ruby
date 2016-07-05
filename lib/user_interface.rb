@@ -1,169 +1,87 @@
-require_relative "board"
-require_relative "game"
-require_relative "human_player"
+require_relative "helper"
 
 module TicTacToe 
   class UserInterface 
-    attr_accessor :input, :output
 
-    NEW_LINE = "\n"
-    PROMPT = "> "
-
-    def initialize(input = STDIN, output = STDOUT)
-      @input = input 
-      @output = output
+    def initialize(helper)
+      @helper = helper
       @size = 3
       @marker = "O"
     end
 
-    def run_menu_loop
-      display(default_messages[:welcome])
+    def menu
+      "Enter 1, 2, 3, or 4 to continue:
+      (1) Change board size
+      (2) Change marker
+      (3) Proceed to game with a #{@size}x#{@size} board and #{@marker} as your marker
+      (4) Exit"
+    end
+
+    def get_options
+      @helper.display(DEFAULT_MESSAGES[:welcome])
 
       begin
-        display(NEW_LINE, default_messages[:menu], NEW_LINE)
-        menu_option = get_input
-        perform_menu_action(menu_option)
+        @helper.display(NEW_LINE, menu, NEW_LINE)
+        menu_option = @helper.get_input
+        case menu_option
+        when OPTIONS[:one] 
+          select_size 
+        when OPTIONS[:two] 
+          select_marker 
+        when OPTIONS[:three] 
+          return { size: @size, marker: @marker }
+        when OPTIONS[:four]
+          @helper.display(DEFAULT_MESSAGES[:goodbye], NEW_LINE)
+          @quit_game = true
+        end
       end until @quit_game
     end
 
-    def initialize_game
-      board = Board.new(@size)
-      human_player = HumanPlayer.new(@marker)
-      @game = Game.new(board: board, human_player: human_player)
-    end
-
-    def run_game_loop
-      until @game.is_game_over?
-        if @game.current_player == @game.human_player
-          display_board
-          move = select_move
-          begin 
-            @game.make_human_move(move)
-          rescue Exception => message
-            display(NEW_LINE, message, NEW_LINE)
-          end
-        else
-          @game.make_computer_move
-        end
-      end
-
-      display_board
-      display_outcome
-    end
-
-    def perform_menu_action(menu_option) 
-      case menu_option
-      when "1"
-        select_size 
-      when "2"
-        select_marker 
-      when "3"
-        initialize_game
-        run_game_loop
-      when "4"
-        puts "Adios!"
-        @quit_game = true
-      end
+    def display_error(message)
+      @helper.display(NEW_LINE, message, NEW_LINE)
     end
 
     def select_size
       begin 
-        display(default_messages[:size], NEW_LINE)
-        size = get_input.to_i
-      end until is_size_valid?(size)
+        @helper.display(DEFAULT_MESSAGES[:size], NEW_LINE)
+        size = @helper.get_input.to_i
+      end until @helper.is_size_valid?(size)
 
       @size = size
     end
 
     def select_marker
       begin
-        display(default_messages[:marker], NEW_LINE)
-        marker = get_input
-      end until is_marker_valid?(marker)
+        @helper.display(DEFAULT_MESSAGES[:marker], NEW_LINE)
+        marker = @helper.get_input
+      end until @helper.is_marker_valid?(marker)
 
       @marker = marker
     end
 
-    def display_board
-      display(NEW_LINE, draw_board, NEW_LINE)
-    end
-
     def select_move
       begin
-        display(default_messages[:move], NEW_LINE)
-        move = get_input.to_i
-      end until is_move_valid?(move) 
+        @helper.display(DEFAULT_MESSAGES[:move], NEW_LINE)
+        move = @helper.get_input.to_i
+      end until @helper.is_move_valid?(move, @size) 
 
-      move
+      @helper.map_move(move, @size)
     end
 
-    def display_outcome
-      outcome = @game.declare_outcome
-
-      if outcome == "draw"
-        display(default_messages[:draw], NEW_LINE)
-      elsif outcome == "computer"
-        display(default_messages[:computer], NEW_LINE)
-      else 
-        display(default_messages[:human], NEW_LINE)
-      end
+    def display_board(board)
+      @helper.display(NEW_LINE, @helper.draw_board(board, @size), NEW_LINE)
     end
 
-    private
-
-    def get_input
-      display(PROMPT)
-      @input.gets.chomp
-    end
-
-    def display(*messages)
-      messages.each do |message|
-        output.print message
-      end
-    end
-
-    # Should I make this a constant?
-    def default_messages
-      { welcome:  "Welcome to tic-tac-toe!",
-        menu:     "Enter 1, 2, 3, or 4 to continue:
-        (1) Change board size
-        (2) Change marker
-        (3) Proceed to game with with a #{@size}x#{@size} board and #{@marker} as your marker
-        (4) Exit",
-        size:     "Enter a board size:",
-        marker:   "Enter a marker:",
-        move:     "Enter your move:",
-        draw:     "Nobody won!",
-        computer: "Computer won!",
-        human:    "You (somehow) won!" }
-    end
-
-    def is_size_valid?(size)
-      size <= 10 && size > 1
-    end
-
-    def is_marker_valid?(marker)
-      marker != "X" && marker.length == 1 ? true : false
-    end
-
-    def is_move_valid?(move)
-      cell_nums = @size * @size
-      move <= cell_nums && move > 0 ? true : false
-    end
-
-    def draw_board
-      board = ""
-
-      @game.board.grid.each_with_index do |row, i|
-        row.each_with_index do |cell, j|
-          cell_num = (i * @size) + j + 1
-          board << (cell || cell_num.to_s).to_s.center(3)
-          board << "|" if j < @size - 1
-          board << "\n" if (j + 1) % @size == 0
-        end
+    def display_outcome(outcome)
+      if outcome == DRAW
+        @helper.display(DEFAULT_MESSAGES[:draw], NEW_LINE)
+      elsif outcome == COMPUTER
+        @helper.display(DEFAULT_MESSAGES[:computer], NEW_LINE)
+      elsif outcome == HUMAN 
+        @helper.display(DEFAULT_MESSAGES[:human], NEW_LINE)
       end
 
-      board
+      @helper.display(NEW_LINE)
     end
   end
 end
