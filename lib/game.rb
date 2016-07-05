@@ -2,7 +2,6 @@ require_relative "board"
 require_relative "computer_player"
 require_relative "human_player"
 require_relative "user_interface"
-require_relative "constants"
 
 module TicTacToe
   class Game

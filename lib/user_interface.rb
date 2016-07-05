@@ -8,7 +8,7 @@ module TicTacToe
       @ui_helper = ui_helper
       @validator = validator
       @size = 3
-      @marker = "O"
+      @marker = MARKERS[1] 
     end
 
     def menu

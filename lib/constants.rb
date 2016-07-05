@@ -1,5 +1,6 @@
 module TicTacToe 
   
+  MARKERS = ["X", "O"]
   NEW_LINE = "\n"
   PROMPT = "> "
   OPTIONS = 

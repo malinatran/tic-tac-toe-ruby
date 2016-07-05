@@ -43,7 +43,7 @@ module TicTacToe
     end
 
     def best_move(current_marker, scores)
-      if current_marker == "X"
+      if current_marker == MARKERS[0]
         scores.max_by {|k, v| v}
       else
         scores.min_by {|k, v| v}
