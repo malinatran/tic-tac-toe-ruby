@@ -11,7 +11,7 @@ module TicTacToe
     end
 
     def get_input
-      display(PROMPT)
+      display(FORMAT[:prompt])
       @input.gets.chomp
     end
 

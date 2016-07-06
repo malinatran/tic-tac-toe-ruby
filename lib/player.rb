@@ -10,5 +10,9 @@ module TicTacToe
     def default_marker
       nil
     end
+
+    def make_move
+      nil
+    end
   end
 end

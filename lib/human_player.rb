@@ -1,5 +1,5 @@
-require_relative "player"
 require_relative "constants"
+require_relative "player"
 
 module TicTacToe
   class HumanPlayer < Player
@@ -7,7 +7,7 @@ module TicTacToe
     attr_accessor :marker
     
     def default_marker
-      MARKERS[1]
+      MARKER[:human]
     end
   end
 end

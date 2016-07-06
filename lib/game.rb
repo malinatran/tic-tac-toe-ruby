@@ -1,12 +1,14 @@
 require_relative "board"
 require_relative "computer_player"
+require_relative "constants"
+require_relative "game_state"
 require_relative "human_player"
 require_relative "user_interface"
-require_relative "game_state"
-require_relative "constants"
 
 module TicTacToe
   class Game
+
+    DEPTH = 0
 
     def initialize(params = {})
       @board = params[:board]
@@ -44,7 +46,7 @@ module TicTacToe
     def run_game_loop
       markers = generate_markers
 
-      until TicTacToe::is_game_over?(@board, markers)
+      until TicTacToe::GameState::is_game_over?(@board, markers)
         if is_computer_the_current_player?
           make_computer_move
         else
@@ -52,9 +54,7 @@ module TicTacToe
         end
       end
 
-      @user_interface.display_board(@board.grid)
-      outcome = declare_outcome(@board, markers)
-      @user_interface.display_outcome(outcome)
+      display_outcome(markers)
     end
 
     private
@@ -124,11 +124,17 @@ module TicTacToe
         @computer_player
     end
 
-    def declare_outcome(board, markers)
-      if TicTacToe::is_game_over?(board, markers) 
-        if TicTacToe::draw?(board, markers)
+    def display_outcome(markers)
+      @user_interface.display_board(@board.grid)
+      outcome = determine_outcome(@board, markers)
+      @user_interface.display_outcome(outcome)
+    end
+
+    def determine_outcome(board, markers)
+      if TicTacToe::GameState::is_game_over?(board, markers) 
+        if TicTacToe::GameState::draw?(board, markers)
           return DRAW
-        elsif TicTacToe::win?(board, markers)
+        elsif TicTacToe::GameState::win?(board, markers)
           determine_winner
         end
       end
@@ -136,10 +142,12 @@ module TicTacToe
 
     def determine_winner
       @players.each do |player|
-        if TicTacToe::is_winner?(@board, player.marker)
+        if TicTacToe::GameState::is_winner?(@board, player.marker)
           return player.marker
         end
       end
+
+      nil
     end
   end
 end

@@ -1,16 +1,16 @@
 module TicTacToe 
-  
-  MARKERS = ["X", "O"]
-  NEW_LINE = "\n"
-  PROMPT = "> "
-  OPTIONS = 
-    { one: "1",
-      two: "2",
-      three: "3",
-      four: "4" }
+
   DRAW = "Draw",
-  DEPTH = 0
-  DEFAULT_MESSAGES = 
+
+  FORMAT = 
+    { line:     "\n ",
+      prompt:   "> " }
+
+  MARKER =
+    { computer: "X",
+      human:    "O" }
+
+  MESSAGE = 
     { welcome:  "Welcome to tic-tac-toe!",
       goodbye:  "Adios!",
       size:     "Enter a board size (between 3 and 10):",
@@ -20,4 +20,4 @@ module TicTacToe
       computer: "Computer won!",
       human:    "You (somehow) won!" }
 
-end
+  end

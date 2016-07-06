@@ -84,7 +84,7 @@ module TicTacToe
     context "#best_move" do
       it "returns the most optimal move for AI" do
         scores = {{x: 0, y: 0} => 10,
-          {x: 1, y: 2} => -10}
+                  {x: 1, y: 2} => -10}
         expect(comp_player.best_move("X", scores)).to eq([{x: 0, y: 0}, 10])
       end
     end

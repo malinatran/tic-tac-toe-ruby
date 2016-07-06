@@ -1,4 +1,4 @@
-module TicTacToe 
+module TicTacToe:: GameState
 
   def self.is_game_over?(board, markers)
     win?(board, markers) || draw?(board, markers)

@@ -23,8 +23,8 @@ module TicTacToe
     context "#get_options" do
       it "displays welcome message and menu" do
         user_interface.instance_variable_set(:@quit_game, true)
-        menu_option = "1"
-        input.string = menu_option
+        input.string = "1"
+        input.string.to_i
         allow(ui_helper).to receive(:get_input)
         expect(ui_helper).to receive(:display).exactly(2).times
         user_interface.get_options
@@ -32,8 +32,8 @@ module TicTacToe
 
       it "calls a method to select size when user provides an input" do
         user_interface.instance_variable_set(:@quit_game, true)
-        menu_option = "1"
-        input.string = menu_option
+        input.string = "1"
+        input.string.to_i
         allow(ui_helper).to receive(:get_input).and_return("1")
         expect(user_interface).to receive(:select_size)
         user_interface.get_options
