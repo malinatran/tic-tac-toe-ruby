@@ -1,9 +1,9 @@
 module TicTacToe 
 
-  DRAW = "Draw",
+  DRAW = "Draw"
 
   FORMAT = 
-    { line:     "\n ",
+    { line:     "\n",
       prompt:   "> " }
 
   MARKER =
@@ -20,4 +20,4 @@ module TicTacToe
       computer: "Computer won!",
       human:    "You (somehow) won!" }
 
-  end
+end

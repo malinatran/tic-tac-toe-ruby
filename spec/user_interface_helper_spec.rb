@@ -9,12 +9,6 @@ module TicTacToe
     let(:helper) { UserInterfaceHelper.new(input, output) }
 
     context "#get_input" do
-      it "prints prompt" do
-        input.string = "hey"
-        expect(helper).to receive(:display)
-        helper.get_input
-      end
-
       it "receives user input" do
         input.string = "hi"
         expect(input).to receive(:gets).and_return("hi")

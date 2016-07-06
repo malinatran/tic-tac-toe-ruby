@@ -34,9 +34,29 @@ module TicTacToe
         user_interface.instance_variable_set(:@quit_game, true)
         input.string = "1"
         input.string.to_i
-        allow(ui_helper).to receive(:get_input).and_return("1")
+        allow(ui_helper).to receive(:get_input).and_return(1)
         expect(user_interface).to receive(:select_size)
         user_interface.get_options
+      end
+    end
+
+    context "#select_move" do
+      it "calls a method to translate the cell number to a hash of coordinates" do
+        allow(validator).to receive(:is_move_valid?).and_return(true)
+        input.string = "1"
+        move = input.string.to_i
+        expect(ui_helper).to receive(:display)
+        expect(ui_helper).to receive(:get_input)
+        expect(ui_helper).to receive(:map_move)
+        user_interface.select_move
+      end
+
+      it "returns the move if input is valid" do
+        allow(validator).to receive(:is_move_valid?).and_return(true)
+        input.string = "5"
+        allow(ui_helper).to receive(:get_input).and_return(5)
+        expect(ui_helper).to receive(:map_move).and_return({x: 1, y: 1})
+        user_interface.select_move
       end
     end
 
@@ -45,54 +65,6 @@ module TicTacToe
         message = "You cannot do that"
         expect(ui_helper).to receive(:display)
         user_interface.display_error(message)
-      end
-    end
-
-    context "#select_size" do
-      it "converts size input by user to an integer" do
-        input.string = "4"
-        allow(ui_helper).to receive(:display)
-        expect(ui_helper.get_input.to_i).to eq(4)
-      end
-
-      it "returns the size if input is valid" do
-        input.string = "3"
-        allow(ui_helper).to receive(:get_input).and_return(3)
-        allow(validator).to receive(:is_size_valid?).and_return(true)
-        expect(user_interface.select_size).to eq(3)
-      end
-    end
-
-    context "#select_marker" do
-      it "returns the marker if input is valid" do
-        input.string = "Y"
-        allow(ui_helper).to receive(:get_input).and_return("Y")
-        allow(validator).to receive(:is_marker_valid?).and_return(true)
-        expect(user_interface.select_marker).to eq("Y")
-      end
-    end
-
-    context "#select_move" do
-      it "calls a method to translate the cell number to a hash of coordinates" do
-        allow(validator).to receive(:is_move_valid?).and_return(true)
-        input.string = "1"
-        expect(ui_helper).to receive(:map_move)
-        user_interface.select_move
-      end
-
-      it "converts move input by user to an integer" do
-        input.string = "2"
-        allow(ui_helper).to receive(:display)
-        expect(ui_helper.get_input.to_i).to eq(2)
-      end
-
-      it "returns the move if input is valid" do
-        allow(validator).to receive(:is_move_valid?).and_return(true)
-        input.string = "5"
-        user_interface.instance_variable_set(:@size, 3)
-        allow(ui_helper).to receive(:get_input).and_return(5)
-        expect(ui_helper).to receive(:map_move).and_return({x: 1, y: 1})
-        user_interface.select_move
       end
     end
 
@@ -115,13 +87,13 @@ module TicTacToe
     context "#display_outcome" do
       it "displays message that nobody won when there is a draw" do
         outcome = "Draw" 
-        expect(ui_helper).to receive(:display).exactly(2).times.and_return("Nobody won!\n")
+        expect(ui_helper).to receive(:display).and_return("Nobody won!\n")
         user_interface.display_outcome(outcome)
       end
 
       it "displays message about computer winning when computer wins" do
         outcome = "X"
-        expect(ui_helper).to receive(:display).exactly(2).times.and_return("Computer won!\n")
+        expect(ui_helper).to receive(:display).and_return("Computer won!\n")
         user_interface.display_outcome(outcome)
       end
     end

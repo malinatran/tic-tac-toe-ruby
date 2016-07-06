@@ -11,12 +11,12 @@ module TicTacToe
     DEPTH = 0
 
     def initialize(params = {})
-      @board = params[:board]
-      @computer_player = params[:computer_player]    || ComputerPlayer.new
-      @human_player = params[:human_player]          || HumanPlayer.new
-      @user_interface = params[:user_interface] 
-      @players = [@computer_player, @human_player]
-      @current_player = @players.sample
+      @board =            params[:board]
+      @computer_player =  params[:computer_player] || ComputerPlayer.new
+      @human_player =     params[:human_player]    || HumanPlayer.new
+      @user_interface =   params[:user_interface] 
+      @players =          [@computer_player, @human_player]
+      @current_player =   @players.sample
     end
 
     def start_game
@@ -34,14 +34,14 @@ module TicTacToe
     end
 
     def run_game_loop
-      markers = generate_markers
+      markers = get_markers
 
       until TicTacToe::GameState::is_game_over?(@board, markers)
-        if is_computer_the_current_player?
-          make_computer_move
-        else
-          make_human_move  
-        end
+        move = @current_player.make_move(board:          @board,
+                                         user_interface: @user_interface,
+                                         current_marker: @current_player.marker,
+                                         human_marker:   @human_player.marker)
+        set_move(move, @current_player.marker) 
       end
 
       determine_outcome(markers)
@@ -49,7 +49,7 @@ module TicTacToe
 
     private
 
-    def generate_markers
+    def get_markers
       markers = []
 
       @players.each do |player|
@@ -59,63 +59,13 @@ module TicTacToe
       markers
     end
 
-    def is_computer_the_current_player?
-      @current_player == @computer_player
-    end
-
-    def make_human_move
-      @user_interface.display_board(@board.grid)
-      move = @user_interface.select_move
+    def set_move(move, marker)
       begin
-        set_human_move(move)
+        @board.set_cell(move, marker)
+        switch_player
       rescue Exception => message
         @user_interface.display_error(message)
       end
-    end
-
-    def make_computer_move
-      if is_computer_the_first_player? 
-        make_first_move
-      else
-        make_minimax_move
-      end
-    end
-
-    def is_computer_the_first_player?
-      total_cells = @board.size * @board.size
-      @board.get_empty_cells.length == total_cells && @board.retrieve_cells(@computer_player.marker).length == 0
-    end
-
-    def make_first_move
-      move = get_center_or_first_cell
-
-      @board.set_cell(move, @computer_player.marker)
-      switch_player
-    end
-
-    def get_center_or_first_cell
-      if @board.size % 2 == 0
-        return {x: 0, y: 0}
-      else
-        center = @board.size / 2
-        return {x: center, y: center} 
-      end
-    end
-
-    def make_minimax_move
-      move = request_computer_move
-      @board.set_cell(move, @computer_player.marker)
-      switch_player
-    end
-
-    def request_computer_move
-      @computer_player.minimax(@board, DEPTH, @current_player.marker, @human_player.marker)
-      return @computer_player.move
-    end
-
-    def set_human_move(move)
-      @board.set_cell(move, @human_player.marker)
-      switch_player
     end
 
     def switch_player
@@ -129,5 +79,5 @@ module TicTacToe
       outcome = TicTacToe::GameState::determine_outcome(@board, markers)
       @user_interface.display_outcome(outcome)
     end
- end
+  end
 end

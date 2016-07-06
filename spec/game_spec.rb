@@ -14,6 +14,7 @@ module TicTacToe
                                      user_interface: user_interface) }
     let(:game_state)      { TicTacToe::GameState }
     let(:input)           { StringIO.new }
+    let(:markers)         { ["X", "O", "G"] }
     let(:output)          { StringIO.new }
     let(:ui_helper)       { UserInterfaceHelper.new }
     let(:validator)       { InputValidator.new } 
@@ -64,27 +65,11 @@ module TicTacToe
     end
 
     context "#run_game_loop" do
-      it "calls methods to display board, select move, and make human move if current player is human" do 
-        allow(game_state).to receive(:is_game_over?).and_return(false, true)
-        allow(game).to receive(:is_computer_the_current_player?).and_return(false)
-        input.string = "1"
-        expect(game).to receive(:make_human_move)
-        expect(game).to receive(:determine_outcome)
-        game.run_game_loop
-      end  
-
-      it "calls a method to make the computer's move" do 
-        allow(game_state).to receive(:is_game_over?).and_return(false, true)
-        allow(game).to receive(:is_computer_the_current_player?).and_return(true)
-        expect(game).to receive(:make_computer_move)
-        expect(game).to receive(:determine_outcome)
-        game.run_game_loop
-      end
-
-      it "calls a method to display board and outcome regardless of current player" do
+      it "calls a method to get all of the players' markers and determine outcome" do
         allow(game_state).to receive(:is_game_over?).and_return(true)
+        expect(game).to receive(:get_markers)
         expect(game).to receive(:determine_outcome)
-        game.run_game_loop
+        game.run_game_loop 
       end
     end
   end

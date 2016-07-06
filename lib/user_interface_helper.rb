@@ -11,14 +11,18 @@ module TicTacToe
     end
 
     def get_input
-      display(FORMAT[:prompt])
+      print FORMAT[:prompt]
       @input.gets.chomp
     end
 
     def display(*messages)
+      print FORMAT[:line]
+
       messages.each do |message|
         output.print message
       end
+      
+      print FORMAT[:line]
     end
 
     def map_move(move, size) 

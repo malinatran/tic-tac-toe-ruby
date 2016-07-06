@@ -1,15 +1,19 @@
 module TicTacToe:: GameState
 
+  DRAW = "Draw"
+
   def self.determine_outcome(board, markers)
     if is_game_over?(board, markers)
       if draw?(board, markers)
-        return "Draw"
+        return DRAW
       elsif win?(board, markers)
         determine_winner(board, markers)
       end
     end
   end
-  
+
+  private
+
   def self.determine_winner(board, markers)
     markers.each do |marker|
       if is_winner?(board, marker) 
@@ -19,8 +23,6 @@ module TicTacToe:: GameState
 
     nil
   end
-
-  private
 
   def self.is_game_over?(board, markers)
     win?(board, markers) || draw?(board, markers)
