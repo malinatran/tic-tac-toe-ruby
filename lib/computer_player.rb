@@ -77,8 +77,8 @@ module TicTacToe
       end 
     end
 
-    def switch(current_marker, opponent_player)
-      current_marker == marker ? opponent_player : marker
+    def switch(current_marker, opponent_marker)
+      current_marker == marker ? opponent_marker : marker
     end
 
     def best_move(current_marker, scores)

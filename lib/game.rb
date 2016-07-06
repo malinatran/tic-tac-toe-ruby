@@ -8,8 +8,6 @@ require_relative "user_interface"
 module TicTacToe
   class Game
 
-    DEPTH = 0
-
     def initialize(params = {})
       @board =            params[:board]
       @computer_player =  params[:computer_player] || ComputerPlayer.new
