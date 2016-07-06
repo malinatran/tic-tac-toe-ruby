@@ -23,14 +23,19 @@ To run tests, first enter `bundle install` and then `bundle exec rspec`.
 #### File Structure
 In the `lib` folder, you will find the following files and corresponding spec files in the `spec` folder (with the exception of `play.rb`):
 
+* `play.rb`: is the entry point of the game and initializes all of the classes below
+* `game.rb`: contains knowledge pertaining to game, including game state, players, and moves 
 * `board.rb`: has functionalities related to the grid, its cells, and winning moves
 * `computer_player.rb`: enables interaction with board to retrieve cells and make moves
 * `human_player.rb`: only accepts a marker provided by user input or default marker 
 * `player.rb`: serves as superclass of `computer_player` and `human_player`
 * `user_interface.rb`: handles methods dealing with the command line
-* `helper.rb`: contains methods that are helpers or validators for `user_interface`
-* `game.rb`: contains knowledge pertaining to game, including game state, players, and moves 
-* `play.rb`: is the entry point of the game and initializes all of the above classes
+* `user_interface_helper.rb`: contains methods that are helpers or validators for `user_interface`
+* `input_validator.rb`: checks that user input for board size, marker, and moves are valid 
+* `constants.rb`: contains all stubbed string values
 
 #### Organization
+The first diagram demonstrates hierarchy; the second is a more accurate portrayal of relationships between classes. For instance, the latter diagram shows that many classes are being dependency injected into `Game` (as indicated by directional arrows). `Constants` and `GameState` are accessible at the module level.
+
 ![Organization](https://s31.postimg.org/emb1riycb/tictactoe.png)
+![Sketch](https://s31.postimg.org/45qsuhj2j/tictactoe_complex.jpg)
