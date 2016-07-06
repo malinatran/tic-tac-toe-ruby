@@ -6,17 +6,16 @@ module TicTacToe
 
     let(:board)           { Board.new }
     let(:computer_player) { ComputerPlayer.new }
+    let(:human_player)    { HumanPlayer.new }
+    let(:user_interface)  { UserInterface.new(ui_helper, validator) }
     let(:game)            { Game.new(board: board, 
                                      computer_player: computer_player, 
                                      human_player: human_player,
                                      user_interface: user_interface) }
-
     let(:game_state)      { TicTacToe::GameState }
-    let(:human_player)    { HumanPlayer.new }
     let(:input)           { StringIO.new }
     let(:output)          { StringIO.new }
     let(:ui_helper)       { UserInterfaceHelper.new }
-    let(:user_interface)  { UserInterface.new(ui_helper, validator) }
     let(:validator)       { InputValidator.new } 
 
     context "#initialize" do
@@ -64,19 +63,13 @@ module TicTacToe
       end
     end
 
-    context "#generate_markers" do
-      it "creates an array of markers" do
-        expect(game.generate_markers).to eq(["X", "O"])
-      end
-    end
-
     context "#run_game_loop" do
       it "calls methods to display board, select move, and make human move if current player is human" do 
         allow(game_state).to receive(:is_game_over?).and_return(false, true)
         allow(game).to receive(:is_computer_the_current_player?).and_return(false)
         input.string = "1"
         expect(game).to receive(:make_human_move)
-        expect(game).to receive(:display_outcome)
+        expect(game).to receive(:determine_outcome)
         game.run_game_loop
       end  
 
@@ -84,13 +77,13 @@ module TicTacToe
         allow(game_state).to receive(:is_game_over?).and_return(false, true)
         allow(game).to receive(:is_computer_the_current_player?).and_return(true)
         expect(game).to receive(:make_computer_move)
-        expect(game).to receive(:display_outcome)
+        expect(game).to receive(:determine_outcome)
         game.run_game_loop
       end
 
       it "calls a method to display board and outcome regardless of current player" do
         allow(game_state).to receive(:is_game_over?).and_return(true)
-        expect(game).to receive(:display_outcome)
+        expect(game).to receive(:determine_outcome)
         game.run_game_loop
       end
     end

@@ -33,16 +33,6 @@ module TicTacToe
       @human_player.marker = @marker
     end
 
-    def generate_markers
-      markers = []
-
-      @players.each do |player|
-        markers << player.marker
-      end
-
-      markers
-    end
-
     def run_game_loop
       markers = generate_markers
 
@@ -54,10 +44,20 @@ module TicTacToe
         end
       end
 
-      display_outcome(markers)
+      determine_outcome(markers)
     end
 
     private
+
+    def generate_markers
+      markers = []
+
+      @players.each do |player|
+        markers << player.marker
+      end
+
+      markers
+    end
 
     def is_computer_the_current_player?
       @current_player == @computer_player
@@ -124,30 +124,10 @@ module TicTacToe
         @computer_player
     end
 
-    def display_outcome(markers)
+    def determine_outcome(markers)
       @user_interface.display_board(@board.grid)
-      outcome = determine_outcome(@board, markers)
+      outcome = TicTacToe::GameState::determine_outcome(@board, markers)
       @user_interface.display_outcome(outcome)
     end
-
-    def determine_outcome(board, markers)
-      if TicTacToe::GameState::is_game_over?(board, markers) 
-        if TicTacToe::GameState::draw?(board, markers)
-          return DRAW
-        elsif TicTacToe::GameState::win?(board, markers)
-          determine_winner
-        end
-      end
-    end
-
-    def determine_winner
-      @players.each do |player|
-        if TicTacToe::GameState::is_winner?(@board, player.marker)
-          return player.marker
-        end
-      end
-
-      nil
-    end
-  end
+ end
 end
