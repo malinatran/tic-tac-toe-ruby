@@ -26,7 +26,7 @@ module TicTacToe
     end
 
     def valid_marker(marker)
-      marker.capitalize != MARKER[:computer] && marker.length == 1
+      marker.capitalize != MARKER[:computer] && marker.length == 1 && /[a-zA-Z]/.match(marker) ? true : false
     end
 
     def valid_move(move, size)

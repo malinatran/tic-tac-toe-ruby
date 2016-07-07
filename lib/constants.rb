@@ -12,7 +12,7 @@ module TicTacToe
     { welcome:  "Welcome to tic-tac-toe!",
       goodbye:  "Adios!",
       size:     "Enter a board size (between 3 and 10):",
-      marker:   "Enter a marker (single character that is not 'X'):",
+      marker:   "Enter a marker (any single letter except 'X'):",
       move:     "Enter your move:",
       draw:     "Nobody won!",
       computer: "Computer won!",

@@ -51,26 +51,5 @@ module TicTacToe
         game.start_game
       end
     end
-
-    context "#set_options" do
-      it "sets new size in board and new marker in human player" do
-        game.instance_variable_set(:@size, 4)
-        game.instance_variable_set(:@marker, "L")
-        board.size = 4
-        human_player.marker = "L"
-        expect(board.size).to eq(4)
-        expect(human_player.marker).to eq("L")
-        game.set_options
-      end
-    end
-
-    context "#run_game_loop" do
-      it "calls a method to get all of the players' markers and determine outcome" do
-        allow(game_state).to receive(:is_game_over?).and_return(true)
-        expect(game).to receive(:get_markers)
-        expect(game).to receive(:determine_outcome)
-        game.run_game_loop 
-      end
-    end
   end
 end
