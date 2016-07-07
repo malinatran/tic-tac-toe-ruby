@@ -67,9 +67,8 @@ module TicTacToe
     end
 
     def switch_player
-      @current_player = (@current_player == @computer_player) ?
-        @human_player :
-        @computer_player
+      @current_player = (@current_player == @computer_player) ? 
+        @human_player : @computer_player
     end
 
     def determine_outcome(markers)

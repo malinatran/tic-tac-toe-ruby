@@ -1,6 +1,7 @@
 module TicTacToe::GameState
 
-  DRAW = "Draw"
+  COMP_MARKER    = "X"
+  DRAW           = "Draw"
 
   def self.determine_outcome(board, markers)
     if is_game_over?(board, markers)
@@ -10,6 +11,11 @@ module TicTacToe::GameState
         determine_winner(board, markers)
       end
     end
+  end
+
+  def self.switch(current_marker, human_marker)
+    current_marker = (current_marker == COMP_MARKER) ?
+      human_marker : COMP_MARKER 
   end
 
   private

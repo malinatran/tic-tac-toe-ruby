@@ -19,14 +19,20 @@ module TicTacToe
         expect(game_state).to receive(:draw?).and_return("Draw")
         game_state.determine_outcome(board, markers)
       end
-    end
 
-    context "#determine_winner" do
       it "returns the player's marker if there is a winner" do
         board.set_cell({x: 0, y: 0}, "O")
         board.set_cell({x: 0, y: 1}, "O")
         board.set_cell({x: 0, y: 2}, "O")
         expect(game_state.determine_winner(board, markers)).to eq("O")
+      end
+    end
+
+    context "#switch" do
+      it "returns the opponent player as the current player" do
+        current_marker = "O" 
+        human_marker = human_player.marker 
+        expect(game_state.switch(current_marker, human_marker)).to eq("X")
       end
     end
   end

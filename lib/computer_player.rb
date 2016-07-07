@@ -59,7 +59,7 @@ module TicTacToe
 
       board.get_empty_cells.each do |cell|
         board.set_cell(cell, current_marker)
-        scores[cell] = minimax(board, depth, switch(current_marker, opponent_marker), opponent_marker)
+        scores[cell] = minimax(board, depth, TicTacToe::GameState::switch(current_marker, opponent_marker), opponent_marker)
         board.clear_cell(cell)
       end
 
@@ -75,10 +75,6 @@ module TicTacToe
       else
         0
       end 
-    end
-
-    def switch(current_marker, opponent_marker)
-      current_marker == marker ? opponent_marker : marker
     end
 
     def best_move(current_marker, scores)
