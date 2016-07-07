@@ -1,18 +1,28 @@
 require_relative "spec_helper"
+require_relative "../lib/board"
 require_relative "../lib/user_interface_helper"
 
 module TicTacToe
   describe TicTacToe::UserInterfaceHelper do
 
-    let(:input) { StringIO.new }
-    let(:output) { StringIO.new }
-    let(:helper) { UserInterfaceHelper.new(input, output) }
+    let(:board)   { Board.new }
+    let(:input)   { StringIO.new }
+    let(:output)  { StringIO.new }
+    let(:helper)  { UserInterfaceHelper.new(input, output) }
 
-    context "#get_input" do
+    context "#get_string" do
       it "receives user input" do
         input.string = "hi"
         expect(input).to receive(:gets).and_return("hi")
-        helper.get_input
+        helper.get_string
+      end
+    end
+
+    context "#get_integer" do
+      it "receives user input and converts into integer" do
+        input.string = "1"
+        expect(input).to receive(:gets).and_return("1")
+        helper.get_integer
       end
     end
 
@@ -24,20 +34,19 @@ module TicTacToe
       end
     end
 
-    context "#map_move" do
-      it "returns the coordinates of the cell number" do
-        move = 5
-        size = 3
-        expect(helper.map_move(move, size)).to eq({x: 1, y: 1})
+    context "#display_outcome" do
+      it "calls the display method depending on game's outcome" do
+        outcome = "Draw"
+        expect(helper).to receive(:display).and_return("Nobody won!\n")
+        helper.display_outcome(outcome)
       end
     end
- 
-    context "#draw_board" do
-      it "renders a board as a string with each cell's numerical value" do
-        board = [[nil, nil], [nil, nil]]
-        size = 2
-        mapped_board = " 1 | 2 \n 3 | 4 \n"
-        expect(helper.draw_board(board, size)).to eq(mapped_board)
+
+    context "#display_board" do
+      it "calls the display method to draw the board" do
+        board = Board.new
+        expect(helper).to receive(:display).with(any_args)
+        helper.display_board(board.grid, board.size)
       end
     end
   end

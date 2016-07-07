@@ -7,6 +7,12 @@ module TicTacToe
     let(:validator) { InputValidator.new }
 
     context "#is_size_valid?" do
+      it "calls a method for size validation" do
+        size = 4
+        expect(validator).to receive(:valid_size)
+        validator.is_size_valid?(size)
+      end
+
       it "returns true if size is between 2 and 10" do
         size = 5
         expect(validator.is_size_valid?(size)).to eq(true)
@@ -24,6 +30,12 @@ module TicTacToe
     end
 
     context "#is_marker_valid?" do
+      it "calls a method for marker validation" do
+        marker = "f"
+        expect(validator).to receive(:valid_marker)
+        validator.is_marker_valid?(marker)
+      end
+
       it "returns true if marker is not an 'X' and longer than a single character" do
         marker = "M"
         expect(validator.is_marker_valid?(marker)).to eq(true)
@@ -41,6 +53,13 @@ module TicTacToe
     end
 
     context "#is_move_valid?" do
+      it "calls a method for move validation" do
+        marker = 4
+        size = 3
+        expect(validator).to receive(:valid_move)
+        validator.is_move_valid?(marker, size)
+      end
+
       it "returns true if move's cell number is within the board" do
         move = 2
         size = 3
@@ -51,6 +70,21 @@ module TicTacToe
         move = 10
         size = 3
         expect(validator.is_move_valid?(move, size)).to eq(false)
+      end
+    end
+
+    context "#translate_move" do
+      it "calls a method for move translation" do
+        move = 9
+        size = 3
+        expect(validator).to receive(:translation)
+        validator.translate_move(move, size)
+      end
+
+      it "returns the coordinates of the cell number" do
+        move = 5
+        size = 3
+        expect(validator.translate_move(move, size)).to eq({x: 1, y: 1})
       end
     end
   end

@@ -5,21 +5,19 @@ require_relative "user_interface_helper"
 module TicTacToe 
   class UserInterface 
 
-    DRAW = "Draw"
-
     def initialize(ui_helper, validator)
       @ui_helper = ui_helper
       @validator = validator
-      @size = 3
+      @size = DEFAULT_SIZE 
       @marker = MARKER[:human] 
     end
 
     def get_options
-      @ui_helper.display(MESSAGE[:welcome])
+      display(MESSAGE[:welcome])
 
       begin
-        @ui_helper.display(menu)
-        menu_option = @ui_helper.get_input.to_i
+        display(menu)
+        menu_option = @ui_helper.get_integer
 
         case menu_option
         when 1 
@@ -29,40 +27,44 @@ module TicTacToe
         when 3 
           return { size: @size, marker: @marker }
         when 4 
-          @ui_helper.display(MESSAGE[:goodbye])
+          display(MESSAGE[:goodbye])
           @quit_game = true
         end
       end until @quit_game
     end
 
-    def select_move
+    def get_move(board)
+      display_board(board)
+
       begin
-        @ui_helper.display(MESSAGE[:move])
-        move = @ui_helper.get_input.to_i
+        display(MESSAGE[:move])
+        move = @ui_helper.get_integer
       end until @validator.is_move_valid?(move, @size) 
 
-      @ui_helper.map_move(move, @size)
+      @validator.translate_move(move, @size)
     end
 
-    def display_error(message)
-      @ui_helper.display(message)
+    def display_error(error)
+      display(error)
     end
 
     def display_board(board)
-      @ui_helper.display(FORMAT[:line], @ui_helper.draw_board(board, @size))
+      @ui_helper.display_board(board, @size)
     end
 
     def display_outcome(outcome)
-      if outcome == DRAW
-        @ui_helper.display(MESSAGE[:draw])
-      elsif outcome == MARKER[:computer]
-        @ui_helper.display(MESSAGE[:computer])
-      elsif outcome == MARKER[:human] 
-        @ui_helper.display(MESSAGE[:human])
-      end
-    end
+      @ui_helper.display_outcome(outcome)
+   end
 
     private
+
+    def display(message)
+      @ui_helper.display(message)
+    end
+
+    def translate_move(move, size)
+      @ui_helper.translate_move(move, size)
+    end
 
     def menu
       "Enter 1, 2, 3, or 4 to continue:
@@ -74,8 +76,8 @@ module TicTacToe
 
     def select_size
       begin 
-        @ui_helper.display(MESSAGE[:size])
-        size = @ui_helper.get_input.to_i
+        display(MESSAGE[:size])
+        size = @ui_helper.get_integer
       end until @validator.is_size_valid?(size)
 
       @size = size
@@ -83,8 +85,8 @@ module TicTacToe
 
     def select_marker
       begin
-        @ui_helper.display(MESSAGE[:marker])
-        marker = @ui_helper.get_input
+        display(MESSAGE[:marker])
+        marker = @ui_helper.get_string
       end until @validator.is_marker_valid?(marker)
 
       @marker = marker

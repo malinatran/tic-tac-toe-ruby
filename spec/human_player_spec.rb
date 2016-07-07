@@ -25,9 +25,8 @@ module TicTacToe
     end
 
     context "#make_move" do
-      it "calls methods to display board and and select move" do
-        expect(user_interface).to receive(:display_board)
-        expect(user_interface).to receive(:select_move)
+      it "calls methods to display board and and get move from user interface" do
+        expect(user_interface).to receive(:get_move)
         human_player.make_move(user_interface: user_interface, board: board)
       end
     end

@@ -1,4 +1,4 @@
-module TicTacToe:: GameState
+module TicTacToe::GameState
 
   DRAW = "Draw"
 

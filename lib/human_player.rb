@@ -14,8 +14,7 @@ module TicTacToe
       user_interface = params[:user_interface]
       board          = params[:board]
 
-      user_interface.display_board(board.grid)
-      move = user_interface.select_move
+      user_interface.get_move(board.grid)
     end
   end
 end

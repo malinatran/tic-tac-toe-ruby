@@ -1,3 +1,5 @@
+require_relative "constants"
+
 module TicTacToe
 
   class CellIsFilledError < StandardError
@@ -7,7 +9,7 @@ module TicTacToe
     attr_reader :size, :grid
 
     def initialize(size = nil)
-      @size = size || 3 
+      @size = size || DEFAULT_SIZE 
       @grid = create_grid
     end
 

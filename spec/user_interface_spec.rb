@@ -25,8 +25,8 @@ module TicTacToe
         user_interface.instance_variable_set(:@quit_game, true)
         input.string = "1"
         input.string.to_i
-        allow(ui_helper).to receive(:get_input)
-        expect(ui_helper).to receive(:display).exactly(2).times
+        allow(ui_helper).to receive(:get_integer)
+        expect(user_interface).to receive(:display).exactly(2).times
         user_interface.get_options
       end
 
@@ -34,51 +34,56 @@ module TicTacToe
         user_interface.instance_variable_set(:@quit_game, true)
         input.string = "1"
         input.string.to_i
-        allow(ui_helper).to receive(:get_input).and_return(1)
+        allow(ui_helper).to receive(:get_integer).and_return(1)
         expect(user_interface).to receive(:select_size)
         user_interface.get_options
       end
     end
 
-    context "#select_move" do
+    context "#get_move" do
       it "calls a method to translate the cell number to a hash of coordinates" do
         allow(validator).to receive(:is_move_valid?).and_return(true)
         input.string = "1"
-        move = input.string.to_i
-        expect(ui_helper).to receive(:display)
-        expect(ui_helper).to receive(:get_input)
-        expect(ui_helper).to receive(:map_move)
-        user_interface.select_move
+        expect(validator).to receive(:translate_move)
+        user_interface.get_move(board)
       end
 
-      it "returns the move if input is valid" do
+      it "takes in the move that user input and returns an integer" do
+        allow(user_interface).to receive(:display_board)
         allow(validator).to receive(:is_move_valid?).and_return(true)
         input.string = "5"
-        allow(ui_helper).to receive(:get_input).and_return(5)
-        expect(ui_helper).to receive(:map_move).and_return({x: 1, y: 1})
-        user_interface.select_move
+        expect(ui_helper).to receive(:get_integer).and_return(5)
+        user_interface.get_move(board)
+      end
+
+      it "translates the move into a hash of coordinates" do
+        allow(user_interface).to receive(:display_board)
+        allow(validator).to receive(:is_move_valid?).and_return(true)
+        input.string = "5"
+        size = 3
+        move = input.string.to_i
+        expect(validator).to receive(:translate_move).and_return({x: 1, y: 1})
+        user_interface.get_move(board)
       end
     end
 
     context "#display_error" do
       it "displays a mesage and new lines" do 
-        message = "You cannot do that"
-        expect(ui_helper).to receive(:display)
-        user_interface.display_error(message)
+        error = "You cannot do that"
+        expect(user_interface).to receive(:display)
+        user_interface.display_error(error)
       end
     end
 
     context "#display_board" do
       it "calls several methods to display the baord" do
-        user_interface.instance_variable_set(:@size, 3)
-        expect(ui_helper).to receive(:display)
-        expect(ui_helper).to receive(:draw_board)
+        expect(ui_helper).to receive(:display_board)
         user_interface.display_board(board)
       end
 
       it "calls a method to render a board with each cell's numerical value" do
         size = 3
-        expect(ui_helper).to receive(:display).and_return(
+        expect(ui_helper).to receive(:display_board).and_return(
           "\n 1 | 2 | 3 \n 4 | 5 | 6 \n 7 | 8 | 9 \n\n")
           user_interface.display_board(board)
       end
@@ -87,13 +92,13 @@ module TicTacToe
     context "#display_outcome" do
       it "displays message that nobody won when there is a draw" do
         outcome = "Draw" 
-        expect(ui_helper).to receive(:display).and_return("Nobody won!\n")
+        expect(ui_helper).to receive(:display_outcome).and_return("Nobody won!\n")
         user_interface.display_outcome(outcome)
       end
 
       it "displays message about computer winning when computer wins" do
         outcome = "X"
-        expect(ui_helper).to receive(:display).and_return("Computer won!\n")
+        expect(ui_helper).to receive(:display_outcome).and_return("Computer won!\n")
         user_interface.display_outcome(outcome)
       end
     end

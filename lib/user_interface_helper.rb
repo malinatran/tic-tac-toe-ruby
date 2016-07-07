@@ -3,6 +3,10 @@ require_relative "constants"
 module TicTacToe 
   class UserInterfaceHelper
 
+    FORMAT = 
+      { line:     "\n",
+        prompt:   "> " }
+
     attr_accessor :input, :output
 
     def initialize(input = STDIN, output = STDOUT)
@@ -10,9 +14,14 @@ module TicTacToe
       @output = output
     end
 
-    def get_input
+    def get_string
       print FORMAT[:prompt]
       @input.gets.chomp
+    end
+
+    def get_integer
+      print FORMAT[:prompt]
+      @input.gets.chomp.to_i
     end
 
     def display(*messages)
@@ -21,16 +30,25 @@ module TicTacToe
       messages.each do |message|
         output.print message
       end
-      
+
       print FORMAT[:line]
     end
 
-    def map_move(move, size) 
-      move -= 1
-      x = move / size
-      y = move % size
-      {x: x, y: y}
+    def display_outcome(outcome)
+      if outcome == DRAW
+        display(MESSAGE[:draw])
+      elsif outcome == MARKER[:computer]
+        display(MESSAGE[:computer])
+      elsif outcome == MARKER[:human] 
+        display(MESSAGE[:human])
+      end
     end
+
+    def display_board(board, size)
+      display(FORMAT[:line], draw_board(board, size))
+    end
+
+    private
 
     def draw_board(board, size)
       mapped_board = ""

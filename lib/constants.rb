@@ -1,10 +1,8 @@
 module TicTacToe 
 
-  DRAW = "Draw"
+  DEFAULT_SIZE = 3
 
-  FORMAT = 
-    { line:     "\n",
-      prompt:   "> " }
+  DRAW = "Draw"
 
   MARKER =
     { computer: "X",
