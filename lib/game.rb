@@ -26,6 +26,8 @@ module TicTacToe
       end
     end
 
+    private
+    
     def set_options
       @board.size = @size
       @human_player.marker = @marker
@@ -44,8 +46,6 @@ module TicTacToe
 
       determine_outcome(markers)
     end
-
-    private
 
     def get_markers
       markers = []

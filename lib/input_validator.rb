@@ -1,3 +1,5 @@
+require_relative "constants"
+
 module TicTacToe 
   class InputValidator
 
@@ -24,7 +26,7 @@ module TicTacToe
     end
 
     def valid_marker(marker)
-      marker.capitalize != "X" && marker.length == 1
+      marker.capitalize != MARKER[:computer] && marker.length == 1
     end
 
     def valid_move(move, size)

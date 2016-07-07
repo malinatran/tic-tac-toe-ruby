@@ -6,10 +6,10 @@ module TicTacToe
   class UserInterface 
 
     def initialize(ui_helper, validator)
-      @ui_helper = ui_helper
-      @validator = validator
-      @size = DEFAULT_SIZE 
-      @marker = MARKER[:human] 
+      @ui_helper =    ui_helper
+      @validator =    validator
+      @size =         DEFAULT_SIZE 
+      @marker =       MARKER[:human] 
     end
 
     def get_options
@@ -54,7 +54,7 @@ module TicTacToe
 
     def display_outcome(outcome)
       @ui_helper.display_outcome(outcome)
-   end
+    end
 
     private
 
