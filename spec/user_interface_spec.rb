@@ -5,16 +5,20 @@ require_relative "../lib/user_interface"
 module TicTacToe
   describe TicTacToe::UserInterface do
 
+    let(:board)           { Board.new.grid }
     let(:input)           { StringIO.new }
     let(:output)          { StringIO.new }
     let(:ui_helper)       { UserInterfaceHelper.new(input, output) }
-    let(:validator)       { InputValidator.new }
     let(:user_interface)  { UserInterface.new(ui_helper, validator) }
-    let(:board)           { Board.new.grid }
+    let(:validator)       { InputValidator.new }
 
     context "#initialize" do
-      it "receives an argument and sets instance variables" do
+      it "receives argument and sets them as instance variables" do
         expect(user_interface.instance_variable_get(:@ui_helper)).to eq(ui_helper)
+        expect(user_interface.instance_variable_get(:@validator)).to eq(validator)
+      end
+
+      it "has default board size of 3 and human player's marker as 'O'" do
         expect(user_interface.instance_variable_get(:@size)).to eq(3)
         expect(user_interface.instance_variable_get(:@marker)).to eq("O")
       end
@@ -24,16 +28,15 @@ module TicTacToe
       it "displays welcome message and menu" do
         user_interface.instance_variable_set(:@quit_game, true)
         input.string = "1"
-        input.string.to_i
         allow(ui_helper).to receive(:get_integer)
         expect(user_interface).to receive(:display).exactly(2).times
         user_interface.get_options
       end
 
-      it "calls a method to select size when user provides an input" do
+      it "calls a method to select size when user provides '1' as an input" do
         user_interface.instance_variable_set(:@quit_game, true)
         input.string = "1"
-        input.string.to_i
+        allow(user_interface).to receive(:display)
         allow(ui_helper).to receive(:get_integer).and_return(1)
         expect(user_interface).to receive(:select_size)
         user_interface.get_options
@@ -41,26 +44,30 @@ module TicTacToe
     end
 
     context "#get_move" do
-      it "calls a method to translate the cell number to a hash of coordinates" do
+      it "displays board and move message" do
         allow(validator).to receive(:is_move_valid?).and_return(true)
-        input.string = "1"
-        expect(validator).to receive(:translate_move)
+        allow(ui_helper).to receive(:get_integer).and_return(9)
+        expect(user_interface).to receive(:display_board)
+        expect(user_interface).to receive(:display)
         user_interface.get_move(board)
       end
 
       it "takes in the move that user input and returns an integer" do
         allow(user_interface).to receive(:display_board)
         allow(validator).to receive(:is_move_valid?).and_return(true)
+        allow(user_interface).to receive(:display)
         input.string = "5"
         expect(ui_helper).to receive(:get_integer).and_return(5)
         user_interface.get_move(board)
       end
 
-      it "translates the move into a hash of coordinates" do
+      it "calls a method to translate the move into a hash of coordinates" do
         allow(user_interface).to receive(:display_board)
         allow(validator).to receive(:is_move_valid?).and_return(true)
-        input.string = "5"
+        allow(ui_helper).to receive(:get_integer)
+        allow(user_interface).to receive(:display)
         size = 3
+        input.string = "5"
         move = input.string.to_i
         expect(validator).to receive(:translate_move).and_return({x: 1, y: 1})
         user_interface.get_move(board)
@@ -68,16 +75,22 @@ module TicTacToe
     end
 
     context "#display_error" do
-      it "displays a mesage and new lines" do 
+      it "calls a method to display an error message" do 
         error = "You cannot do that"
-        expect(user_interface).to receive(:display)
+        expect(user_interface).to receive(:display).with(any_args)
+        user_interface.display_error(error)
+      end
+
+      it "displays an error message" do
+        error = "You can't do that!"
+        expect(user_interface).to receive(:display).and_return("You can't do that!\n")
         user_interface.display_error(error)
       end
     end
 
     context "#display_board" do
-      it "calls several methods to display the baord" do
-        expect(ui_helper).to receive(:display_board)
+      it "calls a method to display the baord" do
+        expect(ui_helper).to receive(:display_board).with(any_args)
         user_interface.display_board(board)
       end
 
@@ -90,13 +103,19 @@ module TicTacToe
     end
 
     context "#display_outcome" do
-      it "displays message that nobody won when there is a draw" do
+      it "calls a method to display the game's outcome" do
+        outcome = "Draw"
+        expect(ui_helper).to receive(:display_outcome).with(any_args)
+        user_interface.display_outcome(outcome)
+      end
+
+      it "displays message declaring that nobody won when there is a draw" do
         outcome = "Draw" 
         expect(ui_helper).to receive(:display_outcome).and_return("Nobody won!\n")
         user_interface.display_outcome(outcome)
       end
 
-      it "displays message about computer winning when computer wins" do
+      it "displays message declaring that computer won when computer wins" do
         outcome = "X"
         expect(ui_helper).to receive(:display_outcome).and_return("Computer won!\n")
         user_interface.display_outcome(outcome)

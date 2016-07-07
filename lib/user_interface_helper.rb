@@ -15,23 +15,21 @@ module TicTacToe
     end
 
     def get_string
-      print FORMAT[:prompt]
+      print_prompt
       @input.gets.chomp
     end
 
     def get_integer
-      print FORMAT[:prompt]
+      print_prompt
       @input.gets.chomp.to_i
     end
 
     def display(*messages)
-      print FORMAT[:line]
-
       messages.each do |message|
         output.print message
       end
 
-      print FORMAT[:line]
+      print_line
     end
 
     def display_outcome(outcome)
@@ -42,6 +40,8 @@ module TicTacToe
       elsif outcome == MARKER[:human] 
         display(MESSAGE[:human])
       end
+
+      print_line
     end
 
     def display_board(board, size)
@@ -49,6 +49,14 @@ module TicTacToe
     end
 
     private
+
+    def print_line
+      print FORMAT[:line]
+    end
+
+    def print_prompt
+      print FORMAT[:prompt]
+    end
 
     def draw_board(board, size)
       mapped_board = ""

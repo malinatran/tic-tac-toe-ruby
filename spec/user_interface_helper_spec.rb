@@ -11,18 +11,25 @@ module TicTacToe
     let(:helper)  { UserInterfaceHelper.new(input, output) }
 
     context "#get_string" do
-      it "receives user input" do
+      it "prints a prompt sign and receives user input" do
         input.string = "hi"
+        expect(helper).to receive(:print_prompt)
         expect(input).to receive(:gets).and_return("hi")
         helper.get_string
       end
     end
 
     context "#get_integer" do
-      it "receives user input and converts into integer" do
+      it "calls a method to print a prompt sign" do
         input.string = "1"
-        expect(input).to receive(:gets).and_return("1")
+        expect(helper).to receive(:print_prompt)
         helper.get_integer
+      end
+
+      it "returns the value of user input as an integer" do
+        input.string = "2"
+        expect(helper).to receive(:print_prompt)
+        expect(helper.get_integer).to eq(2)
       end
     end
 
@@ -32,10 +39,17 @@ module TicTacToe
         helper.display(message)
         expect(output.string).to eq("yo")
       end
+
+      it "prints a message with several arguments" do
+        prompt = "\n"
+        greeting = "aloha"
+        helper.display(prompt, greeting)
+        expect(output.string).to eq("\naloha")
+      end
     end
 
     context "#display_outcome" do
-      it "calls the display method depending on game's outcome" do
+      it "calls the display method depending on game's outcome and returns a message" do
         outcome = "Draw"
         expect(helper).to receive(:display).and_return("Nobody won!\n")
         helper.display_outcome(outcome)
@@ -44,7 +58,6 @@ module TicTacToe
 
     context "#display_board" do
       it "calls the display method to draw the board" do
-        board = Board.new
         expect(helper).to receive(:display).with(any_args)
         helper.display_board(board.grid, board.size)
       end

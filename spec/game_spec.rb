@@ -12,18 +12,14 @@ module TicTacToe
                                      computer_player: computer_player, 
                                      human_player: human_player,
                                      user_interface: user_interface) }
-    let(:game_state)      { TicTacToe::GameState }
-    let(:input)           { StringIO.new }
-    let(:markers)         { ["X", "O", "G"] }
-    let(:output)          { StringIO.new }
     let(:ui_helper)       { UserInterfaceHelper.new }
     let(:validator)       { InputValidator.new } 
 
     context "#initialize" do
       it "initializes a game with a board" do
         sample_board = [[nil, nil, nil],
-          [nil, nil, nil],
-          [nil, nil, nil]]
+                        [nil, nil, nil],
+                        [nil, nil, nil]]
         expect(board.grid).to eq(sample_board)
         expect(board.size).to eq(3)
       end
