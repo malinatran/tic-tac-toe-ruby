@@ -1,4 +1,5 @@
 require_relative "board"
+require_relative "constants"
 require_relative "game_state"
 require_relative "player"
 
