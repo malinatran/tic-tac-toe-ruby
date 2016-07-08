@@ -36,4 +36,4 @@ In the `lib` folder, you will find the following files and corresponding spec fi
 * `user_interface_helper.rb`: is concerned with formatted input and output 
 
 #### Organization
-![Diagram](https://s31.postimg.org/swv9rj4x7/TTT_Diagram.jpg)
+![Diagram](https://s31.postimg.org/mgt748td7/TTT_Diagram_v2.jpg)
