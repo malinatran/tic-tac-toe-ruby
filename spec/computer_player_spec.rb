@@ -34,6 +34,18 @@ module TicTacToe
         expect(comp_player).to receive(:make_minimax_move)
         comp_player.make_move(board: board, current_marker: current_marker, human_marker: human_marker)
       end
+      
+      it "returns a center cell if the board has a center cell" do
+        allow(comp_player).to receive(:is_board_empty?).and_return(true)
+        expect(comp_player).to receive(:make_first_move).and_return({x: 1, y: 1})
+        comp_player.make_move(board: board, current_marker: current_marker, human_marker: human_marker)
+      end
+
+      it "returns a top-left cell if board does not have a center cell" do
+        allow(comp_player).to receive(:is_board_empty?).and_return(true)
+        expect(comp_player).to receive(:make_first_move).and_return({x: 0, y: 0})
+        comp_player.make_move(board: Board.new(4), current_marker: current_marker, human_marker: human_marker)
+      end
     end
   end
 end

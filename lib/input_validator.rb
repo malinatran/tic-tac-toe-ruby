@@ -54,9 +54,17 @@ module TicTacToe
 
     def translation(move, size)
       move -= 1
-      x = move / size
-      y = move % size
+      x = translate_row(move, size)
+      y = translate_index(move, size) 
       {x: x, y: y}
+    end
+
+    def translate_row(move, size)
+      move / size
+    end
+
+    def translate_index(move, size)
+      move % size
     end
   end
 end
