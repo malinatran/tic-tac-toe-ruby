@@ -26,12 +26,30 @@ module TicTacToe
     end
 
     def valid_marker(marker)
-      marker.capitalize != MARKER[:computer] && marker.length == 1 && /[a-zA-Z]/.match(marker) ? true : false
+      is_not_computer_marker?(marker) && 
+      is_single_char?(marker) && 
+      is_not_digit?(marker)
+    end
+
+    def is_not_computer_marker?(marker)
+      marker.capitalize != MARKER[:computer]
+    end
+
+    def is_single_char?(marker)
+      marker.length == 1
+    end
+
+    def is_not_digit?(marker)
+      /[a-zA-Z]/.match(marker) ? true : false
     end
 
     def valid_move(move, size)
-      cell_nums = size * size
-      move <= cell_nums && move > 0 ? true : false
+      total_cell_nums = size * size
+      is_cell_within_range?(move, total_cell_nums)
+    end
+
+    def is_cell_within_range?(move, total_cell_nums)
+      move > 0 && move <= total_cell_nums  
     end
 
     def translation(move, size)

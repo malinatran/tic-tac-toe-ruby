@@ -58,20 +58,6 @@ module TicTacToe
       end
     end
 
-    def retrieve_cells(marker)
-      player_cells = []
-
-      @size.times do |x|
-        @size.times do |y|
-          if @grid[x][y] == marker 
-            player_cells << {x: x, y: y}
-          end
-        end
-      end
-
-      player_cells
-    end
-
     def is_row_filled?(x, marker)
       @grid[x].each do |cell|
         if cell != marker

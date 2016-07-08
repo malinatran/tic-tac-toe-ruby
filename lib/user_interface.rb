@@ -37,8 +37,7 @@ module TicTacToe
       display_board(board)
 
       begin
-        display(MESSAGE[:move])
-        move = @ui_helper.get_integer
+        move = prompt_for_move
       end until @validator.is_move_valid?(move, @size) 
 
       @validator.translate_move(move, @size)
@@ -76,20 +75,33 @@ module TicTacToe
 
     def select_size
       begin 
-        display(MESSAGE[:size])
-        size = @ui_helper.get_integer
+        size = prompt_for_size
       end until @validator.is_size_valid?(size)
 
       @size = size
     end
 
+    def prompt_for_size
+      display(MESSAGE[:size])
+      @ui_helper.get_integer
+    end
+
     def select_marker
       begin
-        display(MESSAGE[:marker])
-        marker = @ui_helper.get_string
+        marker = prompt_for_marker
       end until @validator.is_marker_valid?(marker)
 
       @marker = marker
+    end
+
+    def prompt_for_marker
+      display(MESSAGE[:marker])
+      @ui_helper.get_string
+    end
+
+    def prompt_for_move
+      display(MESSAGE[:move])
+      @ui_helper.get_integer
     end
   end
 end

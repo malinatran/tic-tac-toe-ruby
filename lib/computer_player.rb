@@ -18,7 +18,7 @@ module TicTacToe
       current_marker =  params[:current_marker]
       human_marker =    params[:human_marker]
 
-      if is_computer_the_first_player?
+      if is_board_empty?
         make_first_move
       else
         make_minimax_move(DEPTH, current_marker, human_marker)
@@ -27,9 +27,9 @@ module TicTacToe
 
     private
 
-    def is_computer_the_first_player?
+    def is_board_empty?
       total_cells = @board.size * @board.size
-      @board.get_empty_cells.length == total_cells && @board.retrieve_cells(marker).length == 0
+      @board.get_empty_cells.length == total_cells
     end
 
     def make_first_move

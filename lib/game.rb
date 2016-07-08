@@ -41,7 +41,7 @@ module TicTacToe
                                          user_interface: @user_interface,
                                          current_marker: @current_player.marker,
                                          human_marker:   @human_player.marker)
-        set_move(move, @current_player.marker) 
+        make_move(move, @current_player.marker) 
       end
 
       determine_outcome(markers)
@@ -57,7 +57,7 @@ module TicTacToe
       markers
     end
 
-    def set_move(move, marker)
+    def make_move(move, marker)
       begin
         @board.set_cell(move, marker)
         switch_player

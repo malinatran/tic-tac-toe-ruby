@@ -24,13 +24,13 @@ module TicTacToe
 
     context "#make_move" do
       it "calls a method to select center or top-left cell if the computer is the first player" do
-        allow(comp_player).to receive(:is_computer_the_first_player?).and_return(true)
+        allow(comp_player).to receive(:is_board_empty?).and_return(true)
         expect(comp_player).to receive(:make_first_move)
         comp_player.make_move(board: board, current_marker: current_marker, human_marker: human_marker)
       end
 
       it "calls a method to run through minimax algorithm if computer is not the first player" do
-        allow(comp_player).to receive(:is_computer_the_first_player?).and_return(false)
+        allow(comp_player).to receive(:is_board_empty?).and_return(false)
         expect(comp_player).to receive(:make_minimax_move)
         comp_player.make_move(board: board, current_marker: current_marker, human_marker: human_marker)
       end

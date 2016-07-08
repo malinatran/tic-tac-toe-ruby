@@ -4,7 +4,8 @@ module TicTacToe
   class UserInterfaceHelper
 
     FORMAT = 
-      { line:     "\n",
+      { border:   "|",
+        line:     "\n",
         prompt:   "> " }
 
     attr_accessor :input, :output
@@ -26,7 +27,7 @@ module TicTacToe
 
     def display(*messages)
       messages.each do |message|
-        output.print message
+        @output.print message
       end
 
       print_line
@@ -51,11 +52,11 @@ module TicTacToe
     private
 
     def print_line
-      print FORMAT[:line]
+      @output.print FORMAT[:line]
     end
 
     def print_prompt
-      print FORMAT[:prompt]
+      @output.print FORMAT[:prompt]
     end
 
     def draw_board(board, size)
@@ -63,14 +64,30 @@ module TicTacToe
 
       board.each_with_index do |row, i|
         row.each_with_index do |cell, j|
-          cell_num = (i * size) + j + 1
-          mapped_board << (cell || cell_num.to_s).to_s.center(3)
-          mapped_board << "|" if j < size - 1
-          mapped_board << "\n" if (j + 1) % size == 0
+          cell_num = convert_to_cell_num(i, j, size)
+          mapped_board << center_align(cell || cell_num.to_s)
+          mapped_board << FORMAT[:border] if is_not_border?(j, size) 
+          mapped_board << FORMAT[:line] if is_last_in_row?(j, size) 
         end
       end
 
       mapped_board
+    end
+
+    def convert_to_cell_num(i, j, size)
+      (i * size) + j + 1
+    end
+
+    def center_align(string)
+      string.to_s.center(3) 
+    end
+
+    def is_not_border?(j, size)
+      j < size - 1
+    end
+
+    def is_last_in_row?(j, size)
+      (j + 1) % size == 0
     end
   end
 end

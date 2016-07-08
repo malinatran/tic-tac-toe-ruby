@@ -46,9 +46,9 @@ module TicTacToe
     context "#get_move" do
       it "displays board and move message" do
         allow(validator).to receive(:is_move_valid?).and_return(true)
-        allow(ui_helper).to receive(:get_integer).and_return(9)
         expect(user_interface).to receive(:display_board)
-        expect(user_interface).to receive(:display)
+        expect(user_interface).to receive(:prompt_for_move)
+        expect(validator).to receive(:translate_move)
         user_interface.get_move(board)
       end
 

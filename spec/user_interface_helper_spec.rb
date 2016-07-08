@@ -37,14 +37,14 @@ module TicTacToe
       it "prints a message with a single argument" do
         message = "yo"
         helper.display(message)
-        expect(output.string).to eq("yo")
+        expect(output.string).to eq("yo\n")
       end
 
       it "prints a message with several arguments" do
         prompt = "\n"
         greeting = "aloha"
         helper.display(prompt, greeting)
-        expect(output.string).to eq("\naloha")
+        expect(output.string).to eq("\naloha\n")
       end
     end
 
