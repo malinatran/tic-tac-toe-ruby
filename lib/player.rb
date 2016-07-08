@@ -1,7 +1,4 @@
 module TicTacToe
-  
-  MARKERS = ["X", "O"]
-
   class Player
 
     attr_reader :marker
@@ -11,6 +8,10 @@ module TicTacToe
     end
 
     def default_marker
+      nil
+    end
+
+    def make_move
       nil
     end
   end

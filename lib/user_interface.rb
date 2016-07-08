@@ -1,12 +1,68 @@
-require_relative "helper"
+require_relative "constants"
+require_relative "input_validator"
+require_relative "user_interface_helper"
 
 module TicTacToe 
   class UserInterface 
 
-    def initialize(helper)
-      @helper = helper
-      @size = 3
-      @marker = "O"
+    def initialize(ui_helper, validator)
+      @ui_helper =    ui_helper
+      @validator =    validator
+      @size =         DEFAULT_SIZE 
+      @marker =       MARKER[:human] 
+    end
+
+    def get_options
+      display(MESSAGE[:welcome])
+
+      begin
+        display(menu)
+        menu_option = @ui_helper.get_integer
+
+        case menu_option
+        when 1 
+          select_size 
+        when 2 
+          select_marker 
+        when 3 
+          return { size: @size, marker: @marker }
+        when 4 
+          display(MESSAGE[:goodbye])
+          @quit_game = true
+        end
+      end until @quit_game
+    end
+
+    def get_move(board)
+      display_board(board)
+
+      begin
+        move = prompt_for_move
+      end until @validator.is_move_valid?(move, @size) 
+
+      @validator.translate_move(move, @size)
+    end
+
+    def display_error(error)
+      display(error)
+    end
+
+    def display_board(board)
+      @ui_helper.display_board(board, @size)
+    end
+
+    def display_outcome(outcome)
+      @ui_helper.display_outcome(outcome)
+    end
+
+    private
+
+    def display(message)
+      @ui_helper.display(message)
+    end
+
+    def translate_move(move, size)
+      @ui_helper.translate_move(move, size)
     end
 
     def menu
@@ -17,71 +73,35 @@ module TicTacToe
       (4) Exit"
     end
 
-    def get_options
-      @helper.display(DEFAULT_MESSAGES[:welcome])
-
-      begin
-        @helper.display(NEW_LINE, menu, NEW_LINE)
-        menu_option = @helper.get_input
-        case menu_option
-        when OPTIONS[:one] 
-          select_size 
-        when OPTIONS[:two] 
-          select_marker 
-        when OPTIONS[:three] 
-          return { size: @size, marker: @marker }
-        when OPTIONS[:four]
-          @helper.display(DEFAULT_MESSAGES[:goodbye], NEW_LINE)
-          @quit_game = true
-        end
-      end until @quit_game
-    end
-
-    def display_error(message)
-      @helper.display(NEW_LINE, message, NEW_LINE)
-    end
-
     def select_size
       begin 
-        @helper.display(DEFAULT_MESSAGES[:size], NEW_LINE)
-        size = @helper.get_input.to_i
-      end until @helper.is_size_valid?(size)
+        size = prompt_for_size
+      end until @validator.is_size_valid?(size)
 
       @size = size
     end
 
+    def prompt_for_size
+      display(MESSAGE[:size])
+      @ui_helper.get_integer
+    end
+
     def select_marker
       begin
-        @helper.display(DEFAULT_MESSAGES[:marker], NEW_LINE)
-        marker = @helper.get_input
-      end until @helper.is_marker_valid?(marker)
+        marker = prompt_for_marker
+      end until @validator.is_marker_valid?(marker)
 
       @marker = marker
     end
 
-    def select_move
-      begin
-        @helper.display(DEFAULT_MESSAGES[:move], NEW_LINE)
-        move = @helper.get_input.to_i
-      end until @helper.is_move_valid?(move, @size) 
-
-      @helper.map_move(move, @size)
+    def prompt_for_marker
+      display(MESSAGE[:marker])
+      @ui_helper.get_string
     end
 
-    def display_board(board)
-      @helper.display(NEW_LINE, @helper.draw_board(board, @size), NEW_LINE)
-    end
-
-    def display_outcome(outcome)
-      if outcome == DRAW
-        @helper.display(DEFAULT_MESSAGES[:draw], NEW_LINE)
-      elsif outcome == COMPUTER
-        @helper.display(DEFAULT_MESSAGES[:computer], NEW_LINE)
-      elsif outcome == HUMAN 
-        @helper.display(DEFAULT_MESSAGES[:human], NEW_LINE)
-      end
-
-      @helper.display(NEW_LINE)
+    def prompt_for_move
+      display(MESSAGE[:move])
+      @ui_helper.get_integer
     end
   end
 end

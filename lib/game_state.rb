@@ -1,11 +1,40 @@
-module TicTacToe 
-  class GameState
+require_relative "constants"
 
-    def is_game_over?(board, markers)
+module TicTacToe
+  module GameState
+
+    def self.determine_outcome(board, markers)
+      if is_game_over?(board, markers)
+        if draw?(board, markers)
+          return DRAW
+        elsif win?(board, markers)
+          determine_winner(board, markers)
+        end
+      end
+    end
+
+    def self.switch(current_marker, human_marker)
+      current_marker = (current_marker == MARKER[:computer]) ?
+        human_marker : MARKER[:computer] 
+    end
+
+    private
+
+    def self.determine_winner(board, markers)
+      markers.each do |marker|
+        if is_winner?(board, marker) 
+          return marker
+        end
+      end
+
+      nil
+    end
+
+    def self.is_game_over?(board, markers)
       win?(board, markers) || draw?(board, markers)
     end
 
-    def win?(board, markers)
+    def self.win?(board, markers)
       markers.each do |marker|
         if is_winner?(board, marker)
           return true
@@ -15,11 +44,11 @@ module TicTacToe
       false
     end
 
-    def draw?(board, markers)
+    def self.draw?(board, markers)
       board.is_grid_filled? && !win?(board, markers)
     end
 
-    def is_winner?(board, marker)
+    def self.is_winner?(board, marker)
       if board.is_either_diagonal_filled?(marker)
         return true
       end

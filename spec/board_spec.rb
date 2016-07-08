@@ -26,35 +26,9 @@ module TicTacToe
       end
     end
 
-    context "#create_grid" do
-      it "constructs a two-dimensional array based on size determined by user" do
-        board = Board.new(2)
-        empty_board = [[nil, nil], 
-                       [nil, nil]]
-        expect(board.grid).to eq(empty_board)
-      end
-
-      it "constructs a two-dimension array with a default size of three" do
-        empty_board = [[nil, nil, nil],
-                       [nil, nil, nil], 
-                       [nil, nil, nil]]
-        expect(board.grid).to eq(empty_board)
-      end
-    end
-
-    context "#is_cell_empty?" do
-      it "returns true if cell is empty" do
-        expect(board.is_cell_empty?({x: 0, y: 0})).to eq(true)
-      end
-
-      it "returns false if cell has an identity" do
-        board.set_cell({x: 0, y: 1}, "X")
-        expect(board.is_cell_empty?({x: 0, y: 1})).to eq(false)
-      end
-    end
-
     context "#get_empty_cells" do
       let(:board) { Board.new(2) }
+
       it "returns only cells without any values" do
         board.set_cell({x: 0, y: 0}, "O")
         board.set_cell({x: 0, y: 1}, "X")
@@ -71,6 +45,7 @@ module TicTacToe
 
     context "#is_grid_filled" do
       let(:board) { Board.new(2) }
+
       it "returns true if all cells have values" do
         board.set_cell({x: 0, y: 0}, "O")
         board.set_cell({x: 0, y: 1}, "X")
@@ -116,21 +91,6 @@ module TicTacToe
       end
     end
 
-    context "#retrieve_cells" do
-      it "retrieves a single cell with player's marker" do
-        board = Board.new(2)
-        board.set_cell({x: 0, y: 0}, "X")
-        expect(board.retrieve_cells("X")).to eq([{x: 0, y: 0}])
-      end
-
-      it "retrieves multiple cells with a player's marker" do
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 1, y: 2}, "m")
-        board.set_cell({x: 2, y: 0}, "m")
-        expect(board.retrieve_cells("m")).to eq([{x: 1, y: 2}, {x: 2, y: 0}])
-      end
-    end 
-
     context "#is_row_filled?" do
       it "returns true if each cell in a row is filled with player's identity" do
         board.set_cell({x: 0, y: 0}, "X")
@@ -172,60 +132,6 @@ module TicTacToe
         board.set_cell({x: 1, y: 2}, "X")
         board.set_cell({x: 2, y: 2}, "O")
         expect(board.is_column_filled?(2, "X")).to eq(false)
-      end
-    end
-
-    context "#is_backward_diagonal_filled?" do
-      it "returns true if each cell in the backward diagonal is filled with player's identity" do
-        board.set_cell({x: 0, y: 0}, "X")
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 2, y: 2}, "X")
-        expect(board.is_backward_diagonal_filled?("X")).to eq(true)
-      end
-      
-      it "returns false if a cell in the backward diagonal is empty" do
-        board.set_cell({x: 0, y: 0}, "O")
-        board.set_cell({x: 2, y: 2}, "O")
-        expect(board.is_backward_diagonal_filled?("O")).to eq(false)
-      end
-      
-      it "returns false if a cell in the backward diagonal is not filled with player's identity" do
-        board.set_cell({x: 0, y: 0}, "O")
-        board.set_cell({x: 1, y: 1}, "O")
-        board.set_cell({x: 2, y: 2}, "X")
-        expect(board.is_backward_diagonal_filled?("O")).to eq(false)
-      end
-    end
-    
-    context "#is_forward_diagonal_filled?" do
-      it "returns true if each cell in the forward diagonal is filled with player's identity" do
-        board.set_cell({x: 0, y: 2}, "X")
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 2, y: 0}, "X")
-        expect(board.is_forward_diagonal_filled?("X")).to eq(true)
-      end
-      
-      it "returns false if a cell in the forward diagonal is empty" do
-        board.set_cell({x: 0, y: 2}, "O")
-        board.set_cell({x: 1, y: 1}, "O")
-        expect(board.is_forward_diagonal_filled?("O")).to eq(false)
-      end
-      
-      it "returns false if a cell in the forward diagonal is not filled with player's identity" do
-        board.set_cell({x: 0, y: 2}, "O")
-        board.set_cell({x: 1, y: 1}, "X")
-        board.set_cell({x: 2, y: 0}, "O")
-        expect(board.is_forward_diagonal_filled?("O")).to eq(false)
-      end
-    end
-
-    context "#dup" do
-      it "makes a copy of the board and its grid" do
-        board_copy = board.dup
-        board_copy.set_cell({x: 0, y: 0}, "m")
-        board_copy.set_cell({x: 1, y: 1}, "m")
-        board_copy.set_cell({x: 2, y: 2}, "m")
-        expect(board_copy.grid).to_not eq(board.grid)
       end
     end
   end

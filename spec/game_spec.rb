@@ -7,20 +7,19 @@ module TicTacToe
     let(:board)           { Board.new }
     let(:computer_player) { ComputerPlayer.new }
     let(:human_player)    { HumanPlayer.new }
-    let(:user_interface)  { UserInterface.new(helper) }
+    let(:user_interface)  { UserInterface.new(ui_helper, validator) }
     let(:game)            { Game.new(board: board, 
                                      computer_player: computer_player, 
                                      human_player: human_player,
                                      user_interface: user_interface) }
-    let(:input)           { StringIO.new }
-    let(:output)          { StringIO.new }
-    let(:helper)          { Helper.new(input, output) }
+    let(:ui_helper)       { UserInterfaceHelper.new }
+    let(:validator)       { InputValidator.new } 
 
     context "#initialize" do
       it "initializes a game with a board" do
         sample_board = [[nil, nil, nil],
-          [nil, nil, nil],
-          [nil, nil, nil]]
+                        [nil, nil, nil],
+                        [nil, nil, nil]]
         expect(board.grid).to eq(sample_board)
         expect(board.size).to eq(3)
       end
@@ -46,62 +45,6 @@ module TicTacToe
         expect(game).to receive(:set_options)
         expect(game).to receive(:run_game_loop)
         game.start_game
-      end
-    end
-
-    context "#set_options" do
-      it "sets new size in board and new marker in human player" do
-        game.instance_variable_set(:@size, 4)
-        game.instance_variable_set(:@marker, "L")
-        board.size = 4
-        human_player.marker = "L"
-        expect(board.size).to eq(4)
-        expect(human_player.marker).to eq("L")
-        game.set_options
-      end
-    end
-
-    context "#run_game_loop" do
-      it "displays the board when current player is human player" do 
-        game.instance_variable_set(:@current_player, human_player)
-        input.string = "1"
-        allow(game).to receive(:is_game_over?).and_return(false, true)
-        expect(user_interface).to receive(:display_board).exactly(2).times
-        game.run_game_loop
-      end  
-
-      it "calls a method to make human for move" do 
-        game.instance_variable_set(:@current_player, human_player)
-        allow(game).to receive(:is_game_over?).and_return(false, true)
-        allow(game).to receive(:is_computer_the_current_player?).and_return(false)
-        input.string = "1"
-        allow(user_interface).to receive(:select_move).and_return(1)
-        expect(game).to receive(:make_human_move)
-        game.run_game_loop
-      end
-
-      it "calls a method to make the computer's move" do 
-        game.instance_variable_set(:@current_player, computer_player)
-        allow(game).to receive(:is_game_over?).and_return(false, true)
-        allow(game).to receive(:is_computer_the_current_player?).and_return(true)
-        expect(game).to receive(:make_computer_move)
-        game.run_game_loop
-      end
-    end
-
-    context "#declare_outcome" do
-      it "returns information about draw" do
-        allow(game).to receive(:is_game_over?).and_return(true, false)
-        allow(game).to receive(:draw?).and_return(true, false)
-        expect(game.declare_outcome).to eq("Draw")
-      end
-
-      it "returns information about winner" do
-        allow(game).to receive(:is_game_over?).and_return(true, false)
-        allow(game).to receive(:draw?).and_return(false)
-        allow(game).to receive(:win?).and_return(true, false)
-        expect(game).to receive(:declare_winner)
-        game.declare_outcome
       end
     end
   end
