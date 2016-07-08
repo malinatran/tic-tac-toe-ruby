@@ -21,21 +21,19 @@ Please note: the board will reset and the menu will reappear after each game is 
 To run tests, first enter `bundle install` and then `bundle exec rspec`.
 
 #### File Structure
-In the `lib` folder, you will find the following files and corresponding spec files in the `spec` folder (with the exception of `play.rb`):
+In the `lib` folder, you will find the following files and corresponding spec files in the `spec` folder (with the exception of `play.rb` and `constants.rb`):
 
-* `play.rb`: is the entry point of the game and initializes all of the classes below
-* `game.rb`: contains knowledge pertaining to game, including game state, players, and moves 
-* `board.rb`: has functionalities related to the grid, its cells, and winning moves
-* `computer_player.rb`: enables interaction with board to retrieve cells and make moves
-* `human_player.rb`: only accepts a marker provided by user input or default marker 
-* `player.rb`: serves as superclass of `computer_player` and `human_player`
-* `user_interface.rb`: handles methods dealing with the command line
-* `user_interface_helper.rb`: contains methods that are helpers or validators for `user_interface`
+* `board.rb`: has functionalities related to the grid and cells
+* `computer_player.rb`: makes computer moves 
+* `constants.rb`: contains all stubbed string values shared across classes
+* `game.rb`: is responsible for coordinating game loop and players' turns
+* `game_state.rb`: handles logic for state of game and outcome
+* `human_player.rb`: makes human moves by coordinating with `user_interface` 
 * `input_validator.rb`: checks that user input for board size, marker, and moves are valid 
-* `constants.rb`: contains all stubbed string values
+* `play.rb`: is the entry point of the game and initializes many of the classes below
+* `player.rb`: serves as superclass of `computer_player` and `human_player`
+* `user_interface.rb`: handles looping of menu directory and commands
+* `user_interface_helper.rb`: is concerned with formatted input and output 
 
 #### Organization
-The first diagram demonstrates hierarchy; the second is a more accurate portrayal of relationships between classes. For instance, the latter diagram shows that many classes are being dependency injected into `Game` (as indicated by directional arrows). `Constants` and `GameState` are accessible at the module level.
-
-![Organization](https://s31.postimg.org/emb1riycb/tictactoe.png)
-![Sketch](https://s31.postimg.org/45qsuhj2j/tictactoe_complex.jpg)
+![Diagram](https://postimg.org/image/izk8ygxbb/)
