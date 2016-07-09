@@ -11,7 +11,7 @@ module TicTacToe
     attr_reader :marker
 
     def default_marker
-      MARKER[:computer] 
+      MARKER[:X] 
     end
 
     def make_move(params)
@@ -42,8 +42,8 @@ module TicTacToe
       end
     end
 
-    def make_minimax_move(depth, current_marker, human_marker)
-      minimax(@board, depth, current_marker, human_marker)
+    def make_minimax_move(depth, current_marker, opponent_marker)
+      minimax(@board, depth, current_marker, opponent_marker)
       return @move
     end
 
@@ -78,7 +78,7 @@ module TicTacToe
     end
 
     def best_move(current_marker, scores)
-      if current_marker == MARKER[:computer]
+      if current_marker == marker
         scores.max_by {|k, v| v}
       else
         scores.min_by {|k, v| v}

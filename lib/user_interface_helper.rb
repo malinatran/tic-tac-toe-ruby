@@ -33,18 +33,6 @@ module TicTacToe
       print_line
     end
 
-    def display_outcome(outcome)
-      if outcome == DRAW
-        display(MESSAGE[:draw])
-      elsif outcome == MARKER[:computer]
-        display(MESSAGE[:computer])
-      elsif outcome == MARKER[:human] 
-        display(MESSAGE[:human])
-      end
-
-      print_line
-    end
-
     def display_board(board, size)
       display(FORMAT[:line], draw_board(board, size))
     end
@@ -66,8 +54,8 @@ module TicTacToe
         row.each_with_index do |cell, j|
           cell_num = convert_to_cell_num(i, j, size)
           mapped_board << center_align(cell || cell_num.to_s)
-          mapped_board << FORMAT[:border] if is_not_border?(j, size) 
-          mapped_board << FORMAT[:line] if is_last_in_row?(j, size) 
+          mapped_board << FORMAT[:border] if middle_cell?(j, size) 
+          mapped_board << FORMAT[:line] if last_cell?(j, size) 
         end
       end
 
@@ -82,11 +70,11 @@ module TicTacToe
       string.to_s.center(3) 
     end
 
-    def is_not_border?(j, size)
+    def middle_cell?(j, size)
       j < size - 1
     end
 
-    def is_last_in_row?(j, size)
+    def last_cell?(j, size)
       (j + 1) % size == 0
     end
   end

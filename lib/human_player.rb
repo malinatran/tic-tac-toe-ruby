@@ -7,7 +7,7 @@ module TicTacToe
     attr_accessor :marker
 
     def default_marker
-      MARKER[:human]
+      MARKER[:O]
     end
 
     def make_move(params)

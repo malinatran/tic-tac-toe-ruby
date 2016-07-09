@@ -7,6 +7,9 @@ require_relative "user_interface"
 module TicTacToe
   class Game
 
+    DRAW = "Nobody won!\n"
+    WIN = " won!\n"
+
     def initialize(params = {})
       @board =            params[:board]
       @computer_player =  params[:computer_player] || ComputerPlayer.new
@@ -61,7 +64,7 @@ module TicTacToe
         @board.set_cell(move, marker)
         switch_player
       rescue Exception => message
-        @user_interface.display_error(message)
+        @user_interface.display(message)
       end
     end
 
@@ -72,8 +75,13 @@ module TicTacToe
 
     def determine_outcome(markers)
       @user_interface.display_board(@board.grid)
-      outcome = TicTacToe::GameState::determine_outcome(@board, markers)
-      @user_interface.display_outcome(outcome)
+
+      if TicTacToe::GameState::draw?(@board, markers)
+        @user_interface.display(DRAW)
+      elsif TicTacToe::GameState::win?(@board, markers)
+        winning_marker = TicTacToe::GameState::winner(@board, markers)
+        @user_interface.display(winning_marker + WIN)
+      end
     end
   end
 end

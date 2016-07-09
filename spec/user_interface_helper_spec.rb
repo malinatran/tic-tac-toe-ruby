@@ -48,14 +48,6 @@ module TicTacToe
       end
     end
 
-    context "#display_outcome" do
-      it "calls the display method depending on game's outcome and returns a message" do
-        outcome = "Draw"
-        expect(helper).to receive(:display).and_return("Nobody won!\n")
-        helper.display_outcome(outcome)
-      end
-    end
-
     context "#display_board" do
       it "calls the display method to draw the board" do
         expect(helper).to receive(:display).with(any_args)

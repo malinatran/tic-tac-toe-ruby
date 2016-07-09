@@ -9,7 +9,7 @@ module TicTacToe
       @ui_helper =    ui_helper
       @validator =    validator
       @size =         DEFAULT_SIZE 
-      @marker =       MARKER[:human] 
+      @marker =       MARKER[:O] 
     end
 
     def get_options
@@ -43,23 +43,15 @@ module TicTacToe
       @validator.translate_move(move, @size)
     end
 
-    def display_error(error)
-      display(error)
+    def display(message)
+      @ui_helper.display(message)
     end
 
     def display_board(board)
       @ui_helper.display_board(board, @size)
     end
 
-    def display_outcome(outcome)
-      @ui_helper.display_outcome(outcome)
-    end
-
     private
-
-    def display(message)
-      @ui_helper.display(message)
-    end
 
     def translate_move(move, size)
       @ui_helper.translate_move(move, size)

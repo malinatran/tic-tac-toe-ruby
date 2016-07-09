@@ -32,7 +32,7 @@ module TicTacToe
     end
 
     def is_not_computer_marker?(marker)
-      marker.capitalize != MARKER[:computer]
+      marker.capitalize != MARKER[:X]
     end
 
     def is_single_char?(marker)

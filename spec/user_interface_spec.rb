@@ -74,20 +74,6 @@ module TicTacToe
       end
     end
 
-    context "#display_error" do
-      it "calls a method to display an error message" do 
-        error = "You cannot do that"
-        expect(user_interface).to receive(:display).with(any_args)
-        user_interface.display_error(error)
-      end
-
-      it "displays an error message" do
-        error = "You can't do that!"
-        expect(user_interface).to receive(:display).and_return("You can't do that!\n")
-        user_interface.display_error(error)
-      end
-    end
-
     context "#display_board" do
       it "calls a method to display the baord" do
         expect(ui_helper).to receive(:display_board).with(any_args)
@@ -101,25 +87,5 @@ module TicTacToe
           user_interface.display_board(board)
       end
     end
-
-    context "#display_outcome" do
-      it "calls a method to display the game's outcome" do
-        outcome = "Draw"
-        expect(ui_helper).to receive(:display_outcome).with(any_args)
-        user_interface.display_outcome(outcome)
-      end
-
-      it "displays message declaring that nobody won when there is a draw" do
-        outcome = "Draw" 
-        expect(ui_helper).to receive(:display_outcome).and_return("Nobody won!\n")
-        user_interface.display_outcome(outcome)
-      end
-
-      it "displays message declaring that computer won when computer wins" do
-        outcome = "X"
-        expect(ui_helper).to receive(:display_outcome).and_return("Computer won!\n")
-        user_interface.display_outcome(outcome)
-      end
-    end
-  end
+ end
 end
