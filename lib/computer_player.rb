@@ -1,27 +1,66 @@
-require_relative "player"
 require_relative "board"
+require_relative "constants"
+require_relative "game_state"
+require_relative "player"
 
 module TicTacToe
   class ComputerPlayer < Player
 
-    attr_reader :marker, :move
+    DEPTH = 0
+
+    attr_reader :marker
 
     def default_marker
-      MARKERS[0]
+      MARKER[:X] 
+    end
+
+    def make_move(params)
+      @board =          params[:board]
+      current_marker =  params[:current_marker]
+      human_marker =    params[:human_marker]
+
+      if is_board_empty?
+        make_first_move
+      else
+        make_minimax_move(DEPTH, current_marker, human_marker)
+      end
+    end
+
+    private
+
+    def is_board_empty?
+      total_cells = @board.size * @board.size
+      @board.get_empty_cells.length == total_cells
+    end
+
+    def make_first_move
+      if @board.size % 2 == 0
+        return {x: 0, y: 0}
+      else
+        center = @board.size / 2
+        return {x: center, y: center} 
+      end
+    end
+
+    def make_minimax_move(depth, current_marker, opponent_marker)
+      minimax(@board, depth, current_marker, opponent_marker)
+      return @move
     end
 
     def minimax(board, depth, current_marker, opponent_marker)
-      if is_game_over?(board, opponent_marker)
+      markers = [current_marker, opponent_marker]
+
+      if TicTacToe::GameState::is_game_over?(board, markers)
         return score(board, depth, opponent_marker)
       end
-  
+
       depth += 1
       scores = {}
 
       board.get_empty_cells.each do |cell|
-        next_game_state = board.dup
-        next_game_state.set_cell(cell, current_marker)
-        scores[cell] = minimax(next_game_state, depth, switch(current_marker, opponent_marker), opponent_marker)
+        board.set_cell(cell, current_marker)
+        scores[cell] = minimax(board, depth, TicTacToe::GameState::switch(current_marker, opponent_marker), opponent_marker)
+        board.clear_cell(cell)
       end
 
       @move, score = best_move(current_marker, scores)
@@ -29,61 +68,21 @@ module TicTacToe
     end
 
     def score(board, depth, opponent_marker)
-      if is_winner?(board, marker)
+      if TicTacToe::GameState::is_winner?(board, marker)
         10 - depth
-      elsif is_winner?(board, opponent_marker)
+      elsif TicTacToe::GameState::is_winner?(board, opponent_marker)
         depth - 10
       else
         0
       end 
     end
 
-    def switch(current_marker, opponent_player)
-      current_marker == marker ? opponent_player : marker
-    end
-
     def best_move(current_marker, scores)
-      if current_marker == "X"
+      if current_marker == marker
         scores.max_by {|k, v| v}
       else
         scores.min_by {|k, v| v}
       end
-    end
-
-    def is_game_over?(board, opponent_marker)
-      draw?(board, opponent_marker) || win?(board, opponent_marker)
-    end
-
-    private
-
-    def draw?(board, opponent_marker)
-      board.is_grid_filled? && !win?(board, opponent_marker)
-    end
-
-    def win?(board, opponent_marker)
-      player_markers = [marker, opponent_marker]
-
-      player_markers.each do |player_marker|
-        if is_winner?(board, player_marker)
-          return true
-        end
-      end
-
-      false
-    end
-
-    def is_winner?(board, current_marker)
-      if board.is_either_diagonal_filled?(current_marker)
-        return true
-      end
-
-      board.size.times do |n|
-        if board.is_row_filled?(n, current_marker) || board.is_column_filled?(n, current_marker)
-          return true
-        end
-      end
-
-      false
     end
   end
 end

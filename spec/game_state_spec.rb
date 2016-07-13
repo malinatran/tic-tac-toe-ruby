@@ -1,14 +1,25 @@
 require_relative "spec_helper"
+require_relative "../lib/board"
+require_relative "../lib/computer_player"
 require_relative "../lib/game_state"
+require_relative "../lib/human_player"
 
 module TicTacToe
   describe TicTacToe::GameState do
 
-    let(:board) { Board.new }
-    let(:comp_player) { ComputerPlayer.new }
-    let(:human_player) { HumanPlayer.new }
-    let(:game_state) { GameState.new }
-    let(:markers) { ["O", "X"] }
+    let(:board)         { Board.new }
+    let(:comp_player)   { ComputerPlayer.new }
+    let(:game_state)    { TicTacToe::GameState }
+    let(:human_player)  { HumanPlayer.new }
+    let(:markers)       { ["O", "X"] }
+
+    context "#switch" do
+      it "returns the opponent player as the current player" do
+        current_marker = "O" 
+        human_marker = human_player.marker 
+        expect(game_state.switch(current_marker, human_marker)).to eq("X")
+      end
+    end
 
     context "#is_game_over?" do
       it "should return true if there is a win or draw" do
