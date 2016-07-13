@@ -3,7 +3,7 @@
 #### Objectives
 * Build a command-line game in Ruby
 * Incorporate Minimax to create an unbeatable AI
-* Adhere to [SOLID princples](https://www.wikiwand.com/en/SOLID_(object-oriented_design)) and incorporate [TDD](https://www.wikiwand.com/en/Test-driven_development)
+* Adhere to [SOLID principles](https://www.wikiwand.com/en/SOLID_(object-oriented_design)) and incorporate [TDD](https://www.wikiwand.com/en/Test-driven_development)
 
 #### Play
 To run the game, enter `ruby play.rb` in the root directory. 
